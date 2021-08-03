@@ -25,7 +25,7 @@ Steps:
 
 * start new release (version: `vX.Y.Z`)
 * enter release notes, i.e., significant changes since last release
-* upload `shallow-flow-core-X.Y.Z.tar.gz` previously generated with `setyp.py`
+* upload `shallow-flow-base-X.Y.Z.tar.gz` previously generated with `setyp.py`
 * publish
 
 

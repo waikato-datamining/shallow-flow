@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_namespace_packages
 
 
 def _read(f):
@@ -13,8 +13,8 @@ def _read(f):
 
 
 setup(
-    name="shallow-flow-core",
-    description="Core components for the Python 3 shallow-flow workflow engine.",
+    name="shallow-flow-base",
+    description="Base components for the Python 3 shallow-flow workflow engine.",
     long_description=(
         _read('DESCRIPTION.rst') + b'\n' +
         _read('CHANGES.rst')).decode('utf-8'),
@@ -29,7 +29,8 @@ setup(
     package_dir={
         '': 'src'
     },
-    packages=[
+    packages=find_namespace_packages(where='src'),
+    namespace_packages=[
         "shallowflow",
     ],
     version="0.0.1",
