@@ -1,4 +1,5 @@
 from shallowflow.api.sink import AbstractSimpleSink
+from shallowflow.api.config import ConfigItem
 
 
 class ConsoleOutput(AbstractSimpleSink):
