@@ -44,6 +44,7 @@ class ConfigManager(LoggableObject):
         """
         self._items = OrderedDict()
         self._values = dict()
+        self._handlers = dict()
 
     def add(self, item):
         """
@@ -91,7 +92,10 @@ class ConfigManager(LoggableObject):
         if not isinstance(value, self._items[name].value_type):
             self.log("Invalid config type for %s: expected=%s, received=%s" % (name, self._items[name].value_type, type(value)))
             return False
-        self._values[name] = value
+        if self.has_handler(name):
+            self.get_handler(name)(value)
+        else:
+            self._values[name] = value
 
     def get(self, name):
         """
@@ -114,6 +118,40 @@ class ConfigManager(LoggableObject):
         Resets all options to default values.
         """
         self._values.clear()
+
+    def set_handler(self, name, handler):
+        """
+        Sets the method that handles the specified config item.
+
+        :param name: the name of the config item to handle
+        :type name: str
+        :param handler: the handler function
+        """
+        self._handlers[name] = handler
+
+    def has_handler(self, name):
+        """
+        Checks whether a handler is set for the config item.
+
+        :param name: the name of the config item
+        :type name: str
+        :return: true if a handler method registered
+        :rtype: bool
+        """
+        return name in self._handlers
+
+    def get_handler(self, name):
+        """
+        Returns the handler registered for the config item.
+
+        :param name: the name of the config item
+        :type name: str
+        :return: the handler, None if no handler registered
+        """
+        if not self.has_handler(name):
+            return None
+        else:
+            return self._handlers[name]
 
     def from_dict(self, d):
         """

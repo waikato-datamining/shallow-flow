@@ -9,7 +9,7 @@ The core components for shallow-flow.
     
 * Transformers
 
-  * ...
+  * shallowflow.base.transformer.PassThrough
     
 * Sinks
 

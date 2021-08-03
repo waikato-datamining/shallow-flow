@@ -190,27 +190,34 @@ class OutputProducer(Actor):
         raise NotImplemented()
 
 
-class ActorHandler(Actor):
+def is_source(actor):
     """
-    Interface for actors that manage sub-actors.
+    Checks whether the actor is a source.
+
+    :param actor: the actor to check
+    :type actor: Actor
+    :return: true if a source actor
     """
+    return isinstance(actor, OutputProducer) and not isinstance(actor, InputConsumer)
 
-    @property
-    def actors(self):
-        """
-        Returns the current sub-actors.
 
-        :return: the sub-actors
-        :rtype: list
-        """
-        raise NotImplemented()
+def is_transformer(actor):
+    """
+    Checks whether the actor is a transformer.
 
-    @actors.setter
-    def actors(self, actors):
-        """
-        Sets the new sub-actors.
+    :param actor: the actor to check
+    :type actor: Actor
+    :return: true if a transformer actor
+    """
+    return isinstance(actor, OutputProducer) and isinstance(actor, InputConsumer)
 
-        :param actors: the new actors
-        :type actors: list
-        """
-        raise NotImplemented()
+
+def is_sink(actor):
+    """
+    Checks whether the actor is a sink.
+
+    :param actor: the actor to check
+    :type actor: Actor
+    :return: true if a sink actor
+    """
+    return not isinstance(actor, OutputProducer) and isinstance(actor, InputConsumer)
