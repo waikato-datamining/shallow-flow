@@ -11,6 +11,7 @@ dl.set("list_dirs", True)
 dl.set("sort", True)
 dl.set("recursive", True)
 dl.set("max_items", 100)
+dl.set("debug", True)
 
 pt = PassThrough()
 
