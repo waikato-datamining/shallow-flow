@@ -1,5 +1,6 @@
 import json
-from .actor import Actor
+import traceback
+from .actor import Actor, actor_to_dict, dict_to_actor
 
 
 def load_actor(path):
@@ -8,11 +9,16 @@ def load_actor(path):
 
     :param path: the file containing an actor in JSON format.
     :type path: str
-    :return: the actor
+    :return: the actor, None if failed to load
     :rtype: Actor
     """
-    # TODO
-    return None
+    try:
+        with open(path, "r") as jf:
+            d = json.load(jf)
+        return dict_to_actor(d)
+    except:
+        print("Failed to load actor from: %s\n%s" % (path, traceback.format_exc()))
+        return None
 
 
 def save_actor(actor, path):
@@ -23,8 +29,13 @@ def save_actor(actor, path):
     :type actor: Actor
     :param path: the file to save the actor in JSON format
     :type path: str
-    :return: whether successfully saved
-    :rtype: bool
+    :return: None if successfully saved, otherwise error message
+    :rtype: str
     """
-    # TODO
-    return True
+    d = actor_to_dict(actor)
+    try:
+        with open(path, "w") as jf:
+            json.dump(d, jf, indent=2)
+        return None
+    except:
+        return "Failed to save actor to: %s\n%s" % (path, traceback.format_exc())
