@@ -1,6 +1,7 @@
 import importlib
 import traceback
 import shallowflow.api.serialization as serialization
+from datetime import datetime
 from .config import Option, OptionManager
 from .logging import LoggableObject
 
@@ -23,13 +24,15 @@ class Actor(LoggableObject):
         """
         self._option_manager = OptionManager()
         self._option_manager.add(Option("debug", bool, False, "If enabled, outputs some debugging information"))
+        self._option_manager.add(Option("name", str, "", "The name to use for this actor, leave empty for class name"))
         self._parent = None
+        self._log_prefix = None
 
     def reset(self):
         """
         Resets the state of the actor.
         """
-        pass
+        self._log_prefix = None
 
     def description(self):
         """
@@ -123,6 +126,34 @@ class Actor(LoggableObject):
         :type value: object
         """
         self._option_manager.set(name, value)
+
+    @property
+    def log_prefix(self):
+        """
+        Returns the log prefix for this actor.
+
+        :return: the prefix
+        :rtype: str
+        """
+        if self._log_prefix is None:
+            if self.parent is not None:
+                prefix = self.parent.log_prefix + "."
+            else:
+                prefix = ""
+            if len(self.get("name")) == 0:
+                prefix += type(self).__name__
+            else:
+                prefix += self.get("name")
+            self._log_prefix = prefix
+        return self._log_prefix
+
+    def log(self, *args):
+        """
+        Logs the arguments.
+
+        :param args: the arguments to log
+        """
+        print(*("%s - %s -" % (self.log_prefix, str(datetime.now())), *args))
 
     def setup(self):
         """
