@@ -33,6 +33,9 @@ setup(
     namespace_packages=[
         "shallowflow",
     ],
+    install_requires=[
+        "pyyaml",
+    ],
     version="0.0.1",
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',
