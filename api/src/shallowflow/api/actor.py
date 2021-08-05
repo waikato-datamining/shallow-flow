@@ -94,6 +94,15 @@ class Actor(LoggableObject):
         self._parent = a
         self.reset()
 
+    def is_debug(self):
+        """
+        Returns whether debug mode is on.
+
+        :return: true if on
+        :rtype: bool
+        """
+        return self.get("debug")
+
     def get(self, name):
         """
         Returns the value for the specified option.
