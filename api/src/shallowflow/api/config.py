@@ -217,10 +217,12 @@ class OptionManager(LoggableObject):
 
             self.set(k, d[k])
 
-    def to_dict(self):
+    def to_dict(self, skip_default=False):
         """
         Returns all the options as dictionary.
 
+        :param skip_default: if enabled, skips values that are default ones
+        :type skip_default: bool
         :return: the options as dictionary
         :rtype: dict
         """
@@ -241,7 +243,8 @@ class OptionManager(LoggableObject):
                 result[k] = handler(self.get(k))
                 continue
 
-            result[k] = self.get(k)
+            if not skip_default or (self.get(k) != self._options[k].def_value):
+                result[k] = self.get(k)
         return result
 
     def to_help(self):

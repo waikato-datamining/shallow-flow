@@ -61,7 +61,7 @@ class Actor(LoggableObject):
         :return: the current options
         :rtype: dict
         """
-        return self._option_manager.to_dict()
+        return self._option_manager.to_dict(skip_default=True)
 
     @options.setter
     def options(self, d):
