@@ -274,6 +274,7 @@ def actor_to_dict(a):
     result = dict()
     m = type(a).__module__
     c = type(a).__name__
+    # can we make the module nicer, by dropping the _CLASS part?
     if m.split(".")[-1].startswith("_"):
         try:
             m_short = ".".join(m.split(".")[:-1])
