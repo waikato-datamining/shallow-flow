@@ -272,8 +272,17 @@ def actor_to_dict(a):
     :rtype: dict
     """
     result = dict()
-    result["module"] = type(a).__module__
-    result["class"] = type(a).__name__
+    m = type(a).__module__
+    c = type(a).__name__
+    if m.split(".")[-1].startswith("_"):
+        try:
+            m_short = ".".join(m.split(".")[:-1])
+            getattr(importlib.import_module(m_short), c)
+            m = m_short
+        except:
+            pass
+    result["module"] = m
+    result["class"] = c
     result["options"] = a.options
     return result
 

@@ -1,6 +1,5 @@
 from .actor import Actor, actor_to_dict, dict_to_actor
 from .config import Option
-from .director import SequentialDirector
 
 
 class ActorHandler(Actor):
@@ -58,21 +57,6 @@ class ActorHandler(Actor):
         :rtype: str
         """
         return self._director().execute(self.actors)
-
-
-class Flow(ActorHandler):
-    """
-    Encapsulates a complete flow.
-    """
-
-    def _director(self):
-        """
-        Returns the directory to use for executing the actors.
-
-        :return: the director
-        :rtype: AbstractDirector
-        """
-        return SequentialDirector(requires_source=True, requires_sink=False)
 
 
 def dict_list_to_actor_list(l):

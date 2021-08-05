@@ -1,4 +1,4 @@
-from shallowflow.base.source import DirectoryLister
+from shallowflow.base.sources import DirectoryLister
 
 dl = DirectoryLister()
 # print the help string

@@ -1,5 +1,5 @@
 from os.path import expanduser
-from shallowflow.base.source import DirectoryLister
+from shallowflow.base.sources import DirectoryLister
 
 dl = DirectoryLister()
 dl.set("dir", expanduser("~"))

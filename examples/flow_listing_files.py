@@ -1,8 +1,8 @@
 from os.path import expanduser
-from shallowflow.api.control import Flow
-from shallowflow.base.source import DirectoryLister
-from shallowflow.base.transformer import PassThrough
-from shallowflow.base.sink import ConsoleOutput
+from shallowflow.base.controls import Flow
+from shallowflow.base.sources import DirectoryLister
+from shallowflow.base.transformers import PassThrough
+from shallowflow.base.sinks import ConsoleOutput
 
 dl = DirectoryLister()
 dl.set("dir", expanduser("~"))
