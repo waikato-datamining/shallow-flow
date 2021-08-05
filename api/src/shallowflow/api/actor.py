@@ -307,9 +307,15 @@ def dict_to_actor(d):
     :return: the actor
     :rtype: Actor
     """
-    Cls = getattr(importlib.import_module(d["module"]), d["class"])
+    p = d["class"].split(".")
+    m = ".".join(p[:-1])
+    c = p[-1]
+    Cls = getattr(importlib.import_module(m), c)
     result = Cls()
-    result.options = d["options"]
+    if "options" in d:
+        result.options = d["options"]
+    else:
+        result.options = dict()
     return result
 
 
@@ -333,9 +339,10 @@ def actor_to_dict(a):
             m = m_short
         except:
             pass
-    result["module"] = m
-    result["class"] = c
-    result["options"] = a.options
+    result["class"] = m + "." + c
+    options = a.options
+    if len(options) != 0:
+        result["options"] = a.options
     return result
 
 

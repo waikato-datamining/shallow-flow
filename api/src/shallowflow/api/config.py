@@ -23,6 +23,8 @@ class Option(object):
         :param base_type: the base class of the value, in case of lists
         :type base_type: object
         """
+        if name == "class":
+            raise Exception("Cannot use reserved name: %s" % name)
         self.name = name
         self.value_type = value_type
         self.def_value = def_value
