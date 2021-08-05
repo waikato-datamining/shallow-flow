@@ -1,2 +1,2 @@
-from ._Null import Null
-from ._ConsoleOutput import ConsoleOutput
+from .sinks._ConsoleOutput import ConsoleOutput
+from .sinks._Null import Null

@@ -1,1 +1,1 @@
-from ._PassThrough import PassThrough
+from .transformers._PassThrough import PassThrough
