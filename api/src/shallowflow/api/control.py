@@ -1,4 +1,4 @@
-from .actor import Actor, actor_to_dict, dict_to_actor
+from .actor import Actor
 from .config import Option
 
 
@@ -12,9 +12,8 @@ class ActorHandler(Actor):
         Performs initializations.
         """
         super(ActorHandler, self).initialize()
-        self.option_manager.add(Option("actors", list, list(), "The sub-actors to manage", Actor))
-        self.option_manager.set_to_dict_handler("actors", actor_list_to_dict_list)
-        self.option_manager.set_from_dict_handler("actors", dict_list_to_actor_list)
+        self.option_manager.add(Option(name="actors", value_type=list, def_value=list(),
+                                       help="The sub-actors to manage", base_type=Actor))
 
     def _director(self):
         """
@@ -57,17 +56,3 @@ class ActorHandler(Actor):
         :rtype: str
         """
         return self._director().execute(self.actors)
-
-
-def dict_list_to_actor_list(l):
-    result = []
-    for d in l:
-        result.append(dict_to_actor(d))
-    return result
-
-
-def actor_list_to_dict_list(l):
-    result = []
-    for actor in l:
-        result.append(actor_to_dict(actor))
-    return result

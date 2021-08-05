@@ -21,7 +21,8 @@ class ConsoleOutput(AbstractSimpleSink):
         Performs initializations.
         """
         super(ConsoleOutput, self).initialize()
-        self._option_manager.add(Option("prefix", str, "", "The prefix to prepend to the output"))
+        self._option_manager.add(Option(name="prefix", value_type=str, def_value="",
+                                        help="The prefix to prepend to the output"))
 
     def _do_execute(self):
         """

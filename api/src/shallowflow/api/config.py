@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from .logging import LoggableObject
+from .serialization import get_dict_reader, get_dict_writer
 
 
 class Option(object):
@@ -198,11 +199,23 @@ class OptionManager(LoggableObject):
         :type d: dict
         """
         for k in d:
+            # was a base type define for the elements of the list?
+            if isinstance(d[k], list) and (self._options[k].base_type is not None):
+                reader = get_dict_reader(self._options[k].base_type)
+                if reader is not None:
+                    l = []
+                    for item in d[k]:
+                        l.append(reader(item))
+                    self.set(k, l)
+                    continue
+
+            # special handler registered?
             if self.has_from_dict_handler(k):
                 handler = self.get_from_dict_handler(k)
                 self.set(k, handler(d[k]))
-            else:
-                self.set(k, d[k])
+                continue
+
+            self.set(k, d[k])
 
     def to_dict(self):
         """
@@ -213,11 +226,22 @@ class OptionManager(LoggableObject):
         """
         result = dict()
         for k in self._options:
+            if isinstance(self.get(k), list) and (self._options[k].base_type is not None):
+                writer = get_dict_writer(self._options[k].base_type)
+                if writer is not None:
+                    l = []
+                    for item in self.get(k):
+                        l.append(writer(item))
+                    result[k] = l
+                    continue
+
+            # special handler registered?
             if self.has_to_dict_handler(k):
                 handler = self.get_to_dict_handler(k)
                 result[k] = handler(self.get(k))
-            else:
-                result[k] = self.get(k)
+                continue
+
+            result[k] = self.get(k)
         return result
 
     def to_help(self):

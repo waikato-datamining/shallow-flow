@@ -23,13 +23,20 @@ class DirectoryLister(AbstractSimpleSource):
         Performs initializations.
         """
         super(DirectoryLister, self).initialize()
-        self._option_manager.add(Option("dir", str, ".", "The directory to use for listing files/dirs"))
-        self._option_manager.add(Option("list_files", bool, False, "If enabled, files get listed"))
-        self._option_manager.add(Option("list_dirs", bool, False, "If enabled, dirs get listed"))
-        self._option_manager.add(Option("max_items", int, -1, "The maximum number of files/dirs to list, ignored if <=0"))
-        self._option_manager.add(Option("regexp", str, "", "The regular expression that the files/dirs must match, ignored if empty string"))
-        self._option_manager.add(Option("recursive", bool, False, "If enabled, looking for files/dirs recursively"))
-        self._option_manager.add(Option("sort", bool, False, "If enabled, the located files/dirs get sorted"))
+        self._option_manager.add(Option(name="dir", value_type=str, def_value=".",
+                                        help="The directory to use for listing files/dirs"))
+        self._option_manager.add(Option(name="list_files", value_type=bool, def_value=False,
+                                        help="If enabled, files get listed"))
+        self._option_manager.add(Option(name="list_dirs", value_type=bool, def_value=False,
+                                        help="If enabled, dirs get listed"))
+        self._option_manager.add(Option(name="max_items", value_type=int, def_value=-1,
+                                        help="The maximum number of files/dirs to list, ignored if <=0"))
+        self._option_manager.add(Option(name="regexp", value_type=str, def_value="",
+                                        help="The regular expression that the files/dirs must match, ignored if empty string"))
+        self._option_manager.add(Option(name="recursive", value_type=bool, def_value=False,
+                                        help="If enabled, looking for files/dirs recursively"))
+        self._option_manager.add(Option(name="sort", value_type=bool, def_value=False,
+                                        help="If enabled, the located files/dirs get sorted"))
 
     def setup(self):
         """
