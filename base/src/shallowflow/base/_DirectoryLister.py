@@ -1,7 +1,7 @@
 import os
 import re
 from shallowflow.api.source import AbstractSimpleSource
-from shallowflow.api.config import ConfigItem
+from shallowflow.api.config import Option
 
 
 class DirectoryLister(AbstractSimpleSource):
@@ -23,13 +23,13 @@ class DirectoryLister(AbstractSimpleSource):
         Performs initializations.
         """
         super(DirectoryLister, self).initialize()
-        self._configmanager.add(ConfigItem("dir", str, ".", "The directory to use for listing files/dirs"))
-        self._configmanager.add(ConfigItem("list_files", bool, False, "If enabled, files get listed"))
-        self._configmanager.add(ConfigItem("list_dirs", bool, False, "If enabled, dirs get listed"))
-        self._configmanager.add(ConfigItem("max_items", int, -1, "The maximum number of files/dirs to list, ignored if <=0"))
-        self._configmanager.add(ConfigItem("regexp", str, "", "The regular expression that the files/dirs must match, ignored if empty string"))
-        self._configmanager.add(ConfigItem("recursive", bool, False, "If enabled, looking for files/dirs recursively"))
-        self._configmanager.add(ConfigItem("sort", bool, False, "If enabled, the located files/dirs get sorted"))
+        self._option_manager.add(Option("dir", str, ".", "The directory to use for listing files/dirs"))
+        self._option_manager.add(Option("list_files", bool, False, "If enabled, files get listed"))
+        self._option_manager.add(Option("list_dirs", bool, False, "If enabled, dirs get listed"))
+        self._option_manager.add(Option("max_items", int, -1, "The maximum number of files/dirs to list, ignored if <=0"))
+        self._option_manager.add(Option("regexp", str, "", "The regular expression that the files/dirs must match, ignored if empty string"))
+        self._option_manager.add(Option("recursive", bool, False, "If enabled, looking for files/dirs recursively"))
+        self._option_manager.add(Option("sort", bool, False, "If enabled, the located files/dirs get sorted"))
 
     def setup(self):
         """
@@ -40,10 +40,10 @@ class DirectoryLister(AbstractSimpleSource):
         """
         result = super().setup()
         if result is None:
-            if not os.path.exists(self._configmanager.get("dir")):
-                result = "Directory does not exist: %s" % self._configmanager.get("dir")
-            elif not os.path.isdir(self._configmanager.get("dir")):
-                result = "Does not point to a directory: %s" % self._configmanager.get("dir")
+            if not os.path.exists(self._option_manager.get("dir")):
+                result = "Directory does not exist: %s" % self._option_manager.get("dir")
+            elif not os.path.isdir(self._option_manager.get("dir")):
+                result = "Does not point to a directory: %s" % self._option_manager.get("dir")
         return result
 
     def _search(self, dir):

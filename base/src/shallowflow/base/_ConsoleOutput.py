@@ -1,5 +1,5 @@
 from shallowflow.api.sink import AbstractSimpleSink
-from shallowflow.api.config import ConfigItem
+from shallowflow.api.config import Option
 
 
 class ConsoleOutput(AbstractSimpleSink):
@@ -21,7 +21,7 @@ class ConsoleOutput(AbstractSimpleSink):
         Performs initializations.
         """
         super(ConsoleOutput, self).initialize()
-        self._configmanager.add(ConfigItem("prefix", str, "", "The prefix to prepend to the output"))
+        self._option_manager.add(Option("prefix", str, "", "The prefix to prepend to the output"))
 
     def _do_execute(self):
         """

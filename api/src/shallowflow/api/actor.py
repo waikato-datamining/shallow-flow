@@ -1,7 +1,7 @@
 import importlib
 import traceback
 import shallowflow.api.serialization as serialization
-from .config import ConfigItem, ConfigManager
+from .config import Option, OptionManager
 from .logging import LoggableObject
 
 
@@ -21,8 +21,8 @@ class Actor(LoggableObject):
         """
         Performs initializations.
         """
-        self._configmanager = ConfigManager()
-        self._configmanager.add(ConfigItem("debug", bool, False, "If enabled, outputs some debugging information"))
+        self._option_manager = OptionManager()
+        self._option_manager.add(Option("debug", bool, False, "If enabled, outputs some debugging information"))
         self._parent = None
 
     def reset(self):
@@ -41,36 +41,36 @@ class Actor(LoggableObject):
         return "-description missing-"
 
     @property
-    def configmanager(self):
+    def option_manager(self):
         """
-        Returns the config manager.
+        Returns the option manager.
 
         :return: the manager
-        :rtype: ConfigManager
+        :rtype: OptionManager
         """
-        return self._configmanager
+        return self._option_manager
 
     @property
-    def config(self):
+    def options(self):
         """
-        Returns the current configuration.
+        Returns the current options.
 
-        :return: the configuration
+        :return: the current options
         :rtype: dict
         """
-        return self._configmanager.to_dict()
+        return self._option_manager.to_dict()
 
-    @config.setter
-    def config(self, config):
+    @options.setter
+    def options(self, d):
         """
-        Sets the configuration to use.
+        Sets the options to use.
 
-        :param config: the configuration
-        :type config: dict
+        :param d: the options to set
+        :type d: dict
         """
-        if config is None:
-            config = dict()
-        self._configmanager.from_dict(config)
+        if d is None:
+            d = dict()
+        self._option_manager.from_dict(d)
         self.reset()
 
     @property
@@ -102,7 +102,7 @@ class Actor(LoggableObject):
         :type name: str
         :return: the value of the option, None if invalid option
         """
-        return self._configmanager.get(name)
+        return self._option_manager.get(name)
 
     def set(self, name, value):
         """
@@ -113,13 +113,13 @@ class Actor(LoggableObject):
         :param value: the value of the option to set
         :type value: object
         """
-        self._configmanager.set(name, value)
+        self._option_manager.set(name, value)
 
     def setup(self):
         """
         Prepares the actor for use.
 
-        :return: None if sucessful, otherwise error message
+        :return: None if successful, otherwise error message
         :rtype: str
         """
         return None
@@ -172,7 +172,7 @@ class Actor(LoggableObject):
         return type(self).__name__ + "\n" \
                + "=" * (len(type(self).__name__)) + "\n\n" \
                + self.description() + "\n\n" \
-               + self._configmanager.to_help() + "\n"
+               + self._option_manager.to_help() + "\n"
 
 
 class InputConsumer(Actor):
@@ -258,7 +258,7 @@ def dict_to_actor(d):
     """
     Cls = getattr(importlib.import_module(d["module"]), d["class"])
     result = Cls()
-    result.config = d["options"]
+    result.options = d["options"]
     return result
 
 
@@ -274,7 +274,7 @@ def actor_to_dict(a):
     result = dict()
     result["module"] = type(a).__module__
     result["class"] = type(a).__name__
-    result["options"] = a.config
+    result["options"] = a.options
     return result
 
 

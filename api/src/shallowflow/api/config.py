@@ -2,26 +2,31 @@ from collections import OrderedDict
 from .logging import LoggableObject
 
 
-class ConfigItem(object):
+class Option(object):
     """
-    Defines a single configuration item.
+    Defines a single option.
     """
 
-    def __init__(self, name, value_type, def_value, help):
+    def __init__(self, name, value_type, def_value, help, base_type=None):
         """
         Initializes the item.
 
         :param name: the name of the item
         :type name: str
+        :param value_type: the class of the value
+        :type value_type: object
         :param def_value: the default value
         :type def_value: object
         :param help: the help string
         :type help: str
+        :param base_type: the base class of the value, in case of lists
+        :type base_type: object
         """
         self.name = name
         self.value_type = value_type
         self.def_value = def_value
         self.help = help
+        self.base_type = base_type
 
     def __str__(self):
         """
@@ -33,48 +38,48 @@ class ConfigItem(object):
         return "%s/%s: %s\n   %s" % (self.name, str(self.value_type.__name__), str(self.def_value), self.help)
 
 
-class ConfigManager(LoggableObject):
+class OptionManager(LoggableObject):
     """
-    Manages configuration items.
+    Manages multiple options.
     """
 
     def __init__(self):
         """
         Initializes the manager.
         """
-        self._items = OrderedDict()
+        self._options = OrderedDict()
         self._values = dict()
         self._to_dict_handlers = dict()
         self._from_dict_handlers = dict()
 
-    def add(self, item):
+    def add(self, option):
         """
-        Adds the config item.
+        Adds the option.
 
-        :param item: the item to add
-        :type item: ConfigItem
+        :param option: the item to add
+        :type option: Option
         """
-        self._items[item.name] = item
+        self._options[option.name] = option
 
-    def items(self):
+    def options(self):
         """
-        Returns all config items.
+        Returns all options.
 
-        :return: the items
+        :return: the options
         :rtype: list
         """
-        return self._items.values()
+        return self._options.values()
 
     def has(self, name):
         """
-        Returns whether the specified config item is specified.
+        Returns whether the specified option is specified.
 
         :param name: the name of the item to look for
         :type name: str
         :return: true if the item is present
         :rtype: bool
         """
-        return name in self._items
+        return name in self._options
 
     def set(self, name, value):
         """
@@ -84,14 +89,14 @@ class ConfigManager(LoggableObject):
         :type name: str
         :param value: the new value
         :type value: object
-        :return: true if updated successfully, false if unknown config item or incompatible type
+        :return: true if updated successfully, false if unknown option or incompatible type
         :rtype: bool
         """
         if not self.has(name):
-            self.log("Invalid config item name: %s" % name)
+            self.log("Invalid option name: %s" % name)
             return False
-        if not isinstance(value, self._items[name].value_type):
-            self.log("Invalid config type for %s: expected=%s, received=%s" % (name, self._items[name].value_type, type(value)))
+        if not isinstance(value, self._options[name].value_type):
+            self.log("Invalid config type for %s: expected=%s, received=%s" % (name, self._options[name].value_type, type(value)))
             return False
         self._values[name] = value
 
@@ -101,7 +106,7 @@ class ConfigManager(LoggableObject):
 
         :param name: the name of the value to retrieve
         :type name: str
-        :return: the value, None if invalid config item name
+        :return: the value, None if invalid option name
         :rtype: object
         """
         if not self.has(name):
@@ -109,7 +114,7 @@ class ConfigManager(LoggableObject):
         if name in self._values:
             return self._values[name]
         else:
-            return self._items[name].def_value
+            return self._options[name].def_value
 
     def reset(self):
         """
@@ -119,9 +124,9 @@ class ConfigManager(LoggableObject):
 
     def set_to_dict_handler(self, name, handler):
         """
-        Sets the read method that handles the specified config item.
+        Sets the read method that handles the specified option.
 
-        :param name: the name of the config item to handle
+        :param name: the name of the option to handle
         :type name: str
         :param handler: the handler function
         """
@@ -129,9 +134,9 @@ class ConfigManager(LoggableObject):
 
     def has_to_dict_handler(self, name):
         """
-        Checks whether a read handler is set for the config item.
+        Checks whether a read handler is set for the option.
 
-        :param name: the name of the config item
+        :param name: the name of the option
         :type name: str
         :return: true if a handler method registered
         :rtype: bool
@@ -140,9 +145,9 @@ class ConfigManager(LoggableObject):
 
     def get_to_dict_handler(self, name):
         """
-        Returns the handler registered for the config item.
+        Returns the handler registered for the option.
 
-        :param name: the name of the config item
+        :param name: the name of the option
         :type name: str
         :return: the handler, None if no handler registered
         """
@@ -153,9 +158,9 @@ class ConfigManager(LoggableObject):
 
     def set_from_dict_handler(self, name, handler):
         """
-        Sets the write method that handles the specified config item.
+        Sets the write method that handles the specified option.
 
-        :param name: the name of the config item to handle
+        :param name: the name of the option to handle
         :type name: str
         :param handler: the handler function
         """
@@ -163,9 +168,9 @@ class ConfigManager(LoggableObject):
 
     def has_from_dict_handler(self, name):
         """
-        Checks whether a write handler is set for the config item.
+        Checks whether a write handler is set for the option.
 
-        :param name: the name of the config item
+        :param name: the name of the option
         :type name: str
         :return: true if a handler method registered
         :rtype: bool
@@ -174,9 +179,9 @@ class ConfigManager(LoggableObject):
 
     def get_from_dict_handler(self, name):
         """
-        Returns the handler registered for the config item.
+        Returns the handler registered for the option.
 
-        :param name: the name of the config item
+        :param name: the name of the option
         :type name: str
         :return: the handler, None if no handler registered
         """
@@ -201,13 +206,13 @@ class ConfigManager(LoggableObject):
 
     def to_dict(self):
         """
-        Returns all the config items as dictionary.
+        Returns all the options as dictionary.
 
-        :return: the config items as dictionary
+        :return: the options as dictionary
         :rtype: dict
         """
         result = dict()
-        for k in self._items:
+        for k in self._options:
             if self.has_to_dict_handler(k):
                 handler = self.get_to_dict_handler(k)
                 result[k] = handler(self.get(k))
@@ -223,7 +228,7 @@ class ConfigManager(LoggableObject):
         :rtype: str
         """
         result = ""
-        for item in self.items():
+        for item in self.options():
             if len(result) > 0:
                 result += "\n"
             result += str(item)

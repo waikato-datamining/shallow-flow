@@ -4,14 +4,14 @@ dl = DirectoryLister()
 # print the help string
 print(dl.to_help())
 # print the current options
-print(dl.config)
+print(dl.options)
 # update an option
-dl.config = {"debug": True}
-print(dl.config)
+dl.options = {"debug": True}
+print(dl.options)
 # trying to update a non-existing option
-dl.config = {"debug2": True}
-print(dl.config)
+dl.options = {"debug2": True}
+print(dl.options)
 print(dl.get("debug"))
 # reset options
-dl.configmanager.reset()
+dl.option_manager.reset()
 print(dl.get("debug"))

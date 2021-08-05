@@ -1,5 +1,5 @@
 from .actor import Actor, actor_to_dict, dict_to_actor
-from .config import ConfigItem
+from .config import Option
 from .director import SequentialDirector
 
 
@@ -13,9 +13,9 @@ class ActorHandler(Actor):
         Performs initializations.
         """
         super(ActorHandler, self).initialize()
-        self.configmanager.add(ConfigItem("actors", list, list(), "The sub-actors to manage"))
-        self.configmanager.set_to_dict_handler("actors", actor_list_to_dict_list)
-        self.configmanager.set_from_dict_handler("actors", dict_list_to_actor_list)
+        self.option_manager.add(Option("actors", list, list(), "The sub-actors to manage", Actor))
+        self.option_manager.set_to_dict_handler("actors", actor_list_to_dict_list)
+        self.option_manager.set_from_dict_handler("actors", dict_list_to_actor_list)
 
     def _director(self):
         """
@@ -34,7 +34,7 @@ class ActorHandler(Actor):
         :return: the sub-actors
         :rtype: list
         """
-        return self._configmanager.get("actors")
+        return self._option_manager.get("actors")
 
     @actors.setter
     def actors(self, actors):
@@ -48,7 +48,7 @@ class ActorHandler(Actor):
             if not isinstance(a, Actor):
                 raise Exception("Can only set objects of type Actor!")
             a.parent = self
-        self._configmanager.set("actors", actors)
+        self._option_manager.set("actors", actors)
 
     def _do_execute(self):
         """
