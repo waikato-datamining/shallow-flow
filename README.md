@@ -1,5 +1,5 @@
 # shallow-flow
-An ADAMS-inspired simple workflow engine for Python.
+An [ADAMS](https://adams.cms.waikato.ac.nz/)-inspired simple workflow engine for Python.
 
 Available modules:
 
