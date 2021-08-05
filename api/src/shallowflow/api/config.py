@@ -44,7 +44,8 @@ class ConfigManager(LoggableObject):
         """
         self._items = OrderedDict()
         self._values = dict()
-        self._handlers = dict()
+        self._to_dict_handlers = dict()
+        self._from_dict_handlers = dict()
 
     def add(self, item):
         """
@@ -92,10 +93,7 @@ class ConfigManager(LoggableObject):
         if not isinstance(value, self._items[name].value_type):
             self.log("Invalid config type for %s: expected=%s, received=%s" % (name, self._items[name].value_type, type(value)))
             return False
-        if self.has_handler(name):
-            self.get_handler(name)(value)
-        else:
-            self._values[name] = value
+        self._values[name] = value
 
     def get(self, name):
         """
@@ -119,28 +117,28 @@ class ConfigManager(LoggableObject):
         """
         self._values.clear()
 
-    def set_handler(self, name, handler):
+    def set_to_dict_handler(self, name, handler):
         """
-        Sets the method that handles the specified config item.
+        Sets the read method that handles the specified config item.
 
         :param name: the name of the config item to handle
         :type name: str
         :param handler: the handler function
         """
-        self._handlers[name] = handler
+        self._to_dict_handlers[name] = handler
 
-    def has_handler(self, name):
+    def has_to_dict_handler(self, name):
         """
-        Checks whether a handler is set for the config item.
+        Checks whether a read handler is set for the config item.
 
         :param name: the name of the config item
         :type name: str
         :return: true if a handler method registered
         :rtype: bool
         """
-        return name in self._handlers
+        return name in self._to_dict_handlers
 
-    def get_handler(self, name):
+    def get_to_dict_handler(self, name):
         """
         Returns the handler registered for the config item.
 
@@ -148,10 +146,44 @@ class ConfigManager(LoggableObject):
         :type name: str
         :return: the handler, None if no handler registered
         """
-        if not self.has_handler(name):
+        if not self.has_to_dict_handler(name):
             return None
         else:
-            return self._handlers[name]
+            return self._to_dict_handlers[name]
+
+    def set_from_dict_handler(self, name, handler):
+        """
+        Sets the write method that handles the specified config item.
+
+        :param name: the name of the config item to handle
+        :type name: str
+        :param handler: the handler function
+        """
+        self._from_dict_handlers[name] = handler
+
+    def has_from_dict_handler(self, name):
+        """
+        Checks whether a write handler is set for the config item.
+
+        :param name: the name of the config item
+        :type name: str
+        :return: true if a handler method registered
+        :rtype: bool
+        """
+        return name in self._from_dict_handlers
+
+    def get_from_dict_handler(self, name):
+        """
+        Returns the handler registered for the config item.
+
+        :param name: the name of the config item
+        :type name: str
+        :return: the handler, None if no handler registered
+        """
+        if not self.has_from_dict_handler(name):
+            return None
+        else:
+            return self._from_dict_handlers[name]
 
     def from_dict(self, d):
         """
@@ -161,7 +193,11 @@ class ConfigManager(LoggableObject):
         :type d: dict
         """
         for k in d:
-            self.set(k, d[k])
+            if self.has_from_dict_handler(k):
+                handler = self.get_from_dict_handler(k)
+                self.set(k, handler(d[k]))
+            else:
+                self.set(k, d[k])
 
     def to_dict(self):
         """
@@ -172,7 +208,11 @@ class ConfigManager(LoggableObject):
         """
         result = dict()
         for k in self._items:
-            result[k] = self.get(k)
+            if self.has_to_dict_handler(k):
+                handler = self.get_to_dict_handler(k)
+                result[k] = handler(self.get(k))
+            else:
+                result[k] = self.get(k)
         return result
 
     def to_help(self):

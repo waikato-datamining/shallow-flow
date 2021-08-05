@@ -1,4 +1,4 @@
-from .actor import Actor
+from .actor import Actor, actor_to_dict, dict_to_actor
 from .config import ConfigItem
 from .director import SequentialDirector
 
@@ -13,7 +13,9 @@ class ActorHandler(Actor):
         Performs initializations.
         """
         super(ActorHandler, self).initialize()
-        self._configmanager.add(ConfigItem("actors", list, list(), "The sub-actors to manage"))
+        self.configmanager.add(ConfigItem("actors", list, list(), "The sub-actors to manage"))
+        self.configmanager.set_to_dict_handler("actors", actor_list_to_dict_list)
+        self.configmanager.set_from_dict_handler("actors", dict_list_to_actor_list)
 
     def _director(self):
         """
@@ -45,6 +47,7 @@ class ActorHandler(Actor):
         for a in actors:
             if not isinstance(a, Actor):
                 raise Exception("Can only set objects of type Actor!")
+            a.parent = self
         self._configmanager.set("actors", actors)
 
     def _do_execute(self):
@@ -70,3 +73,17 @@ class Flow(ActorHandler):
         :rtype: AbstractDirector
         """
         return SequentialDirector(requires_source=True, requires_sink=False)
+
+
+def dict_list_to_actor_list(l):
+    result = []
+    for d in l:
+        result.append(dict_to_actor(d))
+    return result
+
+
+def actor_list_to_dict_list(l):
+    result = []
+    for actor in l:
+        result.append(actor_to_dict(actor))
+    return result

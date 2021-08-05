@@ -1,4 +1,6 @@
+import importlib
 import traceback
+import shallowflow.api.serialization as serialization
 from .config import ConfigItem, ConfigManager
 from .logging import LoggableObject
 
@@ -21,6 +23,7 @@ class Actor(LoggableObject):
         """
         self._configmanager = ConfigManager()
         self._configmanager.add(ConfigItem("debug", bool, False, "If enabled, outputs some debugging information"))
+        self._parent = None
 
     def reset(self):
         """
@@ -68,6 +71,27 @@ class Actor(LoggableObject):
         if config is None:
             config = dict()
         self._configmanager.from_dict(config)
+        self.reset()
+
+    @property
+    def parent(self):
+        """
+        Returns the current parent actor.
+
+        :return: the parent actor
+        :rtype: Actor
+        """
+        return self._parent
+
+    @parent.setter
+    def parent(self, a):
+        """
+        Sets the actor to use as parent.
+
+        :param a: the parent actor
+        :type a: Actor
+        """
+        self._parent = a
         self.reset()
 
     def get(self, name):
@@ -221,3 +245,39 @@ def is_sink(actor):
     :return: true if a sink actor
     """
     return not isinstance(actor, OutputProducer) and isinstance(actor, InputConsumer)
+
+
+def dict_to_actor(d):
+    """
+    Turns the dictionary into an actor.
+
+    :param d: the dictionary describing the actor
+    :type d: dict
+    :return: the actor
+    :rtype: Actor
+    """
+    Cls = getattr(importlib.import_module(d["module"]), d["class"])
+    result = Cls()
+    result.config = d["options"]
+    return result
+
+
+def actor_to_dict(a):
+    """
+    Turns the actor into a dictionary describing it.
+
+    :param a: the actor to convert
+    :type a: Actor
+    :return: the generated dictionary
+    :rtype: dict
+    """
+    result = dict()
+    result["module"] = type(a).__module__
+    result["class"] = type(a).__name__
+    result["options"] = a.config
+    return result
+
+
+# register reader/writer
+serialization.add_dict_writer(Actor, actor_to_dict)
+serialization.add_dict_reader(Actor, dict_to_actor)
