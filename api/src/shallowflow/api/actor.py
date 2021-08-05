@@ -97,6 +97,7 @@ class Actor(LoggableObject):
         self._parent = a
         self.reset()
 
+    @property
     def is_debug(self):
         """
         Returns whether debug mode is on.
@@ -105,6 +106,19 @@ class Actor(LoggableObject):
         :rtype: bool
         """
         return self.get("debug")
+
+    @property
+    def name(self):
+        """
+        Returns the stored name or the class name.
+
+        :return: the name
+        :rtype: str
+        """
+        if len(self.get("name")) == 0:
+            return type(self).__name__
+        else:
+            return self.get("name")
 
     def get(self, name):
         """
@@ -140,10 +154,7 @@ class Actor(LoggableObject):
                 prefix = self.parent.log_prefix + "."
             else:
                 prefix = ""
-            if len(self.get("name")) == 0:
-                prefix += type(self).__name__
-            else:
-                prefix += self.get("name")
+            prefix += self.name
             self._log_prefix = prefix
         return self._log_prefix
 

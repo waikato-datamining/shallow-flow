@@ -46,6 +46,21 @@ class ActorHandler(Actor):
             if not isinstance(a, Actor):
                 raise Exception("Can only set objects of type Actor!")
             a.parent = self
+
+        # ensure that names are unique
+        names = []
+        for a in actors:
+            name = a.name
+            if name in names:
+                i = 1
+                while name in names:
+                    i += 1
+                    name = a.name + " (" + str(i) + ")"
+                a.set("name", name)
+                names.append(name)
+            else:
+               names.append(name)
+
         self._option_manager.set("actors", actors)
 
     def _do_execute(self):

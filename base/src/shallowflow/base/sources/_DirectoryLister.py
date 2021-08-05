@@ -60,12 +60,12 @@ class DirectoryLister(AbstractSimpleSource):
         :param dir: the directory to search
         :type dir: str
         """
-        if self.is_debug():
+        if self.is_debug:
             self.log("Entering dir: %s" % dir)
         for f in os.listdir(dir):
             full = os.path.join(dir, f)
             if (self.get("max_items") > 0) and (len(self._output) >= self.get("max_items")):
-                if self.is_debug():
+                if self.is_debug:
                     self.log("Max items reached: %d" % self.get("max_items"))
                 break
             if len(self.get("regexp")) > 0:
