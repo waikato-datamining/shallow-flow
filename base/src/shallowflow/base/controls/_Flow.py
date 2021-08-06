@@ -7,11 +7,11 @@ class Flow(ActorHandler):
     Encapsulates a complete flow.
     """
 
-    def _director(self):
+    def _new_director(self):
         """
         Returns the directory to use for executing the actors.
 
         :return: the director
         :rtype: AbstractDirector
         """
-        return SequentialDirector(requires_source=True, requires_sink=False)
+        return SequentialDirector(owner=self, requires_source=True, requires_sink=False)

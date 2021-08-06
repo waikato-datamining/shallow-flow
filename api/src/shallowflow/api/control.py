@@ -1,5 +1,6 @@
 from .actor import Actor
 from .config import Option
+from .director import AbstractDirector
 
 
 class ActorHandler(Actor):
@@ -15,7 +16,7 @@ class ActorHandler(Actor):
         self.option_manager.add(Option(name="actors", value_type=list, def_value=list(),
                                        help="The sub-actors to manage", base_type=Actor))
 
-    def _director(self):
+    def _new_director(self):
         """
         Returns the directory to use for executing the actors.
 
@@ -63,6 +64,19 @@ class ActorHandler(Actor):
 
         self._option_manager.set("actors", actors)
 
+    def setup(self):
+        """
+        Prepares the actor for use.
+
+        :return: None if successful, otherwise error message
+        :rtype: str
+        """
+        result = super().setup()
+        if result is None:
+            self._director = self._new_director()
+
+        return result
+
     def _do_execute(self):
         """
         Performs the actual execution.
@@ -70,4 +84,33 @@ class ActorHandler(Actor):
         :return: None if successful, otherwise error message
         :rtype: str
         """
-        return self._director().execute(self.actors)
+        return self._director.execute(self.actors)
+
+    def stop_execution(self):
+        """
+        Stops the actor execution.
+        """
+        if self._director is not None:
+            self._director.stop_execution()
+        super().stop_execution()
+
+    def wrap_up(self):
+        """
+        For finishing up the execution.
+        Does not affect graphical output.
+        """
+        for actor in self.actors:
+            actor.wrap_up()
+        if self._director is not None:
+            self._director.wrap_up()
+        super().wrap_up()
+
+    def clean_up(self):
+        """
+        Also cleans up graphical output.
+        """
+        for actor in self.actors:
+            actor.clean_up()
+        if self._director is not None:
+            self._director.clean_up()
+        super().clean_up()

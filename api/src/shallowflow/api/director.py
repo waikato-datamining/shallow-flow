@@ -7,6 +7,16 @@ class AbstractDirector(LoggableObject):
     Ancestor for directors.
     """
 
+    def __init__(self, owner):
+        """
+        Initializes the director.
+
+        :param owner: the owning actor
+        :type owner: Actor
+        """
+        self._stopped = False
+        self._owner = owner
+
     def _check(self, actors):
         """
         For performing checks.
@@ -40,10 +50,42 @@ class AbstractDirector(LoggableObject):
         :return: None if successfully executed, otherwise error message
         :rtype: str
         """
+        self._stopped = False
         result = self._check(actors)
         if result is None:
             result = self._do_execute(actors)
         return result
+
+    def stop_execution(self):
+        """
+        Stops the actor execution.
+
+        :param msg: the optional stop message
+        :type msg: str
+        """
+        self._stopped = True
+
+    @property
+    def is_stopped(self):
+        """
+        Returns whether the actor was stopped.
+
+        :return: true if stopped
+        :rtype: bool
+        """
+        return self._stopped
+
+    def wrap_up(self):
+        """
+        Wraps up the execution.
+        """
+        pass
+
+    def clean_up(self):
+        """
+        Cleans up the execution.
+        """
+        self._owner = None
 
 
 class SequentialDirector(AbstractDirector):
@@ -51,7 +93,7 @@ class SequentialDirector(AbstractDirector):
     Executes a list of actors as a sequence (output of one is the input for the next).
     """
 
-    def __init__(self, requires_source, requires_sink):
+    def __init__(self, owner, requires_source, requires_sink):
         """
         Initializes the director.
 
@@ -60,8 +102,10 @@ class SequentialDirector(AbstractDirector):
         :param requires_sink: whether a sink is required
         :type requires_sink: bool
         """
+        super().__init__(owner)
         self.requires_source = requires_source
         self.requires_sink = requires_sink
+        self._actors = None
 
     def _check(self, actors):
         """
@@ -101,12 +145,13 @@ class SequentialDirector(AbstractDirector):
         :rtype: str
         """
         result = None
+        self._actors = actors
         pending_actors = []
         current_index = 0
         current_output = None
         current_actor = actors[0]
 
-        while True:
+        while not self.is_stopped:
             # provide last output as input
             if (current_output is not None) and isinstance(current_actor, InputConsumer):
                 current_actor.input(current_output)
@@ -150,3 +195,12 @@ class SequentialDirector(AbstractDirector):
                     break
 
         return result
+
+    def stop_execution(self):
+        """
+        Stops the actor execution.
+        """
+        if self._actors is not None:
+            for actor in self._actors:
+                actor.stop_execution()
+        super().stop_execution()

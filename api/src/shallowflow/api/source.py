@@ -53,3 +53,11 @@ class AbstractSimpleSource(OutputProducer):
             result = self._output[0]
             del self._output[0]
         return result
+
+    def wrap_up(self):
+        """
+        For finishing up the execution.
+        Does not affect graphical output.
+        """
+        self._output = None
+        super().wrap_up()

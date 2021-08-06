@@ -63,6 +63,8 @@ class DirectoryLister(AbstractSimpleSource):
         if self.is_debug:
             self.log("Entering dir: %s" % dir)
         for f in os.listdir(dir):
+            if self.is_stopped:
+                break
             full = os.path.join(dir, f)
             if (self.get("max_items") > 0) and (len(self._output) >= self.get("max_items")):
                 if self.is_debug:

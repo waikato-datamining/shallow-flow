@@ -27,6 +27,7 @@ class Actor(LoggableObject):
         self._option_manager.add(Option("name", str, "", "The name to use for this actor, leave empty for class name"))
         self._parent = None
         self._log_prefix = None
+        self._stopped = False
 
     def reset(self):
         """
@@ -96,6 +97,19 @@ class Actor(LoggableObject):
         """
         self._parent = a
         self.reset()
+
+    @property
+    def root(self):
+        """
+        Returns the root actor.
+
+        :return: the root actor, None if not available
+        :rtype: Actor
+        """
+        if self._parent is not None:
+            return self._parent.root
+        else:
+            return self
 
     @property
     def is_debug(self):
@@ -173,6 +187,7 @@ class Actor(LoggableObject):
         :return: None if successful, otherwise error message
         :rtype: str
         """
+        self._stopped = False
         return None
 
     def _pre_execute(self):
@@ -212,6 +227,37 @@ class Actor(LoggableObject):
         except Exception:
             result = traceback.format_exc()
         return result
+
+    def wrap_up(self):
+        """
+        For finishing up the execution.
+        Does not affect graphical output.
+        """
+        pass
+
+    def clean_up(self):
+        """
+        Also cleans up graphical output.
+        """
+        pass
+
+    def stop_execution(self):
+        """
+        Stops the actor execution.
+        """
+        self._stopped = True
+        if self.is_debug:
+            self.log("Stopped!")
+
+    @property
+    def is_stopped(self):
+        """
+        Returns whether the actor was stopped.
+
+        :return: true if stopped
+        :rtype: bool
+        """
+        return self._stopped
 
     def to_help(self):
         """
