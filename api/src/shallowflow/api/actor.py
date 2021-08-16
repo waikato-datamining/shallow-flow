@@ -1,81 +1,29 @@
 import importlib
 import traceback
 import shallowflow.api.serialization as serialization
-from datetime import datetime
-from .config import Option, OptionManager
-from .logging import LoggableObject
+from .config import Option, AbstractOptionHandler
 
 
-class Actor(LoggableObject):
+class Actor(AbstractOptionHandler):
     """
     The ancestor for all actors.
     """
-
-    def __init__(self):
-        """
-        Initializes the actor.
-        """
-        self.initialize()
-        self.reset()
 
     def initialize(self):
         """
         Performs initializations.
         """
-        self._option_manager = OptionManager()
-        self._option_manager.add(Option("debug", bool, False, "If enabled, outputs some debugging information"))
+        super().initialize()
         self._option_manager.add(Option("name", str, "", "The name to use for this actor, leave empty for class name"))
         self._parent = None
-        self._log_prefix = None
         self._stopped = False
 
     def reset(self):
         """
-        Resets the state of the actor.
+        Resets the state of the object.
         """
+        super().reset()
         self._log_prefix = None
-
-    def description(self):
-        """
-        Returns a description for the actor.
-
-        :return: the actor description
-        :rtype: str
-        """
-        return "-description missing-"
-
-    @property
-    def option_manager(self):
-        """
-        Returns the option manager.
-
-        :return: the manager
-        :rtype: OptionManager
-        """
-        return self._option_manager
-
-    @property
-    def options(self):
-        """
-        Returns the current options.
-
-        :return: the current options
-        :rtype: dict
-        """
-        return self._option_manager.to_dict(skip_default=True)
-
-    @options.setter
-    def options(self, d):
-        """
-        Sets the options to use.
-
-        :param d: the options to set
-        :type d: dict
-        """
-        if d is None:
-            d = dict()
-        self._option_manager.from_dict(d)
-        self.reset()
 
     @property
     def parent(self):
@@ -112,16 +60,6 @@ class Actor(LoggableObject):
             return self
 
     @property
-    def is_debug(self):
-        """
-        Returns whether debug mode is on.
-
-        :return: true if on
-        :rtype: bool
-        """
-        return self.get("debug")
-
-    @property
     def name(self):
         """
         Returns the stored name or the class name.
@@ -134,29 +72,7 @@ class Actor(LoggableObject):
         else:
             return self.get("name")
 
-    def get(self, name):
-        """
-        Returns the value for the specified option.
-
-        :param name: the name of the option to retrieve
-        :type name: str
-        :return: the value of the option, None if invalid option
-        """
-        return self._option_manager.get(name)
-
-    def set(self, name, value):
-        """
-        Sets the value for the specified option.
-
-        :param name: the name of the option to set
-        :type name: str
-        :param value: the value of the option to set
-        :type value: object
-        """
-        self._option_manager.set(name, value)
-
-    @property
-    def log_prefix(self):
+    def _get_log_prefix(self):
         """
         Returns the log prefix for this actor.
 
@@ -171,14 +87,6 @@ class Actor(LoggableObject):
             prefix += self.name
             self._log_prefix = prefix
         return self._log_prefix
-
-    def log(self, *args):
-        """
-        Logs the arguments.
-
-        :param args: the arguments to log
-        """
-        print(*("%s - %s -" % (self.log_prefix, str(datetime.now())), *args))
 
     def setup(self):
         """
@@ -258,18 +166,6 @@ class Actor(LoggableObject):
         :rtype: bool
         """
         return self._stopped
-
-    def to_help(self):
-        """
-        Outputs a simple help string.
-
-        :return: the generated help string.
-        :rtype: str
-        """
-        return type(self).__name__ + "\n" \
-               + "=" * (len(type(self).__name__)) + "\n\n" \
-               + self.description() + "\n\n" \
-               + self._option_manager.to_help() + "\n"
 
 
 class InputConsumer(Actor):

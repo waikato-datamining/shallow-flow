@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from datetime import datetime
 from .logging import LoggableObject
 from .serialization import get_dict_reader, get_dict_writer
 
@@ -262,3 +263,142 @@ class OptionManager(LoggableObject):
                 result += "\n"
             result += str(item)
         return result
+
+
+class AbstractOptionHandler(LoggableObject):
+    """
+    The ancestor for all classes that handle options.
+    """
+
+    def __init__(self):
+        """
+        Initializes the object.
+        """
+        self.initialize()
+        self.reset()
+
+    def initialize(self):
+        """
+        Performs initializations.
+        """
+        self._option_manager = OptionManager()
+        self._option_manager.add(Option("debug", bool, False, "If enabled, outputs some debugging information"))
+        self._log_prefix = type(self).__name__
+
+    def reset(self):
+        """
+        Resets the state of the object.
+        """
+        pass
+
+    def description(self):
+        """
+        Returns a description for the object.
+
+        :return: the object description
+        :rtype: str
+        """
+        return "-description missing-"
+
+    @property
+    def option_manager(self):
+        """
+        Returns the option manager.
+
+        :return: the manager
+        :rtype: OptionManager
+        """
+        return self._option_manager
+
+    @property
+    def options(self):
+        """
+        Returns the current options.
+
+        :return: the current options
+        :rtype: dict
+        """
+        return self._option_manager.to_dict(skip_default=True)
+
+    @options.setter
+    def options(self, d):
+        """
+        Sets the options to use.
+
+        :param d: the options to set
+        :type d: dict
+        """
+        if d is None:
+            d = dict()
+        self._option_manager.from_dict(d)
+        self.reset()
+
+    @property
+    def is_debug(self):
+        """
+        Returns whether debug mode is on.
+
+        :return: true if on
+        :rtype: bool
+        """
+        return self.get("debug")
+
+    def get(self, name):
+        """
+        Returns the value for the specified option.
+
+        :param name: the name of the option to retrieve
+        :type name: str
+        :return: the value of the option, None if invalid option
+        """
+        return self._option_manager.get(name)
+
+    def set(self, name, value):
+        """
+        Sets the value for the specified option.
+
+        :param name: the name of the option to set
+        :type name: str
+        :param value: the value of the option to set
+        :type value: object
+        """
+        self._option_manager.set(name, value)
+
+    def _get_log_prefix(self):
+        """
+        Returns the log prefix for this object.
+
+        :return: the prefix
+        :rtype: str
+        """
+        return self._log_prefix
+
+    @property
+    def log_prefix(self):
+        """
+        Returns the log prefix for this object.
+
+        :return: the prefix
+        :rtype: str
+        """
+        return self._get_log_prefix()
+
+    def log(self, *args):
+        """
+        Logs the arguments.
+
+        :param args: the arguments to log
+        """
+        print(*("%s - %s -" % (self.log_prefix, str(datetime.now())), *args))
+
+    def to_help(self):
+        """
+        Outputs a simple help string.
+
+        :return: the generated help string.
+        :rtype: str
+        """
+        return type(self).__name__ + "\n" \
+               + "=" * (len(type(self).__name__)) + "\n\n" \
+               + self.description() + "\n\n" \
+               + self._option_manager.to_help() + "\n"
