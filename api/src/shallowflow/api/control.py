@@ -73,6 +73,11 @@ class ActorHandler(Actor):
         """
         result = super().setup()
         if result is None:
+            for actor in self.actors:
+                result = actor.setup()
+                if result is not None:
+                    break
+        if result is None:
             self._director = self._new_director()
 
         return result

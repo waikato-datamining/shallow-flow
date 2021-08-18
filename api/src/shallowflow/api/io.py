@@ -3,7 +3,8 @@ import os
 import pickle
 import traceback
 import yaml
-from .actor import Actor, actor_to_dict, dict_to_actor
+from .config import optionhandler_to_dict, dict_to_optionhandler
+from .actor import Actor
 from .logging import log
 
 FLOW_READERS = None
@@ -144,7 +145,7 @@ def load_json_actor(path):
     try:
         with open(path, "r") as jf:
             d = json.load(jf)
-        return dict_to_actor(d)
+        return dict_to_optionhandler(d)
     except:
         print("Failed to load actor from: %s\n%s" % (path, traceback.format_exc()))
         return None
@@ -162,7 +163,7 @@ def load_yaml_actor(path):
     try:
         with open(path, "r") as yf:
             d = yaml.safe_load(yf)
-        return dict_to_actor(d)
+        return dict_to_optionhandler(d)
     except:
         print("Failed to load actor from: %s\n%s" % (path, traceback.format_exc()))
         return None
@@ -181,7 +182,7 @@ def load_pickle_actor(path):
         with open(path, "rb") as pf:
             b = pf.read()
             d = pickle.loads(b)
-        return dict_to_actor(d)
+        return dict_to_optionhandler(d)
     except:
         print("Failed to load actor from: %s\n%s" % (path, traceback.format_exc()))
         return None
@@ -215,7 +216,7 @@ def save_json_actor(actor, path):
     :return: None if successfully saved, otherwise error message
     :rtype: str
     """
-    d = actor_to_dict(actor)
+    d = optionhandler_to_dict(actor)
     try:
         with open(path, "w") as jf:
             json.dump(d, jf, indent=2)
@@ -235,7 +236,7 @@ def save_yaml_actor(actor, path):
     :return: None if successfully saved, otherwise error message
     :rtype: str
     """
-    d = actor_to_dict(actor)
+    d = optionhandler_to_dict(actor)
     try:
         with open(path, "w") as yf:
             yaml.safe_dump(d, yf)
@@ -255,7 +256,7 @@ def save_pickle_actor(actor, path):
     :return: None if successfully saved, otherwise error message
     :rtype: str
     """
-    d = actor_to_dict(actor)
+    d = optionhandler_to_dict(actor)
     try:
         with open(path, "wb") as pf:
             pf.write(pickle.dumps(d))

@@ -1,4 +1,5 @@
-from .config import AbstractOptionHandler
+from .config import AbstractOptionHandler, optionhandler_to_dict, dict_to_optionhandler
+from .serialization import add_dict_writer, add_dict_reader
 
 
 class AbstractBooleanCondition(AbstractOptionHandler):
@@ -86,3 +87,8 @@ class AbstractBooleanCondition(AbstractOptionHandler):
             raise Exception(msg)
 
         return self._do_evaluate(o)
+
+
+# register reader/writer
+add_dict_writer(AbstractBooleanCondition, optionhandler_to_dict)
+add_dict_reader(AbstractBooleanCondition, dict_to_optionhandler)

@@ -1,7 +1,6 @@
-import importlib
 import traceback
 import shallowflow.api.serialization as serialization
-from .config import Option, AbstractOptionHandler
+from .config import Option, AbstractOptionHandler, dict_to_optionhandler, optionhandler_to_dict
 
 
 class Actor(AbstractOptionHandler):
@@ -71,6 +70,16 @@ class Actor(AbstractOptionHandler):
             return type(self).__name__
         else:
             return self.get("name")
+
+    @property
+    def full_name(self):
+        """
+        Returns the full path of the actor.
+
+        :return: the path
+        :rtype: str
+        """
+        return self._get_log_prefix()
 
     def _get_log_prefix(self):
         """
@@ -240,54 +249,6 @@ def is_sink(actor):
     return not isinstance(actor, OutputProducer) and isinstance(actor, InputConsumer)
 
 
-def dict_to_actor(d):
-    """
-    Turns the dictionary into an actor.
-
-    :param d: the dictionary describing the actor
-    :type d: dict
-    :return: the actor
-    :rtype: Actor
-    """
-    p = d["class"].split(".")
-    m = ".".join(p[:-1])
-    c = p[-1]
-    Cls = getattr(importlib.import_module(m), c)
-    result = Cls()
-    if "options" in d:
-        result.options = d["options"]
-    else:
-        result.options = dict()
-    return result
-
-
-def actor_to_dict(a):
-    """
-    Turns the actor into a dictionary describing it.
-
-    :param a: the actor to convert
-    :type a: Actor
-    :return: the generated dictionary
-    :rtype: dict
-    """
-    result = dict()
-    m = type(a).__module__
-    c = type(a).__name__
-    # can we make the module nicer, by dropping the _CLASS part?
-    if m.split(".")[-1].startswith("_"):
-        try:
-            m_short = ".".join(m.split(".")[:-1])
-            getattr(importlib.import_module(m_short), c)
-            m = m_short
-        except:
-            pass
-    result["class"] = m + "." + c
-    options = a.options
-    if len(options) != 0:
-        result["options"] = a.options
-    return result
-
-
 # register reader/writer
-serialization.add_dict_writer(Actor, actor_to_dict)
-serialization.add_dict_reader(Actor, dict_to_actor)
+serialization.add_dict_writer(Actor, optionhandler_to_dict)
+serialization.add_dict_reader(Actor, dict_to_optionhandler)

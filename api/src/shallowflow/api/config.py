@@ -1,7 +1,8 @@
+import importlib
 from collections import OrderedDict
 from datetime import datetime
 from .logging import LoggableObject
-from .serialization import get_dict_reader, get_dict_writer
+from .serialization import get_dict_reader, get_dict_writer, add_dict_writer, add_dict_reader, has_dict_reader, has_dict_writer
 
 
 class Option(object):
@@ -204,8 +205,8 @@ class OptionManager(LoggableObject):
         for k in d:
             # was a base type define for the elements of the list?
             if isinstance(d[k], list) and (self._options[k].base_type is not None):
-                reader = get_dict_reader(self._options[k].base_type)
-                if reader is not None:
+                if has_dict_reader(self._options[k].base_type):
+                    reader = get_dict_reader(self._options[k].base_type)
                     l = []
                     for item in d[k]:
                         l.append(reader(item))
@@ -217,6 +218,11 @@ class OptionManager(LoggableObject):
                 handler = self.get_from_dict_handler(k)
                 self.set(k, handler(d[k]))
                 continue
+
+            # reader registered for type?
+            if has_dict_reader(self._options[k].value_type):
+                reader = get_dict_reader(self._options[k].value_type)
+                self.set(k, reader(d[k]))
 
             self.set(k, d[k])
 
@@ -232,8 +238,8 @@ class OptionManager(LoggableObject):
         result = dict()
         for k in self._options:
             if isinstance(self.get(k), list) and (self._options[k].base_type is not None):
-                writer = get_dict_writer(self._options[k].base_type)
-                if writer is not None:
+                if has_dict_writer(self._options[k].base_type):
+                    writer = get_dict_writer(self._options[k].base_type)
                     l = []
                     for item in self.get(k):
                         l.append(writer(item))
@@ -244,6 +250,12 @@ class OptionManager(LoggableObject):
             if self.has_to_dict_handler(k):
                 handler = self.get_to_dict_handler(k)
                 result[k] = handler(self.get(k))
+                continue
+
+            # writer registered for type?
+            if has_dict_writer(self._options[k].value_type):
+                writer = get_dict_writer(self._options[k].value_type)
+                result[k] = writer(self.get(k))
                 continue
 
             if not skip_default or (self.get(k) != self._options[k].def_value):
@@ -402,3 +414,57 @@ class AbstractOptionHandler(LoggableObject):
                + "=" * (len(type(self).__name__)) + "\n\n" \
                + self.description() + "\n\n" \
                + self._option_manager.to_help() + "\n"
+
+
+
+def dict_to_optionhandler(d):
+    """
+    Turns the dictionary into an option handler.
+
+    :param d: the dictionary describing the actor
+    :type d: dict
+    :return: the option handler
+    :rtype: AbstractOptionHandler
+    """
+    p = d["class"].split(".")
+    m = ".".join(p[:-1])
+    c = p[-1]
+    Cls = getattr(importlib.import_module(m), c)
+    result = Cls()
+    if "options" in d:
+        result.options = d["options"]
+    else:
+        result.options = dict()
+    return result
+
+
+def optionhandler_to_dict(a):
+    """
+    Turns the option handler into a dictionary describing it.
+
+    :param a: the option handler to convert
+    :type a: AbstractOptionHandler
+    :return: the generated dictionary
+    :rtype: dict
+    """
+    result = dict()
+    m = type(a).__module__
+    c = type(a).__name__
+    # can we make the module nicer, by dropping the _CLASS part?
+    if m.split(".")[-1].startswith("_"):
+        try:
+            m_short = ".".join(m.split(".")[:-1])
+            getattr(importlib.import_module(m_short), c)
+            m = m_short
+        except:
+            pass
+    result["class"] = m + "." + c
+    options = a.options
+    if len(options) != 0:
+        result["options"] = a.options
+    return result
+
+
+# register reader/writer
+add_dict_writer(AbstractOptionHandler, optionhandler_to_dict)
+add_dict_reader(AbstractOptionHandler, dict_to_optionhandler)
