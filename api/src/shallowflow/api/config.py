@@ -203,6 +203,10 @@ class OptionManager(LoggableObject):
         :type d: dict
         """
         for k in d:
+            if k not in self._options:
+                self.log("Unknown option: %s/%s" % (k, d[k]))
+                continue
+
             # was a base type define for the elements of the list?
             if isinstance(d[k], list) and (self._options[k].base_type is not None):
                 if has_dict_reader(self._options[k].base_type):
