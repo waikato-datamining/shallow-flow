@@ -22,7 +22,7 @@ class DirectoryLister(AbstractSimpleSource):
         """
         Performs initializations.
         """
-        super(DirectoryLister, self).initialize()
+        super().initialize()
         self._option_manager.add(Option(name="dir", value_type=str, def_value=".",
                                         help="The directory to use for listing files/dirs"))
         self._option_manager.add(Option(name="list_files", value_type=bool, def_value=False,

@@ -10,14 +10,14 @@ class AbstractSimpleSink(InputConsumer):
         """
         Performs initializations.
         """
-        super(AbstractSimpleSink, self).initialize()
+        super().initialize()
         self._input = None
 
     def reset(self):
         """
         Resets the state of the actor.
         """
-        super(AbstractSimpleSink, self).reset()
+        super().reset()
         self._input = None
 
     def input(self, data):

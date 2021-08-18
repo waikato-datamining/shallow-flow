@@ -10,7 +10,7 @@ class AbstractSimpleTransformer(InputConsumer, OutputProducer):
         """
         Performs initializations.
         """
-        super(AbstractSimpleTransformer, self).initialize()
+        super().initialize()
         self._output = list()
         self._input = None
 
@@ -18,7 +18,7 @@ class AbstractSimpleTransformer(InputConsumer, OutputProducer):
         """
         Resets the state of the actor.
         """
-        super(AbstractSimpleTransformer, self).reset()
+        super().reset()
         self._output = list()
         self._input = None
 

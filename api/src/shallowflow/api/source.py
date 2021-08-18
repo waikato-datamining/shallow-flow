@@ -10,14 +10,14 @@ class AbstractSimpleSource(OutputProducer):
         """
         Performs initializations.
         """
-        super(AbstractSimpleSource, self).initialize()
+        super().initialize()
         self._output = list()
 
     def reset(self):
         """
         Resets the state of the actor.
         """
-        super(AbstractSimpleSource, self).reset()
+        super().reset()
         self._output = list()
 
     def _pre_execute(self):

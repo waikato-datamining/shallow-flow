@@ -20,7 +20,7 @@ class ConsoleOutput(AbstractSimpleSink):
         """
         Performs initializations.
         """
-        super(ConsoleOutput, self).initialize()
+        super().initialize()
         self._option_manager.add(Option(name="prefix", value_type=str, def_value="",
                                         help="The prefix to prepend to the output"))
 
