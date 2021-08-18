@@ -40,7 +40,7 @@ class Option(object):
         :return: the string describing the item
         :rtype: str
         """
-        return "%s/%s: %s\n   %s" % (self.name, str(self.value_type.__name__), str(self.def_value), self.help)
+        return "%s/%s: %s\n   %s" % (self.name, str(self.value_type.__name__), repr(self.def_value), self.help)
 
 
 class OptionManager(LoggableObject):
