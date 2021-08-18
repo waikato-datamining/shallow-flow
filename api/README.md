@@ -46,9 +46,23 @@ The API for shallow-flow.
 
 ## Methods
 
+* Serialization
+
+ * `shallowflow.api.serialization.add_dict_reader` - add a handler for class to interpret a dictionary
+ * `shallowflow.api.serialization.add_dict_writer` - add a handler for class to generate a dictionary
+ * `shallowflow.api.serialization.get_dict_reader` - returns the handler for a class to interpret a dictionary
+ * `shallowflow.api.serialization.get_dict_writer` - returns the handler for a class to generate a dictionary
+
 * I/O
 
   * `shallowflow.api.io.add_flow_reader` - registers a handler for reading a new flow file format via the extension
   * `shallowflow.api.io.add_flow_writer` - registers a handler for writing a new flow file format via the extension
   * `shallowflow.api.io.load_actor` - loads an actor from a file, determines the reader based on the file extension
   * `shallowflow.api.io.save_actor` - saves an actor to a file, determines the writer based on the file extension
+
+  Currently supported formats:
+ 
+  * `.yaml`
+  * `.json`
+  * `.pkl` - object serialization via pickle
+  
