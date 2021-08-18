@@ -71,7 +71,7 @@ class AbstractTee(ActorHandler, InputConsumer, OutputProducer):
         """
         raise NotImplemented()
 
-    def _can_execute_subactors(self):
+    def _can_execute_actors(self):
         """
         Returns whether the sub-actors can be executed.
 
@@ -88,7 +88,7 @@ class AbstractTee(ActorHandler, InputConsumer, OutputProducer):
         :rtype: str
         """
         result = None
-        if self._can_execute_subactors():
+        if self._can_execute_actors():
             result = self._director.execute(self.actors)
         if result is None:
             self._output = self._input
@@ -212,14 +212,14 @@ class ConditionalTee(AbstractTee):
         """
         return SequentialDirector(owner=self, requires_source=False, requires_sink=False)
 
-    def _can_execute_subactors(self):
+    def _can_execute_actors(self):
         """
         Returns whether the sub-actors can be executed.
 
         :return: True if the sub-actors can be executed
         :rtype: bool
         """
-        result = super()._can_execute_subactors()
+        result = super()._can_execute_actors()
         if result:
             result = self.get("condition").evaluate(self._input)
         return result
