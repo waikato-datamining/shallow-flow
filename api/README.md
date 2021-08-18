@@ -5,28 +5,50 @@ The API for shallow-flow.
 
 * Base classes
 
-  * shallowflow.api.actor.Actor
-  * shallowflow.api.actor.ActorHandler
-  * shallowflow.api.actor.InputConsumer
-  * shallowflow.api.actor.OutputProducer
+  * `shallowflow.api.actor.Actor`
+  * `shallowflow.api.actor.InputConsumer`
+  * `shallowflow.api.actor.OutputProducer`
+
+* Boolean conditions
+
+  * `shallowflow.api.condition.AbstractBooleanCondition`
 
 * Configuration
 
-  * shallowflow.api.config.ConfigItem
-  * shallowflow.api.config.ConfigManager
+  * `shallowflow.api.config.Option` - defines a single parameter
+  * `shallowflow.api.config.OptionManager` - manages all parameters and conversion to/from dictionaries used in serialization
+  * `shallowflow.api.config.AbstractOptionHandler` - the `to_help` method outputs a help screen of the available options
 
 * Logging
 
-  * shallowflow.api.logging.LoggableObject
+  * `shallowflow.api.logging.LoggableObject`
+
+* Control actors
+
+  * `shallowflow.api.control.ActorHandler` - manages multiple actors
+    
+* Directors
+
+  * `shallowflow.api.director.AbstractDirector` - used by `ActorHandler`
 
 * Sources
 
-  * shallowflow.api.source.AbstractSimpleSource
+  * `shallowflow.api.source.AbstractSimpleSource`
 
 * Transformers
 
-  * shallowflow.api.transformer.AbstractSimpleTransformer
+  * `shallowflow.api.transformer.AbstractSimpleTransformer`
     
 * Sinks
 
-  * shallowflow.api.sink.AbstractSimpleSink
+  * `shallowflow.api.sink.AbstractSimpleSink`
+
+
+## Methods
+
+* I/O
+
+  * `shallowflow.api.io.add_flow_reader` - registers a handler for reading a new flow file format via the extension
+  * `shallowflow.api.io.add_flow_writer` - registers a handler for writing a new flow file format via the extension
+  * `shallowflow.api.io.load_actor` - loads an actor from a file, determines the reader based on the file extension
+  * `shallowflow.api.io.save_actor` - saves an actor to a file, determines the writer based on the file extension

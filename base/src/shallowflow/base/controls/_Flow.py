@@ -1,5 +1,5 @@
 from shallowflow.api.control import ActorHandler
-from shallowflow.api.director import SequentialDirector
+from shallowflow.base.directors import SequentialDirector
 
 
 class Flow(ActorHandler):
