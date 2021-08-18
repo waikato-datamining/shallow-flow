@@ -48,10 +48,10 @@ The API for shallow-flow.
 
 * Serialization
 
- * `shallowflow.api.serialization.add_dict_reader` - add a handler for class to interpret a dictionary
- * `shallowflow.api.serialization.add_dict_writer` - add a handler for class to generate a dictionary
- * `shallowflow.api.serialization.get_dict_reader` - returns the handler for a class to interpret a dictionary
- * `shallowflow.api.serialization.get_dict_writer` - returns the handler for a class to generate a dictionary
+  * `shallowflow.api.serialization.add_dict_reader` - add a handler for class to interpret a dictionary
+  * `shallowflow.api.serialization.add_dict_writer` - add a handler for class to generate a dictionary
+  * `shallowflow.api.serialization.get_dict_reader` - returns the handler for a class to interpret a dictionary
+  * `shallowflow.api.serialization.get_dict_writer` - returns the handler for a class to generate a dictionary
 
 * I/O
 
