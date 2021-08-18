@@ -1,8 +1,14 @@
+import os
+import tempfile
 from shallowflow.base.sources import DirectoryLister
+from shallowflow.api.io import save_actor, load_actor
 
 dl = DirectoryLister()
+
 # print the help string
 print(dl.to_help())
+
+print("\nOption setting/getting\n======================")
 # print the current options
 print(dl.options)
 # update an option
@@ -15,3 +21,16 @@ print(dl.get("debug"))
 # reset options
 dl.option_manager.reset()
 print(dl.get("debug"))
+
+# save to file
+print("\nI/O\n===")
+dl.options = {"debug": True, "dir": tempfile.gettempdir(), "list_files": True, "recursive": True}
+print("actor:", dl.options)
+fname = os.path.join(tempfile.gettempdir(), "out.json")
+print("Saving actor to: %s" % fname)
+msg = save_actor(dl, fname)
+if msg is not None:
+    raise Exception(msg)
+print("Loading actor from: %s" % fname)
+dl2 = load_actor(fname)
+print("actor:", dl.options)
