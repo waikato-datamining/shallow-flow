@@ -1,4 +1,5 @@
 from .actor import OutputProducer
+from .config import Option
 
 
 class AbstractSimpleSource(OutputProducer):
@@ -54,3 +55,31 @@ class AbstractSimpleSource(OutputProducer):
         """
         self._output = None
         super().wrap_up()
+
+
+class AbstractListOutputSource(AbstractSimpleSource):
+    """
+    Ancestor for source actors that can output data either as list or one by one.
+    """
+
+    def _define_options(self):
+        """
+        For configuring the options.
+        """
+        super()._define_options()
+        self._option_manager.add(Option(name="output_as_list", value_type=bool, def_value=False,
+                                        help="If enabled, the items get output as list rather than one-by-one"))
+
+    def output(self):
+        """
+        Returns the next output data.
+
+        :return: the data, None if nothing available
+        :rtype: object
+        """
+        if self.get("output_as_list"):
+            result = self._output
+            self._output = list()
+            return result
+        else:
+            return super().output()

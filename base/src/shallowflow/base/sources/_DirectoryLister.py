@@ -1,10 +1,10 @@
 import os
 import re
-from shallowflow.api.source import AbstractSimpleSource
+from shallowflow.api.source import AbstractListOutputSource
 from shallowflow.api.config import Option
 
 
-class DirectoryLister(AbstractSimpleSource):
+class DirectoryLister(AbstractListOutputSource):
     """
     Lists files or dirs in a directory.
     """

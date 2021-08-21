@@ -34,10 +34,12 @@ The API for shallow-flow.
 * Sources
 
   * `shallowflow.api.source.AbstractSimpleSource`
+  * `shallowflow.api.source.AbstractListOutputSource` - can output items as list and one-by-one
 
 * Transformers
 
   * `shallowflow.api.transformer.AbstractSimpleTransformer`
+  * `shallowflow.api.transformer.AbstractListOutputTransformer` - can output items as list and one-by-one
     
 * Sinks
 
