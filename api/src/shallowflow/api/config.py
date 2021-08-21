@@ -226,7 +226,10 @@ class OptionManager(LoggableObject):
                 reader = get_dict_reader(self._options[k].value_type)
                 self.set(k, reader(d[k]))
 
-            self.set(k, d[k])
+            if isinstance(d[k], self._options[k].value_type):
+                self.set(k, d[k])
+            else:
+                self.log("Incorrect type: %s/%s/%s" % (k, str(d[k]), str(type(d[k]))))
 
     def to_dict(self, skip_default=False):
         """

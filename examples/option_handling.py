@@ -14,6 +14,9 @@ print(dl.options)
 # update an option
 dl.options = {"debug": True}
 print(dl.options)
+# update an option with wrong type
+dl.options = {"debug": 42}
+print(dl.options)
 # trying to update a non-existing option
 dl.options = {"debug2": True}
 print(dl.options)
