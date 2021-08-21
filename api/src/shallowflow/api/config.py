@@ -94,15 +94,13 @@ class OptionManager(LoggableObject):
         :type name: str
         :param value: the new value
         :type value: object
-        :return: true if updated successfully, false if unknown option or incompatible type
-        :rtype: bool
+        :return: itself
+        :rtype: OptionManager
         """
         if not self.has(name):
-            self.log("Invalid option name: %s" % name)
-            return False
+            raise("Invalid option name: %s" % name)
         if not isinstance(value, self._options[name].value_type):
-            self.log("Invalid config type for %s: expected=%s, received=%s" % (name, self._options[name].value_type, type(value)))
-            return False
+            raise("Invalid config type for %s: expected=%s, received=%s" % (name, self._options[name].value_type, type(value)))
         self._values[name] = value
 
     def get(self, name):
@@ -383,8 +381,11 @@ class AbstractOptionHandler(LoggableObject):
         :type name: str
         :param value: the value of the option to set
         :type value: object
+        :return: itself
+        :rtype: AbstractOptionHandler
         """
         self._option_manager.set(name, value)
+        return self
 
     def _get_log_prefix(self):
         """
