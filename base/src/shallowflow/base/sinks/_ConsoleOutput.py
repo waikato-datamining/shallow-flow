@@ -16,11 +16,11 @@ class ConsoleOutput(AbstractSimpleSink):
         """
         return "Simply outputs the string representation of the incoming data to stdout."
 
-    def initialize(self):
+    def _define_options(self):
         """
-        Performs initializations.
+        For configuring the options.
         """
-        super().initialize()
+        super()._define_options()
         self._option_manager.add(Option(name="prefix", value_type=str, def_value="",
                                         help="The prefix to prepend to the output"))
 

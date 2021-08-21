@@ -6,13 +6,6 @@ class AbstractSimpleSource(OutputProducer):
     Ancestor for simple source actors.
     """
 
-    def initialize(self):
-        """
-        Performs initializations.
-        """
-        super().initialize()
-        self._output = list()
-
     def reset(self):
         """
         Resets the state of the actor.

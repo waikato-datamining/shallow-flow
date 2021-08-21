@@ -20,12 +20,11 @@ class NumExpr(AbstractBooleanCondition):
         return "Evaluates the specified numexpr expression.\n" \
                "https://numexpr.readthedocs.io/projects/NumExpr3/en/latest/"
 
-    def initialize(self):
+    def _define_options(self):
         """
-        Initializes
-        :return:
+        For configuring the options.
         """
-        super().initialize()
+        super()._define_options()
         self._option_manager.add(Option("expression", str, "True", "The expression to evaluate (must return a boolean)"))
 
     def _do_evaluate(self, o):

@@ -8,14 +8,20 @@ class Actor(AbstractOptionHandler):
     The ancestor for all actors.
     """
 
-    def initialize(self):
+    def _initialize(self):
         """
         Performs initializations.
         """
-        super().initialize()
-        self._option_manager.add(Option("name", str, "", "The name to use for this actor, leave empty for class name"))
+        super()._initialize()
         self._parent = None
         self._stopped = False
+
+    def _define_options(self):
+        """
+        For configuring the options.
+        """
+        super()._define_options()
+        self._option_manager.add(Option("name", str, "", "The name to use for this actor, leave empty for class name"))
 
     def reset(self):
         """

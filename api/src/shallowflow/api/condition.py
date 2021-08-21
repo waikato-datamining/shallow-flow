@@ -7,11 +7,11 @@ class AbstractBooleanCondition(AbstractOptionHandler):
     Ancestor for boolean conditions.
     """
 
-    def initialize(self):
+    def _initialize(self):
         """
         Performs initializations.
         """
-        super().initialize()
+        super()._initialize()
         self._owner = None
 
     @property

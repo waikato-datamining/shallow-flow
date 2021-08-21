@@ -290,16 +290,22 @@ class AbstractOptionHandler(LoggableObject):
         """
         Initializes the object.
         """
-        self.initialize()
+        self._initialize()
+        self._define_options()
         self.reset()
 
-    def initialize(self):
+    def _initialize(self):
         """
         Performs initializations.
         """
+        self._log_prefix = type(self).__name__
+
+    def _define_options(self):
+        """
+        For configuring the options.
+        """
         self._option_manager = OptionManager()
         self._option_manager.add(Option("debug", bool, False, "If enabled, outputs some debugging information"))
-        self._log_prefix = type(self).__name__
 
     def reset(self):
         """

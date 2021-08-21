@@ -8,11 +8,11 @@ class ActorHandler(Actor):
     Interface for actors that manage sub-actors.
     """
 
-    def initialize(self):
+    def _define_options(self):
         """
-        Performs initializations.
+        For configuring the options.
         """
-        super(ActorHandler, self).initialize()
+        super()._define_options()
         self.option_manager.add(Option(name="actors", value_type=list, def_value=list(),
                                        help="The sub-actors to manage", base_type=Actor))
 

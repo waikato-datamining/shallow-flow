@@ -11,14 +11,6 @@ class AbstractTee(ActorHandler, InputConsumer, OutputProducer):
     Ancestor for Tee-like control actors.
     """
 
-    def initialize(self):
-        """
-        Performs initializations.
-        """
-        super().initialize()
-        self._output = None
-        self._input = None
-
     def reset(self):
         """
         Resets the state of the actor.
@@ -182,14 +174,12 @@ class ConditionalTee(AbstractTee):
         """
         return "Forwards the incoming data to the defined sub-flow before forwarding it only if the boolean condition evaluates to 'True'."
 
-    def initialize(self):
+    def _define_options(self):
         """
-        Performs initializations.
+        For configuring the options.
         """
-        super().initialize()
+        super()._define_options()
         self._option_manager.add(Option("condition", AbstractBooleanCondition, AlwaysTrue(), "The boolean condition to use"))
-        self._output = None
-        self._input = None
 
     def setup(self):
         """

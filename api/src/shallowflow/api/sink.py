@@ -6,13 +6,6 @@ class AbstractSimpleSink(InputConsumer):
     Ancestor for simple source actors.
     """
 
-    def initialize(self):
-        """
-        Performs initializations.
-        """
-        super().initialize()
-        self._input = None
-
     def reset(self):
         """
         Resets the state of the actor.
