@@ -1,5 +1,5 @@
 from os.path import expanduser
-from shallowflow.base.controls import Flow
+from shallowflow.base.controls import Flow, run_flow
 from shallowflow.base.sources import DirectoryLister
 from shallowflow.base.transformers import PassThrough
 from shallowflow.base.sinks import ConsoleOutput
@@ -20,13 +20,6 @@ co = ConsoleOutput()
 flow = Flow()
 flow.actors = [dl, pt, co]
 
-msg = flow.setup()
-if msg is None:
-    msg = flow.execute()
-    if msg is not None:
-        print(msg)
-else:
+msg = run_flow(flow)
+if msg is not None:
     print(msg)
-flow.wrap_up()
-flow.clean_up()
-

@@ -33,3 +33,23 @@ class Flow(ActorHandler, StorageHandler):
         :rtype: Storage
         """
         return self._storage
+
+
+def run_flow(flow):
+    """
+    Executes the supplied flow.
+
+    :param flow: the actor to execute
+    :type flow: Actor
+    :return: None if successful, otherwise error message
+    :rtype: str
+    """
+    msg = flow.setup()
+    if msg is None:
+        msg = flow.execute()
+        if msg is not None:
+            return "Failed to execute flow: %s" % msg
+    else:
+        return "Failed to setup flow: %s" % msg
+    flow.wrap_up()
+    flow.clean_up()
