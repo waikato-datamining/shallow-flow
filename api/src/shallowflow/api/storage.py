@@ -1,12 +1,12 @@
 STORAGE_EVENT_ADDED = "added"
 STORAGE_EVENT_UPDATED = "updated"
-STOARGE_EVENT_DELETED = "deleted"
+STORAGE_EVENT_DELETED = "deleted"
 STORAGE_EVENT_CLEARED = "cleared"
 
 STORAGE_EVENTS = [
     STORAGE_EVENT_ADDED,
     STORAGE_EVENT_UPDATED,
-    STOARGE_EVENT_DELETED,
+    STORAGE_EVENT_DELETED,
     STORAGE_EVENT_CLEARED,
 ]
 
@@ -167,7 +167,7 @@ class Storage(object):
             raise Exception("Invalid storage name: %s" + key)
         if key in self._data:
             del self._data[key]
-            self._notify_listeners(StorageChangeEvent(self, STOARGE_EVENT_DELETED, key))
+            self._notify_listeners(StorageChangeEvent(self, STORAGE_EVENT_DELETED, key))
 
     def _notify_listeners(self, event):
         """
