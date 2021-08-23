@@ -42,7 +42,7 @@ class DirectoryLister(AbstractListOutputSource):
         """
         Prepares the actor for use.
 
-        :return: None if sucessful, otherwise error message
+        :return: None if successful, otherwise error message
         :rtype: str
         """
         result = super().setup()
