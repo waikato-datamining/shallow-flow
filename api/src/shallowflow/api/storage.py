@@ -177,7 +177,7 @@ class Storage(object):
         :type event: StorageChangeEvent
         """
         for l in self._listeners:
-            l.storage_changed(l)
+            l.storage_changed(event)
 
 
 class StorageHandler(object):
