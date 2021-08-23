@@ -22,6 +22,7 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
         For configuring the options.
         """
         super()._define_options()
+        self._option_manager.add(Option("annotation", str, "", "For adding documentation to the actor"))
         self._option_manager.add(Option("name", str, "", "The name to use for this actor, leave empty for class name"))
         self._option_manager.add(Option("stop_flow_on_error", bool, True, "Whether to stop the flow in case of an error"))
 
