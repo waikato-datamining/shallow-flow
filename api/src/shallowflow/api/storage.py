@@ -177,7 +177,16 @@ class Storage(object):
         :type event: StorageChangeEvent
         """
         for l in self._listeners:
-            l.storage_changed(event)
+            l.variables_changed(event)
+
+    def __str__(self):
+        """
+        Returns a string representation of the stored items.
+
+        :return: the stored items
+        :rtype: str
+        """
+        return str(self._data)
 
 
 class StorageHandler(object):
