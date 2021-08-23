@@ -26,7 +26,7 @@ class NumExpr(AbstractBooleanCondition):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option("expression", str, "True", "The expression to evaluate (must return a boolean)"))
+        self._option_manager.add(Option("expression", str, "True", "The expression to evaluate (must return a boolean); variables get expanded before evaluation"))
 
     def _do_evaluate(self, o):
         """
