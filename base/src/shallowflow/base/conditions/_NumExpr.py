@@ -1,6 +1,7 @@
 import numexpr
 from shallowflow.api.config import Option
 from shallowflow.api.condition import AbstractBooleanCondition
+from shallowflow.api.vars import expand
 
 
 class NumExpr(AbstractBooleanCondition):
@@ -35,9 +36,6 @@ class NumExpr(AbstractBooleanCondition):
         :return: the result of the evaluation
         :rtype: bool
         """
-        expr = str(self.get("expression"))
-        result = numexpr.evaluate(expr)
-        if isinstance(result, bool):
-            return result
-        else:
-            raise Exception("Expression did not generate a boolean result: %s" % expr)
+        expr = expand(str(self.get("expression")), self.variables)
+        result = bool(numexpr.evaluate(expr))
+        return result
