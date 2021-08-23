@@ -22,7 +22,20 @@ class Flow(ActorHandler, StorageHandler):
         :return: the director
         :rtype: AbstractDirector
         """
-        return SequentialDirector(owner=self, requires_source=True, requires_sink=False)
+        return SequentialDirector(owner=self, allows_standalones=True, requires_source=True, requires_sink=False)
+
+    def _pre_execute(self):
+        """
+        Before the actual code gets executed.
+
+        :return: None if successful, otherwise error message
+        :rtype: str
+        """
+        # push down Variables instance
+        result = super()._pre_execute()
+        if result is None:
+            self.update_variables(self.variables)
+        return result
 
     @property
     def storage(self):

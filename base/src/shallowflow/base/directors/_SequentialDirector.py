@@ -1,5 +1,5 @@
 from shallowflow.api.director import AbstractDirector
-from shallowflow.api.actor import InputConsumer, OutputProducer, is_source, is_sink
+from shallowflow.api.actor import InputConsumer, OutputProducer, is_source, is_sink, is_standalone
 
 
 class SequentialDirector(AbstractDirector):
@@ -7,16 +7,19 @@ class SequentialDirector(AbstractDirector):
     Executes a list of actors as a sequence (output of one is the input for the next).
     """
 
-    def __init__(self, owner, requires_source, requires_sink):
+    def __init__(self, owner, allows_standalones, requires_source, requires_sink):
         """
         Initializes the director.
 
+        :param allows_standalones: whether standalones are allowed
+        :type allows_standalones: bool
         :param requires_source: whether a source is required
         :type requires_source: bool
         :param requires_sink: whether a sink is required
         :type requires_sink: bool
         """
         super().__init__(owner)
+        self.allows_standalones = allows_standalones
         self.requires_source = requires_source
         self.requires_sink = requires_sink
         self._actors = None
@@ -49,6 +52,27 @@ class SequentialDirector(AbstractDirector):
                     break
         return result
 
+    def _execute_standalones(self, actors):
+        """
+        Executes all the standalones and returns the index of the
+        :param actors:
+        :return:
+        """
+        result = 0
+
+        if not self.allows_standalones:
+            return result
+
+        for i in range(len(actors)):
+            if is_standalone(actors[i]):
+                result = i
+                msg = actors[i].execute()
+                if msg is not None:
+                    raise Exception(msg)
+            else:
+                break
+        return result
+
     def _do_execute(self, actors):
         """
         Executes the specified list of actors.
@@ -59,54 +83,72 @@ class SequentialDirector(AbstractDirector):
         :rtype: str
         """
         result = None
-        self._actors = actors
+        start_index = self._execute_standalones(actors)
+        not_finished_actor = actors[start_index]
         pending_actors = []
-        current_index = 0
-        current_output = None
-        current_actor = actors[0]
+        finished = False
 
-        while not self.is_stopped:
-            # provide last output as input
-            if (current_output is not None) and isinstance(current_actor, InputConsumer):
-                current_actor.input(current_output)
-                current_output = None
-
-            # execute actor
-            msg = current_actor.execute()
-            if msg is not None:
-                result = "Failed to execute actor #%d: %s" % (current_index+1, msg)
-                break
-
-            # any output?
-            if isinstance(current_actor, OutputProducer):
-                if current_actor.has_output():
-                    current_output = current_actor.output()
-                if current_actor.has_output():
-                    pending_actors.append(current_actor)
-                if current_index < len(actors) - 1:
-                    current_index += 1
-                    current_actor = actors[current_index]
-                else:
-                    # nothing left
-                    if len(pending_actors) == 0:
-                        break
+        while not self.is_stopped and not finished:
+            # determine starting point
+            if len(pending_actors) > 0:
+                start_index = actors.index(pending_actors[-1])
             else:
-                if len(pending_actors) > 0:
-                    current_actor = pending_actors.pop()
-                    current_index = actors.index(current_actor)
-                    current_output = current_actor.output()
-                    if current_actor.has_output():
-                        pending_actors.append(current_actor)
-                    if current_index < len(actors) - 1:
-                        current_index += 1
-                        current_actor = actors[current_index]
+                start_index = actors.index(not_finished_actor)
+                not_finished_actor = None
+
+            # iterate over actors
+            token = None
+            curr = None
+            for i in range(start_index, len(actors), 1):
+                curr = actors[i]
+                if token is None:
+                    if isinstance(curr, OutputProducer) and curr.has_output():
+                        if len(pending_actors) > 0:
+                            pending_actors.pop()
                     else:
-                        # nothing left
-                        if len(pending_actors) == 0:
-                            break
+                        actor_result = curr.execute()
+                        if actor_result is not None:
+                            self.log(actor_result)
+                            result = actor_result
+                            not_finished_actor = None
+                            if curr.get("stop_flow_on_error"):
+                                break
+
+                    if isinstance(curr, OutputProducer) and curr.has_output():
+                        token = curr.output()
+                    else:
+                        token = None
+
+                    # more to come?
+                    if isinstance(curr, OutputProducer) and curr.has_output():
+                        pending_actors.append(curr)
+
                 else:
-                    # nothing left
+                    curr.input(token)
+                    actor_result = curr.execute()
+                    if actor_result is not None:
+                        self.log(actor_result)
+                        result = actor_result
+                        not_finished_actor = None
+                        if curr.get("stop_flow_on_error"):
+                            break
+
+                    # token produced?
+                    if isinstance(curr, OutputProducer):
+                        if curr.has_output():
+                            token = curr.output()
+                        else:
+                            token = None
+
+                        if curr.has_output():
+                            pending_actors.append(curr)
+                    else:
+                        token = None
+
+                if isinstance(curr, OutputProducer) and (token is None):
                     break
+
+            finished = (not_finished_actor is None) and (len(pending_actors) == 0)
 
         return result
 

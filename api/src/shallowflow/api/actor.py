@@ -1,9 +1,10 @@
 import traceback
 import shallowflow.api.serialization as serialization
 from .config import Option, AbstractOptionHandler, dict_to_optionhandler, optionhandler_to_dict
+from .vars import VariableChangeListener
 
 
-class Actor(AbstractOptionHandler):
+class Actor(AbstractOptionHandler, VariableChangeListener):
     """
     The ancestor for all actors.
     """
@@ -22,6 +23,7 @@ class Actor(AbstractOptionHandler):
         """
         super()._define_options()
         self._option_manager.add(Option("name", str, "", "The name to use for this actor, leave empty for class name"))
+        self._option_manager.add(Option("stop_flow_on_error", bool, True, "Whether to stop the flow in case of an error"))
 
     def reset(self):
         """
@@ -29,6 +31,8 @@ class Actor(AbstractOptionHandler):
         """
         super().reset()
         self._log_prefix = None
+        self._variables_changed = False
+        self._variables_detected = []
 
     @property
     def parent(self):
@@ -103,6 +107,28 @@ class Actor(AbstractOptionHandler):
             self._log_prefix = prefix
         return self._log_prefix
 
+    def update_variables(self, vars):
+        """
+        Sets the variables to use.
+
+        :param vars: the variables to use
+        :type vars: Variables
+        """
+        self.variables.remove_listener(self)
+        result = super().update_variables(vars)
+        self.variables.add_listener(self)
+        return result
+
+    def variables_changed(self, event):
+        """
+        Gets called when the variable changes.
+
+        :param event: the event
+        :type event: VariableChangeEvent
+        """
+        if event.var in self._variables_detected:
+            self._variables_changed = True
+
     def setup(self):
         """
         Prepares the actor for use.
@@ -111,6 +137,8 @@ class Actor(AbstractOptionHandler):
         :rtype: str
         """
         self._stopped = False
+        self._variables_detected = self.option_manager.detect_vars(skip=[Actor])
+        self.variables.add_listener(self)
         return None
 
     def _pre_execute(self):
@@ -120,6 +148,8 @@ class Actor(AbstractOptionHandler):
         :return: None if successful, otherwise error message
         :rtype: str
         """
+        if self._variables_changed:
+            self.reset()
         return None
 
     def _do_execute(self):
@@ -139,8 +169,10 @@ class Actor(AbstractOptionHandler):
 
     def execute(self):
         """
-        Executes the actor
-        :return:
+        Executes the actor.
+
+        :return: None if successful, otherwise error message
+        :rtype: str
         """
         try:
             result = self._pre_execute()
@@ -156,7 +188,7 @@ class Actor(AbstractOptionHandler):
         For finishing up the execution.
         Does not affect graphical output.
         """
-        pass
+        self.variables.remove_listener(self)
 
     def clean_up(self):
         """
@@ -220,6 +252,17 @@ class OutputProducer(Actor):
         :rtype: bool
         """
         raise NotImplemented()
+
+
+def is_standalone(actor):
+    """
+    Checks whether the actor is a standalone.
+
+    :param actor: the actor to check
+    :type actor: Actor
+    :return: true if a standalone actor
+    """
+    return not isinstance(actor, OutputProducer) and not isinstance(actor, InputConsumer)
 
 
 def is_source(actor):

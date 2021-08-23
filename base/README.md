@@ -30,3 +30,7 @@ The core components for shallow-flow.
 
 * `shallowflow.base.conditions.AlwaysFalse`
 * `shallowflow.base.conditions.AlwaysTrue`
+
+## Help
+
+  * `shallowflow.base.help.PlainText` - plain text help

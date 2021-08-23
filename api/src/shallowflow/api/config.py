@@ -3,6 +3,7 @@ from collections import OrderedDict
 from datetime import datetime
 from .logging import LoggableObject
 from .serialization import get_dict_reader, get_dict_writer, add_dict_writer, add_dict_reader, has_dict_reader, has_dict_writer
+from .vars import is_valid_name, is_var, pad_var, unpad_var, VariableHandler, Variables
 
 
 class Option(object):
@@ -32,6 +33,7 @@ class Option(object):
         self.def_value = def_value
         self.help = help
         self.base_type = base_type
+        self.var = None
 
     def __str__(self):
         """
@@ -43,7 +45,7 @@ class Option(object):
         return "%s/%s: %s\n   %s" % (self.name, str(self.value_type.__name__), repr(self.def_value), self.help)
 
 
-class OptionManager(LoggableObject):
+class OptionManager(LoggableObject, VariableHandler):
     """
     Manages multiple options.
     """
@@ -56,15 +58,100 @@ class OptionManager(LoggableObject):
         self._values = dict()
         self._to_dict_handlers = dict()
         self._from_dict_handlers = dict()
+        self._variables = Variables()
 
-    def add(self, option):
+    @property
+    def variables(self):
         """
-        Adds the option.
+        Returns the variables.
 
-        :param option: the item to add
-        :type option: Option
+        :return: the variables
+        :rtype: Variables
         """
-        self._options[option.name] = option
+        return self._variables
+
+    def update_variables(self, vars):
+        """
+        Sets the variables to use.
+
+        :param vars: the variables to use
+        :type vars: Variables
+        """
+        self._variables = vars
+        for k in self._options:
+            if isinstance(self._options[k].def_value, VariableHandler):
+                self._options[k].def_value.update_variables(vars)
+                if k in self._values:
+                    self._values[k].update_variables(vars)
+            if (issubclass(self._options[k].value_type, list)) and (self._options[k].base_type is not None):
+                if issubclass(self._options[k].base_type, VariableHandler):
+                    for i in range(len(self._options[k].def_value)):
+                        self._options[k].def_value[i].update_variables(vars)
+                    if k in self._values:
+                        for i in range(len(self._values[k])):
+                            self._values[k][i].update_variables(vars)
+
+    def has_var(self, name):
+        """
+        Returns whether the specified option has a variable attached.
+
+        :param name: the name of the option to look for
+        :type name: str
+        :return: true if the option has a variable
+        :rtype: bool
+        """
+        return self.has(name) and (self._options[name].var is not None)
+
+    def set_var(self, name, var):
+        """
+        Attaches the variable to the specified option.
+
+        :param name: the name of the item to update its value for
+        :type name: str
+        :param var: the new value
+        :type var: str
+        """
+        if not self.has(name):
+            raise Exception("Unknown option: %s" % name)
+        if not is_valid_name(var):
+            raise Exception("Invalid variable name: %s" % var)
+        self._options[name].var = var
+
+    def get_var(self, name):
+        """
+        Returns the variable attached to the specified option.
+
+        :param name: the name of the option to get the variable for
+        :type name: str
+        :return: the attached variable, None if none attached
+        :rtype: str
+        """
+        if not self.has(name):
+            raise Exception("Unknown option: %s" % name)
+        return self._options[name].var
+
+    def remove_var(self, name):
+        """
+        Removes the variable attached to the specified option.
+
+        :param name: the name of option to update
+        :type name: str
+        """
+        if not self.has(name):
+            raise Exception("Unknown option: %s" % name)
+        self._options[name].var = None
+
+    def detect_vars(self, skip=None):
+        """
+        Detects the variables that are attached to its options.
+
+        :param skip: the list of classes to skip
+        :type skip: list
+        :return: the list of detected variable names (unpadded)
+        :rtype: list
+        """
+        # TODO
+        return []
 
     def options(self):
         """
@@ -74,6 +161,18 @@ class OptionManager(LoggableObject):
         :rtype: list
         """
         return self._options.values()
+
+    def add(self, option):
+        """
+        Adds the option.
+
+        :param option: the item to add
+        :type option: Option
+        :return: itself
+        :rtype: OptionManager
+        """
+        self._options[option.name] = option
+        return self
 
     def has(self, name):
         """
@@ -114,10 +213,14 @@ class OptionManager(LoggableObject):
         """
         if not self.has(name):
             return None
+        # variable attached? return associated value
+        if self.has_var(name) and (self.variables.has(self.get_var(name))):
+            return self.variables.get(self.get_var(name))
+        # non-default value set?
         if name in self._values:
             return self._values[name]
-        else:
-            return self._options[name].def_value
+        # default value
+        return self._options[name].def_value
 
     def reset(self):
         """
@@ -205,6 +308,11 @@ class OptionManager(LoggableObject):
                 self.log("Unknown option: %s/%s" % (k, d[k]))
                 continue
 
+            # variable?
+            if isinstance(d[k], str) and is_var(d[k]):
+                self._options[k].var = unpad_var(d[k])
+                continue
+
             # was a base type define for the elements of the list?
             if isinstance(d[k], list) and (self._options[k].base_type is not None):
                 if has_dict_reader(self._options[k].base_type):
@@ -242,6 +350,11 @@ class OptionManager(LoggableObject):
         """
         result = dict()
         for k in self._options:
+            # variable attached?
+            if self.has_var(k):
+                result[k] = pad_var(self.get_var(k))
+                continue
+
             if isinstance(self.get(k), list) and (self._options[k].base_type is not None):
                 if has_dict_writer(self._options[k].base_type):
                     writer = get_dict_writer(self._options[k].base_type)
@@ -267,22 +380,8 @@ class OptionManager(LoggableObject):
                 result[k] = self.get(k)
         return result
 
-    def to_help(self):
-        """
-        Generates a simple help string for all the options.
 
-        :return: the generated helps tring
-        :rtype: str
-        """
-        result = ""
-        for item in self.options():
-            if len(result) > 0:
-                result += "\n"
-            result += str(item)
-        return result
-
-
-class AbstractOptionHandler(LoggableObject):
+class AbstractOptionHandler(LoggableObject, VariableHandler):
     """
     The ancestor for all classes that handle options.
     """
@@ -390,6 +489,25 @@ class AbstractOptionHandler(LoggableObject):
         self._option_manager.set(name, value)
         return self
 
+    @property
+    def variables(self):
+        """
+        Returns the variables.
+
+        :return: the variables
+        :rtype: Variables
+        """
+        return self.option_manager.variables
+
+    def update_variables(self, vars):
+        """
+        Sets the variables to use.
+
+        :param vars: the variables to use
+        :type vars: Variables
+        """
+        return self.option_manager.update_variables(vars)
+
     def _get_log_prefix(self):
         """
         Returns the log prefix for this object.
@@ -416,19 +534,6 @@ class AbstractOptionHandler(LoggableObject):
         :param args: the arguments to log
         """
         print(*("%s - %s -" % (self.log_prefix, str(datetime.now())), *args))
-
-    def to_help(self):
-        """
-        Outputs a simple help string.
-
-        :return: the generated help string.
-        :rtype: str
-        """
-        return type(self).__name__ + "\n" \
-               + "=" * (len(type(self).__name__)) + "\n\n" \
-               + self.description() + "\n\n" \
-               + self._option_manager.to_help() + "\n"
-
 
 
 def dict_to_optionhandler(d):

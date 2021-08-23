@@ -17,11 +17,15 @@ The API for shallow-flow.
 
   * `shallowflow.api.config.Option` - defines a single parameter
   * `shallowflow.api.config.OptionManager` - manages all parameters and conversion to/from dictionaries used in serialization
-  * `shallowflow.api.config.AbstractOptionHandler` - the `to_help` method outputs a help screen of the available options
+  * `shallowflow.api.config.AbstractOptionHandler` - ancestor for all classes that handler options
 
 * Logging
 
   * `shallowflow.api.logging.LoggableObject`
+
+* Help
+
+  * `shallowflow.api.help.AbstractHelpGenerator` - ancestor
 
 * Control actors
 

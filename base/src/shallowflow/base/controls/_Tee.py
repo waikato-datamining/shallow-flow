@@ -145,7 +145,7 @@ class Tee(AbstractTee):
         :return: the director
         :rtype: AbstractDirector
         """
-        return SequentialDirector(owner=self, requires_source=False, requires_sink=False)
+        return SequentialDirector(owner=self, allows_standalones=False, requires_source=False, requires_sink=False)
 
     def _pre_execute(self):
         """
@@ -200,7 +200,7 @@ class ConditionalTee(AbstractTee):
         :return: the director
         :rtype: AbstractDirector
         """
-        return SequentialDirector(owner=self, requires_source=False, requires_sink=False)
+        return SequentialDirector(owner=self, allows_standalones=False, requires_source=False, requires_sink=False)
 
     def _can_execute_actors(self):
         """

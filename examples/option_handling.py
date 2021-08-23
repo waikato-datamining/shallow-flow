@@ -2,11 +2,12 @@ import os
 import tempfile
 from shallowflow.base.sources import DirectoryLister
 from shallowflow.api.io import save_actor, load_actor
+from shallowflow.base.help import PlainText
 
 dl = DirectoryLister()
 
 # print the help string
-print(dl.to_help())
+PlainText().generate(dl)
 
 print("\nOption setting/getting\n======================")
 # print the current options
