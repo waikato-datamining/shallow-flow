@@ -2,6 +2,7 @@ import traceback
 import shallowflow.api.serialization.objects as serialization
 from .config import Option, AbstractOptionHandler, dict_to_optionhandler, optionhandler_to_dict
 from .vars import VariableChangeListener
+from .storage import StorageHandler
 
 
 class Actor(AbstractOptionHandler, VariableChangeListener):
@@ -129,6 +130,22 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
         """
         if event.var in self._variables_detected:
             self._variables_changed = True
+
+    @property
+    def storage_handler(self):
+        """
+        Returns the available storage handler, if any.
+
+        :return: the storage handler
+        :rtype: StorageHandler
+        """
+        if isinstance(self, StorageHandler):
+            return self
+        else:
+            if self.parent is None:
+                return None
+            else:
+                return self.parent.storage_handler
 
     def setup(self):
         """
