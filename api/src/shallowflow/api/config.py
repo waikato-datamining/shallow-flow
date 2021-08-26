@@ -4,6 +4,7 @@ from collections import OrderedDict
 from datetime import datetime
 from .logging import LoggableObject
 from .serialization.objects import get_dict_reader, get_dict_writer, add_dict_writer, add_dict_reader, has_dict_reader, has_dict_writer
+from .serialization.vars import get_string_reader
 from .vars import is_valid_name, is_var, pad_var, unpad_var, VariableHandler, Variables
 from shallowflow.api.serialization.vars import AbstractStringReader, AbstractStringWriter
 import shallowflow.api.serialization.vars as ser_vars
@@ -153,8 +154,22 @@ class OptionManager(LoggableObject, VariableHandler):
         :return: the list of detected variable names (unpadded)
         :rtype: list
         """
-        # TODO
-        return []
+        result = []
+        for k in self._options:
+            option = self._options[k]
+            if skip is not None:
+                if (option.value_type in skip) or (option.base_type in skip):
+                    continue
+            if option.var is not None:
+                result.append(option.var)
+            # recurse
+            if k in self._values:
+                if issubclass(option.value_type, AbstractOptionHandler):
+                    result.extend(self._values[k].option_manager.detect_vars(skip=skip))
+                if (option.base_type is not None) and issubclass(option.base_type, AbstractOptionHandler):
+                    for l in self._values[k]:
+                        result.extend(l.option_manager.detect_vars(skip=skip))
+        return result
 
     def options(self):
         """
@@ -218,7 +233,15 @@ class OptionManager(LoggableObject, VariableHandler):
             return None
         # variable attached? return associated value
         if self.has_var(name) and (self.variables.has(self.get_var(name))):
-            return self.variables.get(self.get_var(name))
+            value = self.variables.get(self.get_var(name))
+            if self._options[name].base_type is not None:
+                reader = get_string_reader(self._options[name].base_type)
+            else:
+                reader = get_string_reader(self._options[name].value_type)
+            if reader is not None:
+                return reader().convert(value)
+            else:
+                self.log("Failed to determine reader for %s" % name)
         # non-default value set?
         if name in self._values:
             return self._values[name]
