@@ -122,7 +122,7 @@ class Storage(object):
             raise Exception("Invalid storage name: %s" + key)
         return key in self._data
 
-    def add(self, key, value):
+    def set(self, key, value):
         """
         Adds the specified storage item.
 
