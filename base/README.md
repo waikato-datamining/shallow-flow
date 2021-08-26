@@ -23,6 +23,8 @@ The core components for shallow-flow.
   * `shallowflow.base.sources.ForLoop`
   * `shallowflow.base.sources.GetStorage`
   * `shallowflow.base.sources.GetVariable`
+  * `shallowflow.base.sources.ListStorage`
+  * `shallowflow.base.sources.ListVariables`
     
 * Transformers
 
