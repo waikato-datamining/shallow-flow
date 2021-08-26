@@ -13,13 +13,22 @@ The core components for shallow-flow.
 
   * `shallowflow.base.directors.SequentialDirector`
 
+* Standalones
+
+  * `shallowflow.base.standalones.SetVariable`
+
 * Sources
 
   * `shallowflow.base.sources.DirectoryLister`
+  * `shallowflow.base.sources.ForLoop`
+  * `shallowflow.base.sources.GetStorage`
+  * `shallowflow.base.sources.GetVariable`
     
 * Transformers
 
   * `shallowflow.base.transformers.PassThrough`
+  * `shallowflow.base.transformers.SetStorage`
+  * `shallowflow.base.transformers.SetVariable`
     
 * Sinks
 
