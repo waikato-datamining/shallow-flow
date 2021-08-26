@@ -272,6 +272,15 @@ class Variables(object):
             del self._data[key]
             self._notify_listeners(VariableChangeEvent(self, VARIABLE_EVENT_DELETED, key))
 
+    def keys(self):
+        """
+        Returns all the names of the currently stored variables.
+
+        :return: the set of names
+        :rtype: set
+        """
+        return self._data.keys()
+
     def _notify_listeners(self, event):
         """
         Notifies all listeners with the event.

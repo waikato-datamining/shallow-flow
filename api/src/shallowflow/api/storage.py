@@ -169,6 +169,15 @@ class Storage(object):
             del self._data[key]
             self._notify_listeners(StorageChangeEvent(self, STORAGE_EVENT_DELETED, key))
 
+    def keys(self):
+        """
+        Returns all the names of the currently stored items.
+
+        :return: the set of names
+        :rtype: set
+        """
+        return self._data.keys()
+
     def _notify_listeners(self, event):
         """
         Notifies all listeners with the event.
