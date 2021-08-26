@@ -130,6 +130,8 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
         """
         if event.var in self._variables_detected:
             self._variables_changed = True
+            if self.is_debug:
+                self.log("Variable changed: %s -> %s" % (event.var, self.variables.get(event.var)))
 
     @property
     def storage_handler(self):
@@ -155,7 +157,10 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
         :rtype: str
         """
         self._stopped = False
+        self._log_prefix = None
         self._variables_detected = self.option_manager.detect_vars(skip=[Actor])
+        if self.is_debug:
+            self.log("Detected variables: %s" % str(self._variables_detected))
         self.variables.add_listener(self)
         return None
 
@@ -167,7 +172,10 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
         :rtype: str
         """
         if self._variables_changed:
+            if self.is_debug:
+                self.log("Variables changed, resetting!")
             self.reset()
+            self.setup()
         return None
 
     def _do_execute(self):
