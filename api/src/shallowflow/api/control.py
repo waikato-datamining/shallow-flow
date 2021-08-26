@@ -74,6 +74,7 @@ class ActorHandler(Actor):
         result = super().setup()
         if result is None:
             for actor in self.actors:
+                actor.parent = self
                 result = actor.setup()
                 if result is not None:
                     break
