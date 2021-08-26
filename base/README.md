@@ -8,6 +8,8 @@ The core components for shallow-flow.
   * `shallowflow.base.controls.Flow`
   * `shallowflow.base.controls.Tee`
   * `shallowflow.base.controls.ConditionalTee`
+  * `shallowflow.base.controls.Trigger`
+  * `shallowflow.base.controls.ConditionalTrigger`
     
 * Directors
 
