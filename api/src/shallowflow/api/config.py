@@ -1,9 +1,12 @@
 import importlib
+import json
 from collections import OrderedDict
 from datetime import datetime
 from .logging import LoggableObject
-from .serialization import get_dict_reader, get_dict_writer, add_dict_writer, add_dict_reader, has_dict_reader, has_dict_writer
+from .serialization.objects import get_dict_reader, get_dict_writer, add_dict_writer, add_dict_reader, has_dict_reader, has_dict_writer
 from .vars import is_valid_name, is_var, pad_var, unpad_var, VariableHandler, Variables
+from shallowflow.api.serialization.vars import AbstractStringReader, AbstractStringWriter
+import shallowflow.api.serialization.vars as ser_vars
 
 
 class Option(object):
@@ -333,8 +336,9 @@ class OptionManager(LoggableObject, VariableHandler):
             if has_dict_reader(self._options[k].value_type):
                 reader = get_dict_reader(self._options[k].value_type)
                 self.set(k, reader(d[k]))
+                continue
 
-            if isinstance(d[k], self._options[k].value_type):
+            if isinstance(self.get(k), self._options[k].value_type):
                 self.set(k, d[k])
             else:
                 self.log("Incorrect type: %s/%s/%s" % (k, str(d[k]), str(type(d[k]))))
@@ -587,3 +591,64 @@ def optionhandler_to_dict(a):
 # register reader/writer
 add_dict_writer(AbstractOptionHandler, optionhandler_to_dict)
 add_dict_reader(AbstractOptionHandler, dict_to_optionhandler)
+
+
+class OptionHandlerStringReader(AbstractStringReader):
+    """
+    Ancestor for classes that turn strings into objects.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert a string into the specified class.
+
+        :param cls: the class to convert to
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, AbstractOptionHandler)
+
+    def convert(self, s):
+        """
+        Turns the string into an object.
+
+        :param s: the string to convert
+        :type s: str
+        :return: the generated object
+        """
+        d = json.loads(s)
+        return dict_to_optionhandler(d)
+
+
+class OptionHandlerStringWriter(AbstractStringWriter):
+    """
+    Ancestor for classes that turn objects into strings.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert the object into a string.
+
+        :param cls: the class to convert
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, AbstractOptionHandler)
+
+    def convert(self, o):
+        """
+        Turns the object into a string.
+
+        :param o: the object to convert
+        :return: the generated string
+        :rtype: str
+        """
+        d = optionhandler_to_dict(o)
+        return json.dumps(d)
+
+
+# add default readers
+ser_vars.add_string_reader(OptionHandlerStringReader)
+
+# add default writers
+ser_vars.add_string_writer(OptionHandlerStringWriter)

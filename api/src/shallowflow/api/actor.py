@@ -1,5 +1,5 @@
 import traceback
-import shallowflow.api.serialization as serialization
+import shallowflow.api.serialization.objects as serialization
 from .config import Option, AbstractOptionHandler, dict_to_optionhandler, optionhandler_to_dict
 from .vars import VariableChangeListener
 

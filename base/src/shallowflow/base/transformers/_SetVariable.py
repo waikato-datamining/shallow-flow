@@ -1,6 +1,7 @@
 from shallowflow.api.transformer import AbstractSimpleTransformer
 from shallowflow.api.config import Option
 from shallowflow.api.vars import is_valid_name
+import shallowflow.api.serialization.vars as ser_vars
 
 
 class SetVariable(AbstractSimpleTransformer):
@@ -52,8 +53,12 @@ class SetVariable(AbstractSimpleTransformer):
         value = self.get("var_value")
         name = self.get("var_name")
         if len(value) == 0:
-            self.variables.set(name, self._input)
+            value = self._input
+        if ser_vars.has_string_writer(type(value)):
+            value_str = ser_vars.get_string_writer(type(value))().convert(value)
         else:
-            self.variables.set(name, value)
+            self.log("Failed to determine string conversion for type: %s" % str(type(value)))
+            value_str = str(value)
+        self.variables.set(name, value_str)
         self._output.append(self._input)
         return None

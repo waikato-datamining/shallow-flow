@@ -1,8 +1,8 @@
 DICT_READERS = None
-""" contains all dictionary readers (class -> reader)"""
+""" contains all dictionary readers (class -> reader) """
 
 DICT_WRITERS = None
-""" contains all dictionary writers (class -> writer)"""
+""" contains all dictionary writers (class -> writer) """
 
 
 def get_dict_readers():
