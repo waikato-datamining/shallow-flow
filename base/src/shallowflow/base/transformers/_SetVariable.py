@@ -59,6 +59,8 @@ class SetVariable(AbstractSimpleTransformer):
         else:
             self.log("Failed to determine string conversion for type: %s" % str(type(value)))
             value_str = str(value)
+        if self.is_debug:
+            self.log("%s -> %s" % (name, value_str))
         self.variables.set(name, value_str)
         self._output.append(self._input)
         return None
