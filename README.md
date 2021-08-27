@@ -5,6 +5,7 @@ Available modules:
 
 * [API](api)
 * [Base components](base)
+* [Imaging components](imaging)
 
 
 ## Examples
@@ -16,3 +17,4 @@ The following examples are available:
 * [listing files/dirs (flow)](examples/flow_listing_files.py)
 * [use variables](examples/use_variables.py)
 * [while loop](examples/while_loop.py)
+* [extract video frames](examples/extract_video_frames.py)
