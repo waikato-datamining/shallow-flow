@@ -25,6 +25,7 @@ The base components for shallow-flow.
 * Sources
 
   * `shallowflow.base.sources.DirectoryLister`
+  * `shallowflow.base.sources.FileSupplier`
   * `shallowflow.base.sources.ForLoop`
   * `shallowflow.base.sources.GetStorage`
   * `shallowflow.base.sources.GetVariable`
