@@ -23,7 +23,7 @@ trigger1 = ConditionalTrigger() \
 with scoping():
     loop2 = ForLoop()
     # attached variable @{upper} to the "end" property
-    loop2.option_manager.set_var("end", "upper")
+    loop2.set("end", "@{upper}")
     loop2.set("debug", False)
 
     output2 = ConsoleOutput() \

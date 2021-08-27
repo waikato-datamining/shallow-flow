@@ -210,15 +210,17 @@ class OptionManager(LoggableObject, VariableHandler):
         :param name: the name of the item to update its value for
         :type name: str
         :param value: the new value
-        :type value: object
         :return: itself
         :rtype: OptionManager
         """
         if not self.has(name):
             raise("Invalid option name: %s" % name)
-        if not isinstance(value, self._options[name].value_type):
-            raise("Invalid config type for %s: expected=%s, received=%s" % (name, self._options[name].value_type, type(value)))
-        self._values[name] = value
+        if is_var(value):
+            self._options[name].var = unpad_var(value)
+        else:
+            if not isinstance(value, self._options[name].value_type):
+                raise("Invalid config type for %s: expected=%s, received=%s" % (name, self._options[name].value_type, type(value)))
+            self._values[name] = value
 
     def get(self, name):
         """
