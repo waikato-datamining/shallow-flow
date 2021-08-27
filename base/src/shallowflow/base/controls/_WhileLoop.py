@@ -1,12 +1,12 @@
 from shallowflow.api.actor import InputConsumer
-from shallowflow.api.control import ActorHandler
+from shallowflow.api.control import MutableActorHandler
 from shallowflow.api.config import Option
 from shallowflow.api.condition import AbstractBooleanCondition
 from shallowflow.base.directors import SequentialDirector
 from shallowflow.base.conditions import AlwaysTrue
 
 
-class WhileLoop(ActorHandler, InputConsumer):
+class WhileLoop(MutableActorHandler, InputConsumer):
     """
     Encapsulates a complete flow.
     """

@@ -1,12 +1,12 @@
 from shallowflow.api.condition import AbstractBooleanCondition
 from shallowflow.api.config import Option
-from shallowflow.api.control import ActorHandler
+from shallowflow.api.control import MutableActorHandler
 from shallowflow.api.transformer import InputConsumer, OutputProducer
 from shallowflow.base.directors import SequentialDirector
 from shallowflow.base.conditions import AlwaysTrue
 
 
-class AbstractTrigger(ActorHandler, InputConsumer, OutputProducer):
+class AbstractTrigger(MutableActorHandler, InputConsumer, OutputProducer):
     """
     Ancestor for Tee-like control actors.
     """

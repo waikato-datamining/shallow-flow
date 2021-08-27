@@ -30,6 +30,7 @@ The API for shallow-flow.
 * Control actors
 
   * `shallowflow.api.control.ActorHandler` - manages multiple actors
+  * `shallowflow.api.control.MutableActorHandler` - manages multiple actors, can be appended/removed
     
 * Directors
 

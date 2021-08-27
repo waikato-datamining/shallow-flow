@@ -1,9 +1,9 @@
-from shallowflow.api.control import ActorHandler
+from shallowflow.api.control import MutableActorHandler
 from shallowflow.api.storage import StorageHandler, Storage
 from shallowflow.base.directors import SequentialDirector
 
 
-class Flow(ActorHandler, StorageHandler):
+class Flow(MutableActorHandler, StorageHandler):
     """
     Encapsulates a complete flow.
     """

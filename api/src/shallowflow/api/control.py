@@ -122,3 +122,38 @@ class ActorHandler(Actor):
         if self._director is not None:
             self._director.clean_up()
         super().clean_up()
+
+
+class MutableActorHandler(ActorHandler):
+    """
+    Ancestor for actor handlers that allow appending, removing of actors.
+    """
+
+    def append(self, actor):
+        """
+        Appends the specified actor.
+
+        :param actor: the actor to append
+        :type actor: Actor
+        :return: itself
+        :rtype: MutableActorHandler
+        """
+        actors = self.actors
+        actors.append(actor)
+        self.actors = actors
+        return self
+
+    def remove(self, actor):
+        """
+        Removes the specified actor.
+
+        :param actor: the actor to remove
+        :type actor: Actor
+        :return: itself
+        :rtype: MutableActorHandler
+        """
+        actors = self.actors
+        if actor in actors:
+            actors.remove(actor)
+            self.actors = actors
+        return self
