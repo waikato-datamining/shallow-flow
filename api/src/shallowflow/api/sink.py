@@ -1,4 +1,5 @@
 from .actor import InputConsumer
+from .config import Option
 
 STATE_INPUT = "input"
 
@@ -53,3 +54,16 @@ class AbstractSimpleSink(InputConsumer):
         After the actual code got executed.
         """
         self._input = None
+
+
+class AbstractFileWriter(AbstractSimpleSink):
+    """
+    Ancestor for sinks that write files to disk.
+    """
+
+    def _define_options(self):
+        """
+        For configuring the options.
+        """
+        super()._define_options()
+        self._option_manager.add(Option("output_file", str, ".", "The file to write to; can contain variables"))

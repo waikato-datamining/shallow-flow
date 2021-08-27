@@ -49,6 +49,7 @@ The API for shallow-flow.
 * Sinks
 
   * `shallowflow.api.sink.AbstractSimpleSink`
+  * `shallowflow.api.sink.AbstractFileWriter`
 
 
 ## Methods
