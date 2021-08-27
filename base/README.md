@@ -10,6 +10,7 @@ The core components for shallow-flow.
   * `shallowflow.base.controls.ConditionalTee`
   * `shallowflow.base.controls.Trigger`
   * `shallowflow.base.controls.ConditionalTrigger`
+  * `shallowflow.base.controls.WhileLoop`
     
 * Directors
 
@@ -27,9 +28,12 @@ The core components for shallow-flow.
   * `shallowflow.base.sources.GetVariable`
   * `shallowflow.base.sources.ListStorage`
   * `shallowflow.base.sources.ListVariables`
+  * `shallowflow.base.sources.Start`
     
 * Transformers
 
+  * `shallowflow.base.transformers.IncStorage`
+  * `shallowflow.base.transformers.IncVariable`
   * `shallowflow.base.transformers.PassThrough`
   * `shallowflow.base.transformers.SetStorage`
   * `shallowflow.base.transformers.SetVariable`
