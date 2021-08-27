@@ -281,6 +281,17 @@ class Variables(object):
         """
         return self._data.keys()
 
+    def expand(self, s):
+        """
+        Expands any variables in the string.
+
+        :param s: the string to expand
+        :type s: str
+        :return: the expanded string
+        :rtype: str
+        """
+        return expand(s, self)
+
     def _notify_listeners(self, event):
         """
         Notifies all listeners with the event.
