@@ -6,11 +6,12 @@ The base components for shallow-flow.
 * Control actors
 
   * `shallowflow.base.controls.Branch`
-  * `shallowflow.base.controls.Flow`
-  * `shallowflow.base.controls.Tee`
   * `shallowflow.base.controls.ConditionalTee`
-  * `shallowflow.base.controls.Trigger`
   * `shallowflow.base.controls.ConditionalTrigger`
+  * `shallowflow.base.controls.Flow`
+  * `shallowflow.base.controls.Sequence`
+  * `shallowflow.base.controls.Tee`
+  * `shallowflow.base.controls.Trigger`
   * `shallowflow.base.controls.WhileLoop`
     
 * Directors
