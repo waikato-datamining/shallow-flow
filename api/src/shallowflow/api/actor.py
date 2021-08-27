@@ -164,6 +164,24 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
         self.variables.add_listener(self)
         return None
 
+    def _backup_state(self):
+        """
+        For backing up the internal state before reconfiguring due to variable changes.
+
+        :return: the state dictionary
+        :rtype: dict
+        """
+        return dict()
+
+    def _restore_state(self, state):
+        """
+        Restores the state from the state dictionary after being reconfigured due to variable changes.
+
+        :param state: the state dictionary to use
+        :type state: dict
+        """
+        pass
+
     def _pre_execute(self):
         """
         Before the actual code gets executed.
@@ -174,8 +192,10 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
         if self._variables_changed:
             if self.is_debug:
                 self.log("Variables changed, resetting!")
+            state = self._backup_state()
             self.reset()
             self.setup()
+            self._restore_state(state)
         return None
 
     def _do_execute(self):
