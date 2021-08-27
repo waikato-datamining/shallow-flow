@@ -37,6 +37,32 @@ class AbstractStringReader(object):
         raise NotImplemented()
 
 
+class StringReader(AbstractStringReader):
+    """
+    Ancestor for classes that turn strings into strings.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert a string into the specified class.
+
+        :param cls: the class to convert to
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, str)
+
+    def convert(self, s):
+        """
+        Turns the string into an object.
+
+        :param s: the string to convert
+        :type s: str
+        :return: the generated object
+        """
+        return str(s)
+
+
 class BoolStringReader(AbstractStringReader):
     """
     Ancestor for classes that turn strings into bool.
@@ -139,6 +165,32 @@ class AbstractStringWriter(object):
         :rtype: str
         """
         raise NotImplemented()
+
+
+class StringWriter(AbstractStringWriter):
+    """
+    Ancestor for classes that turn strings into strings.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert the object into a string.
+
+        :param cls: the class to convert
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, str)
+
+    def convert(self, o):
+        """
+        Turns the object into a string.
+
+        :param o: the object to convert
+        :return: the generated string
+        :rtype: str
+        """
+        return str(o)
 
 
 class BoolStringWriter(AbstractStringWriter):
@@ -372,11 +424,13 @@ def get_string_writer(cls):
 
 
 # add default readers
+add_string_reader(StringReader)
 add_string_reader(BoolStringReader)
 add_string_reader(IntStringReader)
 add_string_reader(FloatStringReader)
 
 # add default writers
+add_string_writer(StringWriter)
 add_string_writer(BoolStringWriter)
 add_string_writer(IntStringWriter)
 add_string_writer(FloatStringWriter)
