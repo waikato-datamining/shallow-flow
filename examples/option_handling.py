@@ -1,5 +1,6 @@
 import os
 import tempfile
+import traceback
 from shallowflow.base.sources import DirectoryLister
 from shallowflow.api.io import save_actor, load_actor
 from shallowflow.base.help import PlainText
@@ -16,7 +17,10 @@ print(dl.options)
 dl.options = {"debug": True}
 print(dl.options)
 # update an option with wrong type
-dl.options = {"debug": 42}
+try:
+    dl.options = {"debug": 42}
+except Exception:
+    traceback.print_exc()
 print(dl.options)
 # trying to update a non-existing option
 dl.options = {"debug2": True}
@@ -38,3 +42,7 @@ if msg is not None:
 print("Loading actor from: %s" % fname)
 dl2 = load_actor(fname)
 print("actor:", dl.options)
+
+# setting options via constructor
+dl2 = DirectoryLister(options={"debug": True, "dir": tempfile.gettempdir(), "list_files": True, "recursive": True})
+print(dl2.options)
