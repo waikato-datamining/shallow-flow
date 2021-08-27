@@ -8,6 +8,15 @@ class Flow(ActorHandler, StorageHandler):
     Encapsulates a complete flow.
     """
 
+    def description(self):
+        """
+        Returns a description for the object.
+
+        :return: the object description
+        :rtype: str
+        """
+        return "Encapsulates a complete flow."
+
     def _initialize(self):
         """
         Initializes the members.
