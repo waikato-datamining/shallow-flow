@@ -109,6 +109,19 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
             self._log_prefix = prefix
         return self._log_prefix
 
+    def _handle_exception(self, msg):
+        """
+        Generates a string from message and the current exception.
+
+        :param msg: the message to use
+        :type msg: str
+        :return: the generated string
+        :rtype: str
+        """
+        result = msg + "\n" + traceback.format_exc()
+        self.log(result)
+        return result
+
     def update_variables(self, vars):
         """
         Sets the variables to use.
