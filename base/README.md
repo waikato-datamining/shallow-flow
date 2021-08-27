@@ -5,6 +5,7 @@ The base components for shallow-flow.
 
 * Control actors
 
+  * `shallowflow.base.controls.Branch`
   * `shallowflow.base.controls.Flow`
   * `shallowflow.base.controls.Tee`
   * `shallowflow.base.controls.ConditionalTee`
