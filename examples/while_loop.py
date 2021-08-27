@@ -1,7 +1,7 @@
 from scoping import scoping
 from shallowflow.base.controls import Flow, WhileLoop, run_flow
 from shallowflow.base.conditions import NumExpr
-from shallowflow.base.sources import Start, ForLoop, GetVariable
+from shallowflow.base.sources import Start, GetVariable
 from shallowflow.base.transformers import SetVariable, IncVariable
 from shallowflow.base.sinks import ConsoleOutput
 
