@@ -9,10 +9,9 @@ Imaging components for shallow-flow.
     
 * Transformers
 
-  * ...
-
+  * `shallowflow.imaging.transformers.VideoFrames`
     
 * Sinks
 
-  * ...
+  * `shallowflow.imaging.sink.ImageWriter`
 
