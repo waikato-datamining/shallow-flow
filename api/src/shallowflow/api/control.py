@@ -98,6 +98,8 @@ class ActorHandler(Actor):
         """
         if self._director is not None:
             self._director.stop_execution()
+        for actor in self.actors:
+            actor.stop_execution()
         super().stop_execution()
 
     def wrap_up(self):
