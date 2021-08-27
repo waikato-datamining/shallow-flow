@@ -10,7 +10,7 @@ Available modules:
 
 ## Examples
 
-The following examples are available:
+The following examples are available for the base components:
 
 * [option handling](examples/option_handling.py)
 * [listing files/dirs](examples/list_files.py)
@@ -18,4 +18,7 @@ The following examples are available:
 * [use variables](examples/use_variables.py)
 * [while loop](examples/while_loop.py)
 * [using branches](examples/branching.py)
+
+Imaging related examples:  
+
 * [extract video frames](examples/extract_video_frames.py)
