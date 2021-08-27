@@ -5,6 +5,8 @@ from shallowflow.api.condition import AbstractBooleanCondition
 from shallowflow.base.directors import SequentialDirector
 from shallowflow.base.conditions import AlwaysTrue
 
+STATE_INPUT = "input"
+
 
 class WhileLoop(MutableActorHandler, InputConsumer):
     """
@@ -42,6 +44,30 @@ class WhileLoop(MutableActorHandler, InputConsumer):
         :type data: object
         """
         self._input = data
+
+    def _backup_state(self):
+        """
+        For backing up the internal state before reconfiguring due to variable changes.
+
+        :return: the state dictionary
+        :rtype: dict
+        """
+        result = super()._backup_state()
+        if self._input is not None:
+            result[STATE_INPUT] = self._input
+        return result
+
+    def _restore_state(self, state):
+        """
+        Restores the state from the state dictionary after being reconfigured due to variable changes.
+
+        :param state: the state dictionary to use
+        :type state: dict
+        """
+        if STATE_INPUT in state:
+            self._input = state[STATE_INPUT]
+            del state[STATE_INPUT]
+        super()._restore_state(state)
 
     def setup(self):
         """
