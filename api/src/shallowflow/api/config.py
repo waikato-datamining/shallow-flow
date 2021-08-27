@@ -219,7 +219,7 @@ class OptionManager(LoggableObject, VariableHandler):
             self._options[name].var = unpad_var(value)
         else:
             if not isinstance(value, self._options[name].value_type):
-                raise("Invalid config type for %s: expected=%s, received=%s" % (name, self._options[name].value_type, type(value)))
+                raise Exception("Invalid config type for %s: expected=%s, received=%s" % (name, str(self._options[name].value_type), str(type(value))))
             self._values[name] = value
 
     def get(self, name):
@@ -415,13 +415,18 @@ class AbstractOptionHandler(LoggableObject, VariableHandler):
     The ancestor for all classes that handle options.
     """
 
-    def __init__(self):
+    def __init__(self, options=None):
         """
         Initializes the object.
+
+        :param options: the options to set immediately
+        :type options: dict
         """
         self._initialize()
         self._define_options()
         self.reset()
+        if options is not None:
+            self.options = options
 
     def _initialize(self):
         """
