@@ -53,4 +53,5 @@ The base components for shallow-flow.
 
 ## Help
 
+  * `shallowflow.base.help.Markdown` - generates help in Markdown
   * `shallowflow.base.help.PlainText` - plain text help
