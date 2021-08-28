@@ -1,3 +1,6 @@
+import json
+
+
 STRING_READERS = None
 """ contains all readers that convert strings into objects (list of AbstractStringReader) """
 
@@ -26,12 +29,13 @@ class AbstractStringReader(object):
         """
         raise NotImplemented()
 
-    def convert(self, s):
+    def convert(self, s, base_type=None):
         """
         Turns the string into an object.
 
         :param s: the string to convert
         :type s: str
+        :param base_type: optional type when reconstructing lists etc
         :return: the generated object
         """
         raise NotImplemented()
@@ -52,12 +56,13 @@ class StringReader(AbstractStringReader):
         """
         return issubclass(cls, str)
 
-    def convert(self, s):
+    def convert(self, s, base_type=None):
         """
         Turns the string into an object.
 
         :param s: the string to convert
         :type s: str
+        :param base_type: optional type when reconstructing lists etc
         :return: the generated object
         """
         return str(s)
@@ -78,12 +83,13 @@ class BoolStringReader(AbstractStringReader):
         """
         return issubclass(cls, bool)
 
-    def convert(self, s):
+    def convert(self, s, base_type=None):
         """
         Turns the string into an object.
 
         :param s: the string to convert
         :type s: str
+        :param base_type: optional type when reconstructing lists etc
         :return: the generated object
         """
         return bool(s)
@@ -104,12 +110,13 @@ class IntStringReader(AbstractStringReader):
         """
         return issubclass(cls, int)
 
-    def convert(self, s):
+    def convert(self, s, base_type=None):
         """
         Turns the string into an object.
 
         :param s: the string to convert
         :type s: str
+        :param base_type: optional type when reconstructing lists etc
         :return: the generated object
         """
         return int(s)
@@ -130,15 +137,53 @@ class FloatStringReader(AbstractStringReader):
         """
         return issubclass(cls, float)
 
-    def convert(self, s):
+    def convert(self, s, base_type=None):
         """
         Turns the string into an object.
 
         :param s: the string to convert
         :type s: str
+        :param base_type: optional type when reconstructing lists etc
         :return: the generated object
         """
         return float(s)
+
+
+class ListStringReader(AbstractStringReader):
+    """
+    Ancestor for classes that turns list strings into lists.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert a string into the specified class.
+
+        :param cls: the class to convert to
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, list)
+
+    def convert(self, s, base_type=None):
+        """
+        Turns the string into an object.
+
+        :param s: the string to convert
+        :type s: str
+        :param base_type: optional type when reconstructing lists etc
+        :return: the generated object
+        """
+        result = list()
+        l = json.loads(s)
+        reader = None
+        if base_type is not None:
+            reader = get_string_reader(base_type)()
+        for item in l:
+            if reader is None:
+                result.append(item)
+            else:
+                result.append(reader.convert(item, base_type))
+        return result
 
 
 class AbstractStringWriter(object):
@@ -269,6 +314,39 @@ class FloatStringWriter(AbstractStringWriter):
         :rtype: str
         """
         return str(o)
+
+
+class ListStringWriter(AbstractStringWriter):
+    """
+    Ancestor for classes that turn lists into strings.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert the object into a string.
+
+        :param cls: the class to convert
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, list)
+
+    def convert(self, o):
+        """
+        Turns the list into a string.
+
+        :param o: the object to convert
+        :return: the generated string
+        :rtype: str
+        """
+        l = list()
+        for item in o:
+            writer = get_string_writer(type(item))
+            if writer is None:
+                l.append(str(item))
+            else:
+                l.append(writer().convert(item))
+        return json.dumps(l)
 
 
 def get_string_readers():
@@ -428,9 +506,11 @@ add_string_reader(StringReader)
 add_string_reader(BoolStringReader)
 add_string_reader(IntStringReader)
 add_string_reader(FloatStringReader)
+add_string_reader(ListStringReader)
 
 # add default writers
 add_string_writer(StringWriter)
 add_string_writer(BoolStringWriter)
 add_string_writer(IntStringWriter)
 add_string_writer(FloatStringWriter)
+add_string_writer(ListStringWriter)

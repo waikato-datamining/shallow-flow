@@ -236,12 +236,11 @@ class OptionManager(LoggableObject, VariableHandler):
         # variable attached? return associated value
         if self.has_var(name) and (self.variables.has(self.get_var(name))):
             value = self.variables.get(self.get_var(name))
-            if self._options[name].base_type is not None:
+            reader = get_string_reader(self._options[name].value_type)
+            if (reader is None) and (self._options[name].base_type is not None):
                 reader = get_string_reader(self._options[name].base_type)
-            else:
-                reader = get_string_reader(self._options[name].value_type)
             if reader is not None:
-                return reader().convert(value)
+                return reader().convert(value, base_type=self._options[name].base_type)
             else:
                 self.log("Failed to determine reader for %s" % name)
         # non-default value set?
@@ -638,12 +637,13 @@ class OptionHandlerStringReader(AbstractStringReader):
         """
         return issubclass(cls, AbstractOptionHandler)
 
-    def convert(self, s):
+    def convert(self, s, base_type=None):
         """
         Turns the string into an object.
 
         :param s: the string to convert
         :type s: str
+        :param base_type: optional type when reconstructing lists etc
         :return: the generated object
         """
         d = json.loads(s)

@@ -55,7 +55,8 @@ class SetVariable(AbstractSimpleTransformer):
         if len(value) == 0:
             value = self._input
         if ser_vars.has_string_writer(type(value)):
-            value_str = ser_vars.get_string_writer(type(value))().convert(value)
+            writer = ser_vars.get_string_writer(type(value))()
+            value_str = writer.convert(value)
         else:
             self.log("Failed to determine string conversion for type: %s" % str(type(value)))
             value_str = str(value)
