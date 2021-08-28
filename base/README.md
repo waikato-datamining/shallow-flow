@@ -10,6 +10,7 @@ The base components for shallow-flow.
   * `shallowflow.base.controls.ConditionalTrigger`
   * `shallowflow.base.controls.Flow`
   * `shallowflow.base.controls.Sequence`
+  * `shallowflow.base.controls.Sleep`
   * `shallowflow.base.controls.Tee`
   * `shallowflow.base.controls.Trigger`
   * `shallowflow.base.controls.WhileLoop`
