@@ -26,6 +26,14 @@ class AbstractSimpleSource(OutputProducer):
             self._output.clear()
         return result
 
+    def _post_execute(self):
+        """
+        After the actual code got executed.
+        """
+        if self.is_stopped:
+            self._output = list()
+        super()._post_execute()
+
     def has_output(self):
         """
         Returns whether output data is available.

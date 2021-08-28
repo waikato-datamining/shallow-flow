@@ -117,6 +117,9 @@ class AbstractTee(MutableActorHandler, InputConsumer, OutputProducer):
         After the actual code got executed.
         """
         self._input = None
+        if self.is_stopped:
+            self._output = None
+        super()._post_execute()
 
     def has_output(self):
         """

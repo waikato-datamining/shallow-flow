@@ -67,6 +67,9 @@ class AbstractSimpleTransformer(InputConsumer, OutputProducer):
         After the actual code got executed.
         """
         self._input = None
+        if self.is_stopped:
+            self._output = list()
+        super()._post_execute()
 
     def has_output(self):
         """

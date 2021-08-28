@@ -117,6 +117,9 @@ class AbstractTrigger(MutableActorHandler, InputConsumer, OutputProducer):
         After the actual code got executed.
         """
         self._input = None
+        if self.is_stopped:
+            self._output = N
+        super()._post_execute()
 
     def has_output(self):
         """
