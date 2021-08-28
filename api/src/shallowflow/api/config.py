@@ -346,7 +346,11 @@ class OptionManager(LoggableObject, VariableHandler):
                     reader = get_dict_reader(self._options[k].base_type)
                     l = []
                     for item in d[k]:
-                        l.append(reader(item))
+                        # already object rather than dict?
+                        if isinstance(item, self._options[k].base_type):
+                            l.append(item)
+                        else:
+                            l.append(reader(item))
                     self.set(k, l)
                     continue
 
