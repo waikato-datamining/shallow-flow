@@ -8,21 +8,15 @@ from shallowflow.base.sinks import ConsoleOutput
 start = Start()
 
 # initialize variable
-setvar = SetVariable() \
-    .set("var_name", "i") \
-    .set("var_value", "1")
+setvar = SetVariable(options={"var_name": "i", "var_value": "1"})
 
 # only execute while loop as lo
-numexpr = NumExpr() \
-    .set("expression", "@{i} < 5")
-while_loop = WhileLoop() \
-    .set("condition", numexpr)
+numexpr = NumExpr(options={"expression": "@{i} < 5"})
+while_loop = WhileLoop(options={"condition": numexpr})
 with scoping():
-    getvar = GetVariable() \
-        .set("var_name", "i")
+    getvar = GetVariable(options={"var_name": "i"})
 
-    incvar = IncVariable() \
-        .set("var_name", "i")
+    incvar = IncVariable(options={"var_name": "i"})
 
     output = ConsoleOutput()
 

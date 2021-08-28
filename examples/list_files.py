@@ -1,13 +1,14 @@
 from os.path import expanduser
 from shallowflow.base.sources import DirectoryLister
 
-dl = DirectoryLister()
-dl.set("dir", expanduser("~"))
-dl.set("list_files", True)
-dl.set("list_dirs", True)
-dl.set("sort", True)
-dl.set("recursive", True)
-dl.set("max_items", 100)
+dl = DirectoryLister(options={
+    "dir": expanduser("~"),
+    "list_files": True,
+    "list_dirs": True,
+    "sort": True,
+    "recursive": True,
+    "max_items": 100
+})
 msg = dl.setup()
 if msg is None:
     msg = dl.execute()
