@@ -358,8 +358,12 @@ class OptionManager(LoggableObject, VariableHandler):
 
             # reader registered for type?
             if has_dict_reader(self._options[k].value_type):
-                reader = get_dict_reader(self._options[k].value_type)
-                self.set(k, reader(d[k]))
+                # already object rather than dict?
+                if isinstance(d[k], self._options[k].value_type):
+                    self.set(k, d[k])
+                else:
+                    reader = get_dict_reader(self._options[k].value_type)
+                    self.set(k, reader(d[k]))
                 continue
 
             if isinstance(self.get(k), self._options[k].value_type):
