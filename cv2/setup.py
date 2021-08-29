@@ -13,7 +13,7 @@ def _read(f):
 
 
 setup(
-    name="shallow-flow-imaging",
+    name="shallow-flow-cv2",
     description="Imaging components for the Python 3 shallow-flow workflow engine.",
     long_description=(
         _read('DESCRIPTION.rst') + b'\n' +

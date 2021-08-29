@@ -2,8 +2,8 @@ from scoping import scoping
 from shallowflow.base.controls import Flow, Branch, run_flow
 from shallowflow.base.sources import FileSupplier
 from shallowflow.base.transformers import IncVariable
-from shallowflow.imaging.transformers import VideoFrames
-from shallowflow.imaging.sinks import ImageWriter, VideoWriter
+from shallowflow.cv2.transformers import VideoFrames
+from shallowflow.cv2.sinks import ImageWriter, VideoWriter
 
 files = FileSupplier({"files": ["./data/track_book.mjpeg"]})
 

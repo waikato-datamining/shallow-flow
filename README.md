@@ -5,7 +5,7 @@ Available modules:
 
 * [API](api)
 * [Base components](base)
-* [Imaging components](imaging)
+* [Imaging components](cv2)
 
 
 ## Examples
