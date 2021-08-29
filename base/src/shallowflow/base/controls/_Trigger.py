@@ -93,15 +93,6 @@ class ConditionalTrigger(Trigger):
             self.get("condition").owner = self
         return result
 
-    def _new_director(self):
-        """
-        Returns the directory to use for executing the actors.
-
-        :return: the director
-        :rtype: AbstractDirector
-        """
-        return SequentialDirector(owner=self, allows_standalones=False, requires_source=False, requires_sink=False)
-
     def _can_execute_actors(self):
         """
         Returns whether the sub-actors can be executed.
