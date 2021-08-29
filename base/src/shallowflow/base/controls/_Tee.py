@@ -54,20 +54,6 @@ class AbstractTee(MutableActorHandler, InputConsumer, OutputProducer):
             del state[STATE_INPUT]
         super()._restore_state(state)
 
-    def setup(self):
-        """
-        Prepares the actor for use.
-
-        :return: None if successful, otherwise error message
-        :rtype: str
-        """
-        result = super().setup()
-        if result is None:
-            if len(self.actors) > 0:
-                if not isinstance(self.actors[0], InputConsumer):
-                    result = "First sub-actor does not accept input: %s" % self.actors[0].full_name
-        return result
-
     def _pre_execute(self):
         """
         Before the actual code gets executed.
@@ -105,12 +91,7 @@ class AbstractTee(MutableActorHandler, InputConsumer, OutputProducer):
         :return: None if successful, otherwise error message
         :rtype: str
         """
-        result = None
-        if self._can_execute_actors():
-            result = self._director.execute(self.actors)
-        if result is None:
-            self._output = self._input
-        return result
+        raise NotImplemented()
 
     def _post_execute(self):
         """
@@ -176,6 +157,22 @@ class Tee(AbstractTee):
         """
         return SequentialDirector(owner=self, allows_standalones=False, requires_source=False, requires_sink=False)
 
+    def _check_actors(self, actors):
+        """
+        Performs checks on the sub-actors.
+
+        :param actors: the actors to check
+        :type actors: list
+        :return: None if successful check, otherwise error message
+        :rtype: str
+        """
+        result = super()._check_actors(actors)
+        if result is None:
+            if len(self.actors) > 0:
+                if not isinstance(self.actors[0], InputConsumer):
+                    result = "First sub-actor does not accept input: %s" % self.actors[0].full_name
+        return result
+
     def _pre_execute(self):
         """
         Before the actual code gets executed.
@@ -186,6 +183,20 @@ class Tee(AbstractTee):
         result = super()._pre_execute()
         if len(self.actors) > 0:
             self.actors[0].input(self._input)
+        return result
+
+    def _do_execute(self):
+        """
+        Performs the actual execution.
+
+        :return: None if successful, otherwise error message
+        :rtype: str
+        """
+        result = None
+        if self._can_execute_actors():
+            result = self._director.execute(self.actors)
+        if result is None:
+            self._output = self._input
         return result
 
 

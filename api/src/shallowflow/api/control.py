@@ -62,7 +62,22 @@ class ActorHandler(Actor):
             else:
                names.append(name)
 
+        msg = self._check_actors(actors)
+        if msg is not None:
+            raise Exception(msg)
+
         self._option_manager.set("actors", actors)
+
+    def _check_actors(self, actors):
+        """
+        Performs checks on the sub-actors.
+
+        :param actors: the actors to check
+        :type actors: list
+        :return: None if successful check, otherwise error message
+        :rtype: str
+        """
+        return None
 
     def setup(self):
         """
@@ -72,6 +87,8 @@ class ActorHandler(Actor):
         :rtype: str
         """
         result = super().setup()
+        if result is None:
+            result = self._check_actors(self.actors)
         if result is None:
             for actor in self.actors:
                 actor.parent = self
