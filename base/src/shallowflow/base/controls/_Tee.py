@@ -233,15 +233,6 @@ class ConditionalTee(Tee):
             self.get("condition").owner = self
         return result
 
-    def _new_director(self):
-        """
-        Returns the directory to use for executing the actors.
-
-        :return: the director
-        :rtype: AbstractDirector
-        """
-        return SequentialDirector(owner=self, allows_standalones=False, requires_source=False, requires_sink=False)
-
     def _can_execute_actors(self):
         """
         Returns whether the sub-actors can be executed.
@@ -252,16 +243,4 @@ class ConditionalTee(Tee):
         result = super()._can_execute_actors()
         if result:
             result = self.get("condition").evaluate(self._input)
-        return result
-
-    def _pre_execute(self):
-        """
-        Before the actual code gets executed.
-
-        :return: None if successful, otherwise error message
-        :rtype: str
-        """
-        result = super()._pre_execute()
-        if len(self.actors) > 0:
-            self.actors[0].input(self._input)
         return result
