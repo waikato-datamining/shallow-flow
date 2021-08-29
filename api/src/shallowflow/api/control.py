@@ -183,3 +183,13 @@ class MutableActorHandler(ActorHandler):
             actors.remove(actor)
             self.actors = actors
         return self
+
+    def clear(self):
+        """
+        Removes all actors.
+
+        :return: itself
+        :rtype: MutableActorHandler
+        """
+        self.actors = []
+        return self
