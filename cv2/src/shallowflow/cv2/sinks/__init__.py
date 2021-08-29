@@ -1,2 +1,2 @@
-from ._ImageWriter import ImageWriter
-from ._VideoWriter import VideoWriter
+from ._ImageFileWriter import ImageFileWriter
+from ._VideoFileWriter import VideoWriter

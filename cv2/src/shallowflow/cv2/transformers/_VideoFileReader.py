@@ -7,7 +7,7 @@ STATE_FRAME_COUNT = "frame_count"
 STATE_FRAMES_PROCESSED = "frames_processed"
 
 
-class VideoFrames(AbstractSimpleTransformer):
+class VideoFileReader(AbstractSimpleTransformer):
     """
     Outputs frames from the video file that it received.
     """

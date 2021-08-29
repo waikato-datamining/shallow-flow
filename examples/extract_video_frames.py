@@ -2,20 +2,20 @@ from scoping import scoping
 from shallowflow.base.controls import Flow, Branch, run_flow
 from shallowflow.base.sources import FileSupplier
 from shallowflow.base.transformers import IncVariable
-from shallowflow.cv2.transformers import VideoFrames
-from shallowflow.cv2.sinks import ImageWriter, VideoWriter
+from shallowflow.cv2.transformers import VideoFileReader
+from shallowflow.cv2.sinks import ImageFileWriter, VideoWriter
 
 files = FileSupplier({"files": ["./data/track_book.mjpeg"]})
 
 # extract every 2nd frame, but only 10 at most
-frames = VideoFrames({"nth_frame": 2, "max_frames": 10})
+frames = VideoFileReader({"nth_frame": 2, "max_frames": 10})
 
 inc = IncVariable({"var_name": "i"})
 
 branch = Branch()
 
 with scoping():
-    writer = ImageWriter({"output_file": "./output/track_book-@{i}.jpg"})
+    writer = ImageFileWriter({"output_file": "./output/track_book-@{i}.jpg"})
     branch.append(writer)
 
 with scoping():

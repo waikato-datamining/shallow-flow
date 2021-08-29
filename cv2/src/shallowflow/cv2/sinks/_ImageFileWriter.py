@@ -2,7 +2,7 @@ import cv2
 from shallowflow.api.sink import AbstractFileWriter
 
 
-class ImageWriter(AbstractFileWriter):
+class ImageFileWriter(AbstractFileWriter):
     """
     Writes the incoming image data to disk.
     """
