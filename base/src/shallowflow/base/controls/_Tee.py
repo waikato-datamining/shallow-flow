@@ -200,7 +200,7 @@ class Tee(AbstractTee):
         return result
 
 
-class ConditionalTee(AbstractTee):
+class ConditionalTee(Tee):
     """
     Forwards the incoming data to the defined sub-flow before forwarding it only if the boolean condition evaluates to 'True'
     """
