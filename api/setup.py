@@ -13,7 +13,7 @@ def _read(f):
 
 
 setup(
-    name="shallow-flow-base",
+    name="shallow-flow-api",
     description="API for the Python 3 shallow-flow workflow engine.",
     long_description=(
         _read('DESCRIPTION.rst') + b'\n' +
