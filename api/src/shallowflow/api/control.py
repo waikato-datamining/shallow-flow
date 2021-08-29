@@ -68,6 +68,15 @@ class ActorHandler(Actor):
 
         self._option_manager.set("actors", actors)
 
+    def __len__(self):
+        """
+        Returns the number of actors.
+
+        :return: the number of actors
+        :rtype: int
+        """
+        return len(self.actors)
+
     def _check_actors(self, actors):
         """
         Performs checks on the sub-actors.
