@@ -14,4 +14,5 @@ Imaging components for shallow-flow.
 * Sinks
 
   * `shallowflow.imaging.sink.ImageWriter`
+  * `shallowflow.imaging.sink.VideoWriter`
 

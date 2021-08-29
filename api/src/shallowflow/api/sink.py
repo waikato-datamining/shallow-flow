@@ -66,4 +66,13 @@ class AbstractFileWriter(AbstractSimpleSink):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option("output_file", str, ".", "The file to write to; can contain variables"))
+        self._option_manager.add(Option("output_file", str, ".", self._output_file_help()))
+
+    def _output_file_help(self):
+        """
+        Returns the help string for the 'output_file' option.
+
+        :return: the help string
+        :rtype: str
+        """
+        return "The file to write to; can contain variables"
