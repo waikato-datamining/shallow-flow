@@ -2,6 +2,7 @@ import importlib
 import json
 from collections import OrderedDict
 from datetime import datetime
+from .class_utils import fix_module_name
 from .logging import LoggableObject
 from .serialization.objects import get_dict_reader, get_dict_writer, add_dict_writer, add_dict_reader, has_dict_reader, has_dict_writer
 from .serialization.vars import get_string_reader
@@ -608,16 +609,7 @@ def optionhandler_to_dict(a):
     :rtype: dict
     """
     result = dict()
-    m = type(a).__module__
-    c = type(a).__name__
-    # can we make the module nicer, by dropping the _CLASS part?
-    if m.split(".")[-1].startswith("_"):
-        try:
-            m_short = ".".join(m.split(".")[:-1])
-            getattr(importlib.import_module(m_short), c)
-            m = m_short
-        except:
-            pass
+    m, c = fix_module_name(type(a).__module__, type(a).__name__)
     result["class"] = m + "." + c
     options = a.options
     if len(options) != 0:
