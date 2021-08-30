@@ -9,11 +9,11 @@ Imaging components using [OpenCV2](https://github.com/opencv/opencv-python) for 
     
 * Transformers
 
-  * `shallowflow.imaging.transformers.ImageFileReader`
-  * `shallowflow.imaging.transformers.VideoFileReader`
+  * `shallowflow.cv2.transformers.ImageFileReader`
+  * `shallowflow.cv2.transformers.VideoFileReader`
     
 * Sinks
 
-  * `shallowflow.imaging.sinks.ImageFileWriter`
-  * `shallowflow.imaging.sinks.VideoFileWriter`
+  * `shallowflow.cv2.sinks.ImageFileWriter`
+  * `shallowflow.cv2.sinks.VideoFileWriter`
 
