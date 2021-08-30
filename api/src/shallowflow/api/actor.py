@@ -4,6 +4,12 @@ from .config import Option, AbstractOptionHandler, dict_to_optionhandler, option
 from .vars import VariableChangeListener
 from .storage import StorageHandler
 
+FLOW_PATH = "flow_path"
+""" Variable that stores the full flow path. """
+
+FLOW_DIR = "flow_dir"
+""" Variable that stores the directory the flow resides in. """
+
 
 class Actor(AbstractOptionHandler, VariableChangeListener):
     """

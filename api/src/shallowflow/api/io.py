@@ -4,7 +4,7 @@ import pickle
 import traceback
 import yaml
 from .config import optionhandler_to_dict, dict_to_optionhandler
-from .actor import Actor
+from .actor import Actor, FLOW_DIR, FLOW_PATH
 from .logging import log
 
 FLOW_READERS = None
@@ -133,6 +133,27 @@ def get_flow_writer(ext):
         return None
 
 
+def add_flow_vars(actor, path):
+    """
+    Adds variables derived from the path to the actor's variables.
+
+    :param actor: the actor to update
+    :type actor: Actor
+    :param path: the path to use
+    :type path: str
+    :return: the (potentially) updated actor
+    :rtype: Actor
+    """
+    if actor is None:
+        return None
+
+    if path is not None:
+        actor.variables.set(FLOW_PATH, path)
+        actor.variables.set(FLOW_DIR, os.path.dirname(path))
+
+    return actor
+
+
 def load_json_actor(path):
     """
     Loads a actor from the given JSON file.
@@ -199,9 +220,9 @@ def load_actor(path):
     """
     ext = os.path.splitext(path)[1]
     if has_flow_reader(ext):
-        return get_flow_reader(ext)(path)
+        return add_flow_vars(get_flow_reader(ext)(path), path)
     else:
-        log("Failed to find flow writer for extension '%s' (file: %s)" % (ext, path))
+        log("Failed to find flow reader for extension '%s' (file: %s)" % (ext, path))
         return None
 
 
@@ -282,6 +303,36 @@ def save_actor(actor, path):
         return get_flow_writer(ext)(actor, path)
     else:
         log("Failed to find flow writer for extension '%s' (file: %s)" % (ext, path))
+        return None
+
+
+def actor_to_json(actor):
+    """
+    Turns the actor into JSON representation.
+
+    :param actor: the actor to convert
+    :type actor: Actor
+    :return: the generated string
+    :rtype: str
+    """
+    d = optionhandler_to_dict(actor)
+    return json.dumps(d, indent=2)
+
+
+def json_to_actor(s):
+    """
+    Parses the JSON string and returns the actor.
+
+    :param s: the string to parse
+    :type s: str
+    :return: the generated actor, None if failed to do so
+    :rtype: Actor
+    """
+    try:
+        d = json.loads(s)
+        return dict_to_optionhandler(d)
+    except Exception:
+        log("Failed to parse JSON string as actor: %s" % s)
         return None
 
 
