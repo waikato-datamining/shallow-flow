@@ -34,6 +34,7 @@ setup(
         "shallowflow",
     ],
     install_requires=[
+        "shallow-flow-api",
         "numexpr",
     ],
     version="0.0.1",
