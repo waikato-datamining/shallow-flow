@@ -1,5 +1,5 @@
-# shallow-flow-imaging
-Imaging components for shallow-flow.
+# shallow-flow-cv2
+Imaging components using [OpenCV2](https://github.com/opencv/opencv-python) for shallow-flow.
 
 ## Actors
 
