@@ -37,6 +37,11 @@ setup(
         "shallow-flow-api",
         "numexpr",
     ],
+    entry_points={
+        "console_scripts": [
+            "sf-runflow=shallowflow.base.controls._Flow:sys_main",
+        ]
+    },
     version="0.0.1",
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',
