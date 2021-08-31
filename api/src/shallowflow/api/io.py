@@ -42,6 +42,18 @@ def get_flow_readers():
     return FLOW_READERS
 
 
+def get_reader_extensions():
+    """
+    Returns a list of extensions for which readers are available.
+
+    :return: the list of extensions
+    :rtype: list
+    """
+    result = list(get_flow_readers().keys())
+    result.sort()
+    return result
+
+
 def add_flow_reader(ext, reader):
     """
     Adds a reader for the specified extension.
@@ -92,6 +104,18 @@ def get_flow_writers():
     if FLOW_WRITERS is None:
         FLOW_WRITERS = dict()
     return FLOW_WRITERS
+
+
+def get_writer_extensions():
+    """
+    Returns a list of extensions for which writers are available.
+
+    :return: the list of extensions
+    :rtype: list
+    """
+    result = list(get_flow_writers().keys())
+    result.sort()
+    return result
 
 
 def add_flow_writer(ext, writer):
