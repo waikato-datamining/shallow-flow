@@ -71,14 +71,14 @@ def unpad_var(s):
         return s
 
 
-def _do_expand(s, vars):
+def _do_expand(s, variables):
     """
     Expands the variable placeholders in the string using the supplied variables.
 
     :param s: the string to expand
     :type s: str
-    :param vars: the variables to use for the expansion
-    :type vars: Variables
+    :param variables: the variables to use for the expansion
+    :type variables: Variables
     :return: the expanded string and whether anything was expanded
     :rtype: tuple(str, bool)
     """
@@ -95,8 +95,8 @@ def _do_expand(s, vars):
         else:
             name = tmp[start+len(VAR_START):end]
             result += tmp[0:start]
-            if vars.has(name):
-                result += str(vars.get(name))
+            if variables.has(name):
+                result += str(variables.get(name))
             if len(tmp) == end + 1:
                 tmp = ""
             else:
@@ -109,20 +109,20 @@ def _do_expand(s, vars):
     return result, expanded
 
 
-def expand(s, vars):
+def expand(s, variables):
     """
     Expands the variable placeholders in the string using the supplied variables.
 
     :param s: the string to expand
     :type s: str
-    :param vars: the variables to use for the expansion
-    :type vars: Variables
+    :param variables: the variables to use for the expansion
+    :type variables: Variables
     :return: the expanded string
     :rtype: str
     """
     result = s
     while True:
-        result, expanded = _do_expand(result, vars)
+        result, expanded = _do_expand(result, variables)
         if not expanded:
             break
         if VAR_START not in result:
@@ -312,17 +312,17 @@ class Variables(object):
         """
         return expand(s, self)
 
-    def merge(self, vars):
+    def merge(self, variables):
         """
         Incorporates the supplied variables (replaces any existing ones).
 
-        :param vars: the variables to merge
-        :type vars: Variables
+        :param variables: the variables to merge
+        :type variables: Variables
         :return: itself
         :rtype: Variables
         """
-        for key in vars.keys():
-            self.set(key, vars.get(key))
+        for key in variables.keys():
+            self.set(key, variables.get(key))
         return self
 
     def _notify_listeners(self, event):
@@ -360,11 +360,11 @@ class VariableHandler(object):
         """
         raise NotImplemented()
 
-    def update_variables(self, vars):
+    def update_variables(self, variables):
         """
         Sets the variables to use.
 
-        :param vars: the variables to use
-        :type vars: Variables
+        :param variables: the variables to use
+        :type variables: Variables
         """
         raise NotImplemented()
