@@ -84,8 +84,11 @@ class Storage(object):
 
         :param l: the listener to add
         :type l: StorageChangeListener
+        :return: itself
+        :rtype: Storage
         """
         self._listeners.add(l)
+        return self
 
     def remove_listener(self, l):
         """
@@ -93,21 +96,32 @@ class Storage(object):
 
         :param l: the listener to remove
         :type l: StorageChangeListener
+        :return: itself
+        :rtype: Storage
         """
         self._listeners.remove(l)
+        return self
 
     def clear_listeners(self):
         """
         Removes all listeners.
+
+        :return: itself
+        :rtype: Storage
         """
         self._listeners.clear()
+        return self
 
     def clear(self):
         """
         Removes all stored items.
+
+        :return: itself
+        :rtype: Storage
         """
         self._data.clear()
         self._notify_listeners(StorageChangeEvent(self, STORAGE_EVENT_CLEARED))
+        return self
 
     def has(self, key):
         """
@@ -130,6 +144,8 @@ class Storage(object):
         :type key: str
         :param value: the value to store
         :type value: object
+        :return: itself
+        :rtype: Storage
         """
         if not is_valid_name(key):
             raise Exception("Invalid storage name: %s" + key)
@@ -139,6 +155,7 @@ class Storage(object):
         else:
             self._data[key] = value
             self._notify_listeners(StorageChangeEvent(self, STORAGE_EVENT_UPDATED, key))
+        return self
 
     def get(self, key):
         """
@@ -162,12 +179,15 @@ class Storage(object):
 
         :param key: the name of the value to remove
         :type key: str
+        :return: itself
+        :rtype: Storage
         """
         if not is_valid_name(key):
             raise Exception("Invalid storage name: %s" + key)
         if key in self._data:
             del self._data[key]
             self._notify_listeners(StorageChangeEvent(self, STORAGE_EVENT_DELETED, key))
+        return self
 
     def keys(self):
         """
@@ -177,6 +197,19 @@ class Storage(object):
         :rtype: set
         """
         return self._data.keys()
+
+    def merge(self, storage):
+        """
+        Incorporates the supplied storage (replaces any existing ones).
+
+        :param storage: the variables to merge
+        :type storage: Storage
+        :return: itself
+        :rtype: Storage
+        """
+        for key in storage.keys():
+            self.set(key, storage.get(key))
+        return self
 
     def _notify_listeners(self, event):
         """
