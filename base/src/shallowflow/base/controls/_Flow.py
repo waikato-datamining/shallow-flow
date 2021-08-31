@@ -1,5 +1,6 @@
 from shallowflow.api.control import MutableActorHandler
 from shallowflow.api.storage import StorageHandler, Storage
+from shallowflow.api.vars import Variables
 from shallowflow.base.directors import SequentialDirector
 
 
@@ -57,17 +58,21 @@ class Flow(MutableActorHandler, StorageHandler):
         return self._storage
 
 
-def run_flow(flow):
+def run_flow(flow, variables=None):
     """
     Executes the supplied flow.
 
     :param flow: the actor to execute
     :type flow: Actor
+    :param variables: additional variables to set
+    :type variables: Variables
     :return: None if successful, otherwise error message
     :rtype: str
     """
     msg = flow.setup()
     if msg is None:
+        if variables is not None:
+            flow.variables.merge(variables)
         msg = flow.execute()
         if msg is not None:
             return "Failed to execute flow: %s" % msg
