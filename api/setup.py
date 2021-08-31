@@ -36,6 +36,7 @@ setup(
     install_requires=[
         "pyyaml",
         "scoping",
+        "setuptools",
     ],
     version="0.0.1",
     author='Peter Reutemann',
