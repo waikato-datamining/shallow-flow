@@ -1,5 +1,5 @@
-# shallow-flow-api
-The API for shallow-flow.
+# shallowflow-api
+The API for shallowflow.
 
 ## Classes
 

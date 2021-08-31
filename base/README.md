@@ -1,5 +1,5 @@
-# shallow-flow-base
-The base components for shallow-flow.
+# shallowflow-base
+The base components for shallowflow.
 
 ## Actors
 

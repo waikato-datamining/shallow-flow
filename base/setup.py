@@ -13,12 +13,12 @@ def _read(f):
 
 
 setup(
-    name="shallow-flow-base",
-    description="Base components for the Python 3 shallow-flow workflow engine.",
+    name="shallowflow-base",
+    description="Base components for the Python 3 shallowflow workflow engine.",
     long_description=(
         _read('DESCRIPTION.rst') + b'\n' +
         _read('CHANGES.rst')).decode('utf-8'),
-    url="https://github.com/waikato-datamining/shallow-flow",
+    url="https://github.com/waikato-datamining/shallowflow",
     classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
@@ -34,7 +34,7 @@ setup(
         "shallowflow",
     ],
     install_requires=[
-        "shallow-flow-api",
+        "shallowflow-api",
         "numexpr",
     ],
     entry_points={

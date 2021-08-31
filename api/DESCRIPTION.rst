@@ -1,1 +1,1 @@
-API for the Python 3 shallow-flow workflow engine.
+API for the Python 3 shallowflow workflow engine.

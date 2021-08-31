@@ -1,1 +1,1 @@
-Imaging components for the Python 3 shallow-flow workflow engine.
+Imaging components for the Python 3 shallowflow workflow engine.

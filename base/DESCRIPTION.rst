@@ -1,1 +1,1 @@
-Base components for the Python 3 shallow-flow workflow engine.
+Base components for the Python 3 shallowflow workflow engine.
