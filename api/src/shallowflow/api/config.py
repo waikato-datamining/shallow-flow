@@ -75,26 +75,26 @@ class OptionManager(LoggableObject, VariableHandler):
         """
         return self._variables
 
-    def update_variables(self, vars):
+    def update_variables(self, variables):
         """
         Sets the variables to use.
 
-        :param vars: the variables to use
-        :type vars: Variables
+        :param variables: the variables to use
+        :type variables: Variables
         """
-        self._variables = vars
+        self._variables = variables
         for k in self._options:
             if isinstance(self._options[k].def_value, VariableHandler):
-                self._options[k].def_value.update_variables(vars)
+                self._options[k].def_value.update_variables(variables)
                 if k in self._values:
-                    self._values[k].update_variables(vars)
+                    self._values[k].update_variables(variables)
             if (issubclass(self._options[k].value_type, list)) and (self._options[k].base_type is not None):
                 if issubclass(self._options[k].base_type, VariableHandler):
                     for i in range(len(self._options[k].def_value)):
-                        self._options[k].def_value[i].update_variables(vars)
+                        self._options[k].def_value[i].update_variables(variables)
                     if k in self._values:
                         for i in range(len(self._values[k])):
-                            self._values[k][i].update_variables(vars)
+                            self._values[k][i].update_variables(variables)
 
     def has_var(self, name):
         """
@@ -541,14 +541,14 @@ class AbstractOptionHandler(LoggableObject, VariableHandler):
         """
         return self.option_manager.variables
 
-    def update_variables(self, vars):
+    def update_variables(self, variables):
         """
         Sets the variables to use.
 
-        :param vars: the variables to use
-        :type vars: Variables
+        :param variables: the variables to use
+        :type variables: Variables
         """
-        return self.option_manager.update_variables(vars)
+        return self.option_manager.update_variables(variables)
 
     def _get_log_prefix(self):
         """
