@@ -128,15 +128,15 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
         self.log(result)
         return result
 
-    def update_variables(self, vars):
+    def update_variables(self, variables):
         """
         Sets the variables to use.
 
-        :param vars: the variables to use
-        :type vars: Variables
+        :param variables: the variables to use
+        :type variables: Variables
         """
         self.variables.remove_listener(self)
-        result = super().update_variables(vars)
+        result = super().update_variables(variables)
         self.variables.add_listener(self)
         return result
 
