@@ -98,9 +98,22 @@ def main(args=None):
         prog="sf-runflow",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-f", "--flow", metavar="FILE", help="the flow to execute, supported extensions: " + ", ".join(get_reader_extensions()), required=True)
+    parser.add_argument("-v", "--variable", metavar="KEY=VALUE", nargs='+', default=None, help="For supplying variables to the flow.")
     parsed = parser.parse_args(args=args)
+
+    # any variables?
+    variables = None
+    if parsed.variable is not None:
+        variables = Variables()
+        for pair in parsed.variable:
+            parts = pair.split("=")
+            if len(parts) == 2:
+                variables.set(parts[0].strip(), parts[1].strip())
+            else:
+                print("Invalid key=value pair: %s" % pair)
+
     flow = load_actor(parsed.flow)
-    run_flow(flow)
+    run_flow(flow, variables=variables)
 
 
 def sys_main() -> int:
