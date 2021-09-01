@@ -1,7 +1,7 @@
+import os
 from shallowflow.api.actor import Actor
 from shallowflow.api.config import Option
 from shallowflow.api.vars import is_valid_name
-import shallowflow.api.serialization.vars as ser_vars
 
 
 class SetVariable(Actor):
@@ -27,6 +27,12 @@ class SetVariable(Actor):
                                         help="The name of the variable"))
         self._option_manager.add(Option(name="var_value", value_type=str, def_value="",
                                         help="The value to use instead of data passing through"))
+        self._option_manager.add(Option(name="env_var", value_type=str, def_value="",
+                                        help="The environment variable to use for setting the value (overrides 'var_value')."))
+        self._option_manager.add(Option(name="env_var_optional", value_type=bool, def_value=False,
+                                        help="Whether the environment must exist or can be absent."))
+        self._option_manager.add(Option(name="expand", value_type=bool, def_value=False,
+                                        help="Whether to expand any variables in the value."))
 
     def setup(self):
         """
@@ -50,12 +56,23 @@ class SetVariable(Actor):
         :return: None if successful, otherwise error message
         :rtype: str
         """
+        result = None
+
         value = self.get("var_value")
-        name = self.get("var_name")
-        if ser_vars.has_string_writer(type(value)):
-            value_str = ser_vars.get_string_writer(type(value))().convert(value)
-        else:
-            self.log("Failed to determine string conversion for type: %s" % str(type(value)))
-            value_str = str(value)
-        self.variables.set(name, value_str)
-        return None
+        env_var = self.get("env_var")
+        if len(env_var) > 0:
+            if os.getenv(env_var) is None:
+                if not self.get("env_var_optional"):
+                    result = "Environment variable not present: %s" % env_var
+            else:
+                value = os.getenv(env_var)
+
+        if result is None:
+            if self.get("expand"):
+                value = self.variables.expand(value)
+                if self.is_debug:
+                    self.log("'%s' expanded to '%s'" % (self.get("var_value"), value))
+            name = self.get("var_name")
+            self.variables.set(name, value)
+
+        return result
