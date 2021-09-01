@@ -23,4 +23,6 @@ with scoping():
 
 flow = Flow()
 flow.actors = [dl, setvar, trigger]
-run_flow(flow)
+msg = run_flow(flow)
+if msg is not None:
+    print(msg)

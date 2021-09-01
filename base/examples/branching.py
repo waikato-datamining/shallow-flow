@@ -19,4 +19,6 @@ for i in range(5):
 
 flow = Flow()
 flow.actors = [forloop, branch]
-run_flow(flow)
+msg = run_flow(flow)
+if msg is not None:
+    print(msg)

@@ -26,4 +26,6 @@ output1 = ConsoleOutput(options={"prefix": "all: "})
 
 flow = Flow()
 flow.actors = [loop1, setvar1, trigger1, output1]
-run_flow(flow)
+msg = run_flow(flow)
+if msg is not None:
+    print(msg)

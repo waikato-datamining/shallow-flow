@@ -15,4 +15,6 @@ output = ConsoleOutput()
 
 flow = Flow()
 flow.actors = [loop, setvar, tee, output]
-run_flow(flow)
+msg = run_flow(flow)
+if msg is not None:
+    print(msg)

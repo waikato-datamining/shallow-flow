@@ -57,3 +57,17 @@ The base components for shallowflow.
 
   * `shallowflow.base.help.Markdown` - generates help in Markdown
   * `shallowflow.base.help.PlainText` - plain text help
+
+
+## Examples
+
+* [option handling](base/examples/option_handling.py)
+* [finding modules/classes](base/examples/find_modules_and_classes.py)
+* [listing files/dirs](base/examples/list_files.py)
+* [listing files/dirs (flow)](base/examples/flow_listing_files.py)
+* [stopping flow](base/examples/stopping_flow.py)
+* [use variables](base/examples/use_variables.py)
+* [use lists in variable](base/examples/use_lists_in_variable.py)
+* [env variables](base/examples/env_var.py)
+* [using branches](base/examples/branching.py)
+* [while loop](base/examples/while_loop.py)
