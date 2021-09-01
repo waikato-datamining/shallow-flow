@@ -34,8 +34,15 @@ def find_module_names():
     """
     result = []
     location = inspect.getmodule(get_dict_reader).__file__
-    while not location.endswith("shallowflow"):
+    # source?
+    if "src/shallowflow" in location:
+        location = location[0:location.index("src/shallowflow")]
         location = os.path.dirname(location)
+        location = os.path.dirname(location)
+    # installed
+    else:
+        while not location.endswith("shallowflow"):
+            location = os.path.dirname(location)
 
     packages = find_namespace_packages(where=location)
 
