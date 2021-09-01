@@ -34,14 +34,25 @@ class SequentialDirector(AbstractDirector):
         :rtype: str
         """
         result = super()._check(actors)
+
         if result is None:
-            if self.requires_source and not is_source(actors[0]):
-                result = "First actor must be a source!"
+            if self.requires_source:
+                for i in range(len(actors)):
+                    if is_standalone(actors[i]):
+                        continue
+                    if is_source(actors[i]):
+                        break
+                    else:
+                        result = "First (non-standalone) actor must be a source!"
+
         if result is None:
             if self.requires_sink and not is_sink(actors[-1]):
-                result = "Last actor must be a source!"
+                result = "Last actor must be a sink!"
+
         if result is None:
             for i in range(len(actors) - 1):
+                if is_standalone(actors[i]):
+                    continue
                 if isinstance(actors[i], OutputProducer) and isinstance(actors[i+1], InputConsumer):
                     continue
                 if not isinstance(actors[i], OutputProducer):
@@ -50,6 +61,7 @@ class SequentialDirector(AbstractDirector):
                 if not isinstance(actors[i+1], InputConsumer):
                     result = "Actor #%d does not accept input!" % (i + 2)
                     break
+
         return result
 
     def _execute_standalones(self, actors):
