@@ -1,3 +1,4 @@
+import os
 from scoping import scoping
 from shallowflow.base.controls import Flow, Branch, Trigger, run_flow
 from shallowflow.base.sources import FileSupplier, GetVariable
@@ -39,6 +40,6 @@ with scoping():
 
 flow = Flow()
 flow.actors = [files, frames, inc, setvar, branch]
-msg = run_flow(flow)
+msg = run_flow(flow, dump_file="./output/" + os.path.splitext(os.path.basename(__file__))[0] + ".json")
 if msg is not None:
     print(msg)

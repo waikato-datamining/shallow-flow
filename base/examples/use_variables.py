@@ -1,3 +1,4 @@
+import os
 from scoping import scoping
 from shallowflow.base.controls import Flow, ConditionalTrigger, run_flow
 from shallowflow.base.conditions import NumExpr
@@ -26,6 +27,6 @@ output1 = ConsoleOutput(options={"prefix": "all: "})
 
 flow = Flow()
 flow.actors = [loop1, setvar1, trigger1, output1]
-msg = run_flow(flow)
+msg = run_flow(flow, dump_file="./output/" + os.path.splitext(os.path.basename(__file__))[0] + ".json")
 if msg is not None:
     print(msg)

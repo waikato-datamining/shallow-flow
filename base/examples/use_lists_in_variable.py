@@ -1,3 +1,4 @@
+import os
 from scoping import scoping
 from os.path import expanduser
 from shallowflow.base.controls import Flow, Trigger, run_flow
@@ -23,6 +24,6 @@ with scoping():
 
 flow = Flow()
 flow.actors = [dl, setvar, trigger]
-msg = run_flow(flow)
+msg = run_flow(flow, dump_file="./output/" + os.path.splitext(os.path.basename(__file__))[0] + ".json")
 if msg is not None:
     print(msg)

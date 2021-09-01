@@ -1,3 +1,4 @@
+import os
 from scoping import scoping
 from shallowflow.base.controls import Flow, Branch, Sequence, run_flow
 from shallowflow.base.sinks import ConsoleOutput
@@ -19,6 +20,6 @@ for i in range(5):
 
 flow = Flow()
 flow.actors = [forloop, branch]
-msg = run_flow(flow)
+msg = run_flow(flow, dump_file="./output/" + os.path.splitext(os.path.basename(__file__))[0] + ".json")
 if msg is not None:
     print(msg)
