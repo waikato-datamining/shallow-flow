@@ -27,6 +27,8 @@ class SetVariable(AbstractSimpleTransformer):
                                         help="The name of the variable"))
         self._option_manager.add(Option(name="var_value", value_type=str, def_value="",
                                         help="The value to use instead of data passing through"))
+        self._option_manager.add(Option(name="expand", value_type=bool, def_value=False,
+                                        help="Whether to expand any variables in the value."))
 
     def setup(self):
         """
@@ -51,6 +53,10 @@ class SetVariable(AbstractSimpleTransformer):
         :rtype: str
         """
         value = self.get("var_value")
+        if self.get("expand"):
+            value = self.variables.expand(value)
+            if self.is_debug:
+                self.log("'%s' expanded to '%s'" % (self.get("var_value"), value))
         name = self.get("var_name")
         if len(value) == 0:
             value = self._input
