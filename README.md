@@ -13,6 +13,7 @@ Available modules:
 The following examples are available for the base components:
 
 * [option handling](examples/option_handling.py)
+* [finding modules/classes](examples/find_modules_and_classes.py)
 * [listing files/dirs](examples/list_files.py)
 * [listing files/dirs (flow)](examples/flow_listing_files.py)
 * [stopping flow](examples/stopping_flow.py)
