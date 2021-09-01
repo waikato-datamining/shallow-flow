@@ -19,4 +19,4 @@ Imaging components using [OpenCV2](https://github.com/opencv/opencv-python) for 
 
 ## Examples
 
-* [extract video frames](cv2/examples/extract_video_frames.py)
+* [extract video frames](examples/extract_video_frames.py)

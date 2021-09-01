@@ -61,13 +61,13 @@ The base components for shallowflow.
 
 ## Examples
 
-* [option handling](base/examples/option_handling.py)
-* [finding modules/classes](base/examples/find_modules_and_classes.py)
-* [listing files/dirs](base/examples/list_files.py)
-* [listing files/dirs (flow)](base/examples/flow_listing_files.py)
-* [stopping flow](base/examples/stopping_flow.py)
-* [use variables](base/examples/use_variables.py)
-* [use lists in variable](base/examples/use_lists_in_variable.py)
-* [env variables](base/examples/env_var.py)
-* [using branches](base/examples/branching.py)
-* [while loop](base/examples/while_loop.py)
+* [option handling](examples/option_handling.py)
+* [finding modules/classes](examples/find_modules_and_classes.py)
+* [listing files/dirs](examples/list_files.py)
+* [listing files/dirs (flow)](examples/flow_listing_files.py)
+* [stopping flow](examples/stopping_flow.py)
+* [use variables](examples/use_variables.py)
+* [use lists in variable](examples/use_lists_in_variable.py)
+* [env variables](examples/env_var.py)
+* [using branches](examples/branching.py)
+* [while loop](examples/while_loop.py)
