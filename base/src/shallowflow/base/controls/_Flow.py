@@ -2,7 +2,7 @@ import argparse
 import traceback
 
 from shallowflow.api.control import MutableActorHandler
-from shallowflow.api.io import load_actor, get_reader_extensions
+from shallowflow.api.io import load_actor, get_reader_extensions, save_actor
 from shallowflow.api.storage import StorageHandler, Storage
 from shallowflow.api.vars import Variables
 from shallowflow.base.directors import SequentialDirector
@@ -62,7 +62,7 @@ class Flow(MutableActorHandler, StorageHandler):
         return self._storage
 
 
-def run_flow(flow, variables=None):
+def run_flow(flow, variables=None, dump_file=None):
     """
     Executes the supplied flow.
 
@@ -70,9 +70,17 @@ def run_flow(flow, variables=None):
     :type flow: Actor
     :param variables: additional variables to set
     :type variables: Variables
+    :param dump_file: the file to store the flow in, e.g., for analysis
+    :type dump_file: str
     :return: None if successful, otherwise error message
     :rtype: str
     """
+    if dump_file is not None:
+        print("Saving flow to: %s" + dump_file)
+        msg = save_actor(flow, dump_file)
+        if msg is not None:
+            print(msg)
+
     msg = flow.setup()
     if msg is None:
         if variables is not None:
