@@ -76,7 +76,7 @@ def run_flow(flow, variables=None, dump_file=None):
     :rtype: str
     """
     if dump_file is not None:
-        print("Saving flow to: %s" + dump_file)
+        print("Saving flow to: %s" % dump_file)
         msg = save_actor(flow, dump_file)
         if msg is not None:
             print(msg)
