@@ -4,6 +4,7 @@ import traceback
 from shallowflow.base.sources import DirectoryLister
 from shallowflow.api.io import save_actor, load_actor
 from shallowflow.base.help import PlainText
+from shallowflow.api.io import Directory
 
 dl = DirectoryLister()
 
@@ -32,7 +33,7 @@ print(dl.get("debug"))
 
 # save to file
 print("\nI/O\n===")
-dl.options = {"debug": True, "dir": tempfile.gettempdir(), "list_files": True, "recursive": True}
+dl.options = {"debug": True, "dir": Directory(tempfile.gettempdir()), "list_files": True, "recursive": True}
 print("actor:", dl.options)
 fname = os.path.join(tempfile.gettempdir(), "out.json")
 print("Saving actor to: %s" % fname)
@@ -46,7 +47,7 @@ print("actor:", dl.options)
 # setting options via constructor
 dl2 = DirectoryLister({
     "debug": True,
-    "dir": tempfile.gettempdir(),
+    "dir": Directory(tempfile.gettempdir()),
     "list_files": True,
     "recursive": True
 })

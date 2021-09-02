@@ -1,8 +1,9 @@
 from os.path import expanduser
 from shallowflow.base.sources import DirectoryLister
+from shallowflow.api.io import Directory
 
 dl = DirectoryLister({
-    "dir": expanduser("~"),
+    "dir": Directory(expanduser("~")),
     "list_files": True,
     "list_dirs": True,
     "sort": True,

@@ -6,9 +6,10 @@ from shallowflow.base.sources import FileSupplier, GetVariable
 from shallowflow.base.transformers import IncVariable, SetVariable
 from shallowflow.cv2.sinks import ImageFileWriter, VideoWriter
 from shallowflow.cv2.transformers import VideoFileReader
+from shallowflow.api.io import File
 
 flow = Flow().manage([
-    FileSupplier({"files": ["./data/track_book.mjpeg"]}),
+    FileSupplier({"files": [File("./data/track_book.mjpeg")]}),
     VideoFileReader({"nth_frame": 2, "max_frames": 10}),  # extract every 2nd frame, but only 10 at most
     IncVariable({"var_name": "i"}),
     SetVariable({"var_name": "out_file", "var_value": "./output/track_book-@{i}.jpg", "expand": True}),  # filename for frame

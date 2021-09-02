@@ -1,5 +1,6 @@
 from shallowflow.api.source import AbstractListOutputSource
 from shallowflow.api.config import Option
+from shallowflow.api.io import File
 
 
 class FileSupplier(AbstractListOutputSource):
@@ -22,7 +23,7 @@ class FileSupplier(AbstractListOutputSource):
         """
         super()._define_options()
         self._option_manager.add(Option(name="files", value_type=list, def_value=list(),
-                                        help="The files to output", base_type=str))
+                                        help="The files to output", base_type=File))
 
     def _do_execute(self):
         """

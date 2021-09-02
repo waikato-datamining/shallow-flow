@@ -14,6 +14,20 @@ FLOW_WRITERS = None
 """ contains all flow writers (.ext -> writer)"""
 
 
+class File(str):
+    """
+    Simple class to differentiate files from plain strings.
+    """
+    pass
+
+
+class Directory(str):
+    """
+    Simple class to differentiate directories from plain strings.
+    """
+    pass
+
+
 def fix_extension(ext):
     """
     Ensures that the extension starts with a dot.

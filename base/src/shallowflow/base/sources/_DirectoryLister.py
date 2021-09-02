@@ -2,6 +2,7 @@ import os
 import re
 from shallowflow.api.source import AbstractListOutputSource
 from shallowflow.api.config import Option
+from shallowflow.api.io import Directory
 
 
 class DirectoryLister(AbstractListOutputSource):
@@ -23,7 +24,7 @@ class DirectoryLister(AbstractListOutputSource):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option(name="dir", value_type=str, def_value=".",
+        self._option_manager.add(Option(name="dir", value_type=Directory, def_value=Directory("."),
                                         help="The directory to use for listing files/dirs"))
         self._option_manager.add(Option(name="list_files", value_type=bool, def_value=False,
                                         help="If enabled, files get listed"))

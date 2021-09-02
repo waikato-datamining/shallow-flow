@@ -5,10 +5,11 @@ from shallowflow.base.controls import Flow, Trigger, run_flow
 from shallowflow.base.sources import DirectoryLister, FileSupplier
 from shallowflow.base.transformers import SetVariable
 from shallowflow.base.sinks import ConsoleOutput
+from shallowflow.api.io import Directory
 
 flow = Flow().manage([
     DirectoryLister({
-        "dir": expanduser("~"),
+        "dir": Directory(expanduser("~")),
         "list_files": True,
         "list_dirs": True,
         "sort": True,
