@@ -25,6 +25,37 @@ def fix_module_name(module, cls):
     return module, cls
 
 
+def class_name_to_type(classname):
+    """
+    Turns the class name into a type.
+
+    :param classname: the class name to convert (a.b.Cls)
+    :type classname: str
+    :return: the type
+    :rtype: type
+    """
+    p = classname.split(".")
+    m = ".".join(p[:-1])
+    c = p[-1]
+    return getattr(importlib.import_module(m), c)
+
+
+def get_class_name(o):
+    """
+    Returns the classname of the object or type.
+
+    :param o: the object or class to get the classname for
+    :return: the classname (a.b.Cls)
+    :rtype: str
+    """
+    if inspect.isclass(o):
+        cls = o
+    else:
+        cls = type(o)
+    m, c = fix_module_name(cls.__module__, cls.__name__)
+    return m + "." + c
+
+
 def find_module_names():
     """
     Locates all module names used by shallowflow.
@@ -61,7 +92,7 @@ def find_module_names():
     return result
 
 
-def find_classes(super_class):
+def find_class_names(super_class):
     """
     Finds all classes that are derived from the specified superclass in all of the
     shallowflow modules.
@@ -84,4 +115,21 @@ def find_classes(super_class):
         except Exception:
             pass
     result.sort()
+    return result
+
+
+def find_classes(super_class):
+    """
+    Finds all classes that are derived from the specified superclass in all of the
+    shallowflow modules.
+
+    :param super_class: the class to look for
+    :type super_class: type
+    :return: the list of classes
+    :rtype: list
+    """
+    names = find_class_names(super_class)
+    result = []
+    for name in names:
+        result.append(class_name_to_type(name))
     return result

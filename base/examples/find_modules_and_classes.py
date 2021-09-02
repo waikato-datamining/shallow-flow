@@ -1,4 +1,4 @@
-from shallowflow.api.class_utils import find_module_names, find_classes
+from shallowflow.api.class_utils import find_module_names, find_class_names
 from shallowflow.api.actor import Actor
 from shallowflow.api.config import AbstractOptionHandler
 
@@ -10,12 +10,12 @@ for module_name in module_names:
 
 # lists all the available shallowflow actors in the installation
 print("\n--> Actors\n")
-classes = find_classes(Actor)
+classes = find_class_names(Actor)
 for cls in classes:
     print(cls)
 
 # lists all the available shallowflow optionhandler classes in the installation
 print("\n--> OptionHandler\n")
-classes = find_classes(AbstractOptionHandler)
+classes = find_class_names(AbstractOptionHandler)
 for cls in classes:
     print(cls)

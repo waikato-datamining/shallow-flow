@@ -1,10 +1,20 @@
 from .config import AbstractOptionHandler
+from .class_utils import find_classes, get_class_name
 
 
 class AbstractHelpGenerator(AbstractOptionHandler):
     """
     Ancestor for classes that generate help from option handlers.
     """
+
+    def file_extension(self):
+        """
+        Returns the preferred file extension.
+
+        :return: the file extension (incl dot)
+        :rtype: str
+        """
+        raise NotImplemented()
 
     def _do_generate(self, handler):
         """
@@ -33,3 +43,27 @@ class AbstractHelpGenerator(AbstractOptionHandler):
         else:
             with open(fname, "w") as hf:
                 hf.write(help)
+
+
+def class_hierarchy_help(super_class, generator, output_dir):
+    """
+    Generates help files for all the classes of the specified class hierarchy
+    and places them in the output directory.
+
+    :param super_class: the super class of the hierarchy to generate the help files for
+    :type super_class: type
+    :param generator: the help generator to use
+    :type generator: AbstractHelpGenerator
+    :param output_dir: the output directory to place the files in
+    :type output_dir: str
+    :return: the list of generated files, relative to the output directory
+    :rtype: list
+    """
+    result = []
+    classes = find_classes(super_class)
+    for cls in classes:
+        fname = get_class_name(cls) + generator.file_extension()
+        out_file = output_dir + "/" + fname
+        generator.generate(cls(), fname=out_file)
+        result.append(fname)
+    return result

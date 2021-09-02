@@ -2,7 +2,7 @@ import importlib
 import json
 from collections import OrderedDict
 from datetime import datetime
-from .class_utils import fix_module_name
+from .class_utils import fix_module_name, class_name_to_type, get_class_name
 from .logging import LoggableObject
 from .serialization.objects import get_dict_reader, get_dict_writer, add_dict_writer, add_dict_reader, has_dict_reader, has_dict_writer
 from .serialization.vars import get_string_reader
@@ -587,11 +587,7 @@ def dict_to_optionhandler(d):
     :return: the option handler
     :rtype: AbstractOptionHandler
     """
-    p = d["class"].split(".")
-    m = ".".join(p[:-1])
-    c = p[-1]
-    Cls = getattr(importlib.import_module(m), c)
-    result = Cls()
+    result = class_name_to_type(d["class"])()
     if "options" in d:
         result.options = d["options"]
     else:
@@ -609,8 +605,7 @@ def optionhandler_to_dict(a):
     :rtype: dict
     """
     result = dict()
-    m, c = fix_module_name(type(a).__module__, type(a).__name__)
-    result["class"] = m + "." + c
+    result["class"] = get_class_name(a)
     options = a.options
     if len(options) != 0:
         result["options"] = a.options

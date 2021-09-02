@@ -7,6 +7,15 @@ class Markdown(AbstractHelpGenerator):
     Generates help in plain text format.
     """
 
+    def file_extension(self):
+        """
+        Returns the preferred file extension.
+
+        :return: the file extension (incl dot)
+        :rtype: str
+        """
+        return ".md"
+
     def _indent(self, s, num):
         """
         Indents the lines in the string.
