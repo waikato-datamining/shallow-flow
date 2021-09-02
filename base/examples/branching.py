@@ -1,25 +1,23 @@
 import os
-from scoping import scoping
+
 from shallowflow.base.controls import Flow, Branch, Sequence, run_flow
 from shallowflow.base.sinks import ConsoleOutput
 from shallowflow.base.sources import ForLoop
 from shallowflow.base.transformers import PassThrough
 
-forloop = ForLoop()
-
-branch = Branch()
-# generates five branches with different prefixes for the console output
+branches = []
 for i in range(5):
-    with scoping():
-        seq = Sequence()
-        pt = PassThrough()  # added for the sequence to make sense :-)
-        output = ConsoleOutput() \
-            .set("prefix", "branch-" + str(len(branch.actors) + 1) + ": ")
-        seq.actors = [pt, output]
-        branch.append(seq)
+    seq = Sequence().manage([
+        PassThrough(),  # added for the sequence to make sense :-)
+        ConsoleOutput({"prefix": "branch-" + str(len(branches) + 1) + ": "}),
+    ])
+    branches.append(seq)
 
-flow = Flow()
-flow.actors = [forloop, branch]
+flow = Flow().manage([
+    ForLoop(),
+    Branch().manage(branches)
+])
+
 msg = run_flow(flow, dump_file="./output/" + os.path.splitext(os.path.basename(__file__))[0] + ".json")
 if msg is not None:
     print(msg)

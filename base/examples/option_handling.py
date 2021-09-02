@@ -44,7 +44,7 @@ dl2 = load_actor(fname)
 print("actor:", dl.options)
 
 # setting options via constructor
-dl2 = DirectoryLister(options={
+dl2 = DirectoryLister({
     "debug": True,
     "dir": tempfile.gettempdir(),
     "list_files": True,
