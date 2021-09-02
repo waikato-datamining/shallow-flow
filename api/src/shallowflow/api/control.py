@@ -68,6 +68,19 @@ class ActorHandler(Actor):
 
         self._option_manager.set("actors", actors)
 
+    def manage(self, actors):
+        """
+        Same as using the 'actors' property for setting the actors to manage,
+        but returns itself, allowing for method chaining.
+
+        :param actors: the new actors to manage
+        :type actors: list
+        :return: itself
+        :rtype: ActorHandler
+        """
+        self.actors = actors
+        return self
+
     def __len__(self):
         """
         Returns the number of actors.
