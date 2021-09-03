@@ -1,5 +1,5 @@
 from shallowflow.api.actor import InputConsumer
-from shallowflow.api.control import MutableActorHandler
+from shallowflow.api.control import MutableActorHandler, ActorHandlerInfo
 from shallowflow.base.directors import SequentialDirector
 
 STATE_INPUT = "input"
@@ -25,6 +25,16 @@ class Sequence(MutableActorHandler, InputConsumer):
         """
         super().reset()
         self._input = None
+
+    @property
+    def actor_handler_info(self):
+        """
+        Returns meta-info about itself.
+
+        :return: the info
+        :rtype: ActorHandlerInfo
+        """
+        return ActorHandlerInfo(can_contain_standalones=False, can_contain_source=False)
 
     def input(self, data):
         """

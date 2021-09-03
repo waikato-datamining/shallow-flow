@@ -3,6 +3,24 @@ from .config import Option
 from .director import AbstractDirector
 
 
+class ActorHandlerInfo(object):
+    """
+    For storing meta-information about an ActorHandler.
+    """
+
+    def __init__(self, can_contain_standalones=False, can_contain_source=False):
+        """
+        Initializes the info object.
+
+        :param can_contain_standalones: whether standalones can be added
+        :type can_contain_standalones: bool
+        :param can_contain_source: whether a source can be added
+        :type can_contain_source: bool
+        """
+        self.can_contain_standalones = can_contain_standalones
+        self.can_contain_source = can_contain_source
+
+
 class ActorHandler(Actor):
     """
     Interface for actors that manage sub-actors.
@@ -22,6 +40,16 @@ class ActorHandler(Actor):
 
         :return: the director
         :rtype: AbstractDirector
+        """
+        raise NotImplemented()
+
+    @property
+    def actor_handler_info(self):
+        """
+        Returns meta-info about itself.
+
+        :return: the info
+        :rtype: ActorHandlerInfo
         """
         raise NotImplemented()
 
@@ -80,6 +108,25 @@ class ActorHandler(Actor):
         """
         self.actors = actors
         return self
+
+    def index(self, actor):
+        """
+        Returns the index of the actor in the managed list of actors.
+
+        :param actor: the actor to look for (Actor or actor name)
+        :return: the index, -1 if not found
+        :rtype: int
+        """
+        result = -1
+        if isinstance(actor, str):
+            for i, a in enumerate(self.actors):
+                if a.name == actor:
+                    result = i
+                    break
+        else:
+            if actor in self.actors:
+                result = self.actors.index(actor)
+        return result
 
     def __len__(self):
         """

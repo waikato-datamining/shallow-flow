@@ -2,6 +2,7 @@ import traceback
 import shallowflow.api.serialization.objects as serialization
 from .config import Option, AbstractOptionHandler, dict_to_optionhandler, optionhandler_to_dict
 from .vars import VariableChangeListener
+from .scope import ScopeHandler
 from .storage import StorageHandler
 
 FLOW_PATH = "flow_path"
@@ -75,6 +76,21 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
             return self._parent.root
         else:
             return self
+
+    @property
+    def scope_handler(self):
+        """
+        Returns the scope handler, if any.
+
+        :return: the scope handler, None if not available
+        :rtype: ScopeHandler
+        """
+        if isinstance(self, ScopeHandler):
+            return self
+        elif self._parent is not None:
+            return self._parent.scope_handler
+        else:
+            return None
 
     @property
     def name(self):

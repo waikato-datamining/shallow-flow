@@ -1,6 +1,6 @@
 from shallowflow.api.condition import AbstractBooleanCondition
 from shallowflow.api.config import Option
-from shallowflow.api.control import MutableActorHandler
+from shallowflow.api.control import MutableActorHandler, ActorHandlerInfo
 from shallowflow.api.transformer import InputConsumer, OutputProducer
 from shallowflow.base.directors import SequentialDirector
 from shallowflow.base.conditions import AlwaysTrue
@@ -156,6 +156,16 @@ class Tee(AbstractTee):
         :rtype: AbstractDirector
         """
         return SequentialDirector(owner=self, allows_standalones=False, requires_source=False, requires_sink=False)
+
+    @property
+    def actor_handler_info(self):
+        """
+        Returns meta-info about itself.
+
+        :return: the info
+        :rtype: ActorHandlerInfo
+        """
+        return ActorHandlerInfo(can_contain_standalones=False, can_contain_source=False)
 
     def _check_actors(self, actors):
         """

@@ -1,3 +1,4 @@
+from ._CallableSource import CallableSource
 from ._DirectoryLister import DirectoryLister
 from ._FileSupplier import FileSupplier
 from ._ForLoop import ForLoop

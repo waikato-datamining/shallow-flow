@@ -202,7 +202,8 @@ class Variables(object):
         :return: itself
         :rtype: Variables
         """
-        self._listeners.remove(l)
+        if l in self._listeners:
+            self._listeners.remove(l)
         return self
 
     def clear_listeners(self):

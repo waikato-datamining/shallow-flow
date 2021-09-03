@@ -1,4 +1,4 @@
-from shallowflow.api.control import MutableActorHandler, AbstractDirector
+from shallowflow.api.control import MutableActorHandler, AbstractDirector, ActorHandlerInfo
 from shallowflow.api.transformer import InputConsumer
 
 STATE_INPUT = "input"
@@ -41,6 +41,16 @@ class Branch(MutableActorHandler, InputConsumer):
         :rtype: str
         """
         return "Forwards the input data to all of its sub-actors."
+
+    @property
+    def actor_handler_info(self):
+        """
+        Returns meta-info about itself.
+
+        :return: the info
+        :rtype: ActorHandlerInfo
+        """
+        return ActorHandlerInfo(can_contain_standalones=False, can_contain_source=False)
 
     def reset(self):
         """

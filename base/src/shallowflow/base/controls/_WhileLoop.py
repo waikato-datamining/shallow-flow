@@ -1,5 +1,5 @@
 from shallowflow.api.actor import InputConsumer
-from shallowflow.api.control import MutableActorHandler
+from shallowflow.api.control import MutableActorHandler, ActorHandlerInfo
 from shallowflow.api.config import Option
 from shallowflow.api.condition import AbstractBooleanCondition
 from shallowflow.base.directors import SequentialDirector
@@ -35,6 +35,16 @@ class WhileLoop(MutableActorHandler, InputConsumer):
         """
         super().reset()
         self._input = None
+
+    @property
+    def actor_handler_info(self):
+        """
+        Returns meta-info about itself.
+
+        :return: the info
+        :rtype: ActorHandlerInfo
+        """
+        return ActorHandlerInfo(can_contain_standalones=True, can_contain_source=True)
 
     def input(self, data):
         """

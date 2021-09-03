@@ -15,17 +15,15 @@ The base components for shallowflow.
   * `shallowflow.base.controls.Tee`
   * `shallowflow.base.controls.Trigger`
   * `shallowflow.base.controls.WhileLoop`
-    
-* Directors
-
-  * `shallowflow.base.directors.SequentialDirector`
 
 * Standalones
 
+  * `shallowflow.base.standalones.CallableActors`
   * `shallowflow.base.standalones.SetVariable`
 
 * Sources
 
+  * `shallowflow.base.sources.CallableSource`
   * `shallowflow.base.sources.DirectoryLister`
   * `shallowflow.base.sources.FileSupplier`
   * `shallowflow.base.sources.ForLoop`
@@ -37,6 +35,7 @@ The base components for shallowflow.
     
 * Transformers
 
+  * `shallowflow.base.transformers.CallableTransformer`
   * `shallowflow.base.transformers.IncStorage`
   * `shallowflow.base.transformers.IncVariable`
   * `shallowflow.base.transformers.PassThrough`
@@ -45,6 +44,7 @@ The base components for shallowflow.
     
 * Sinks
 
+  * `shallowflow.base.sinks.CallableSink`
   * `shallowflow.base.sinks.ConsoleOutput`
   * `shallowflow.base.sinks.Null`
 
@@ -52,6 +52,7 @@ The base components for shallowflow.
 
 * `shallowflow.base.conditions.AlwaysFalse`
 * `shallowflow.base.conditions.AlwaysTrue`
+* `shallowflow.base.conditions.NumExpr`
 
 ## Help
 
@@ -71,3 +72,4 @@ The base components for shallowflow.
 * [env variables](examples/env_var.py)
 * [using branches](examples/branching.py)
 * [while loop](examples/while_loop.py)
+* [using callable actors](examples/callable_actors.py)

@@ -1,5 +1,6 @@
 from shallowflow.api.condition import AbstractBooleanCondition
 from shallowflow.api.config import Option
+from shallowflow.api.control import ActorHandlerInfo
 from shallowflow.api.transformer import InputConsumer
 from shallowflow.base.directors import SequentialDirector
 from shallowflow.base.conditions import AlwaysTrue
@@ -28,6 +29,16 @@ class Trigger(AbstractTee):
         :rtype: AbstractDirector
         """
         return SequentialDirector(owner=self, allows_standalones=True, requires_source=True, requires_sink=False)
+
+    @property
+    def actor_handler_info(self):
+        """
+        Returns meta-info about itself.
+
+        :return: the info
+        :rtype: ActorHandlerInfo
+        """
+        return ActorHandlerInfo(can_contain_standalones=True, can_contain_source=True)
 
     def _check_actors(self, actors):
         """

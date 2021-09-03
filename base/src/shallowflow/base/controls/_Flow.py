@@ -1,14 +1,15 @@
 import argparse
 import traceback
 
-from shallowflow.api.control import MutableActorHandler
+from shallowflow.api.control import MutableActorHandler, ActorHandlerInfo
 from shallowflow.api.io import load_actor, get_reader_extensions, save_actor
+from shallowflow.api.scope import ScopeHandler
 from shallowflow.api.storage import StorageHandler, Storage
 from shallowflow.api.vars import Variables
 from shallowflow.base.directors import SequentialDirector
 
 
-class Flow(MutableActorHandler, StorageHandler):
+class Flow(MutableActorHandler, StorageHandler, ScopeHandler):
     """
     Encapsulates a complete flow.
     """
@@ -28,6 +29,7 @@ class Flow(MutableActorHandler, StorageHandler):
         """
         super()._initialize()
         self._storage = Storage()
+        self._callable_names = set()
 
     def _new_director(self):
         """
@@ -37,6 +39,16 @@ class Flow(MutableActorHandler, StorageHandler):
         :rtype: AbstractDirector
         """
         return SequentialDirector(owner=self, allows_standalones=True, requires_source=True, requires_sink=False)
+
+    @property
+    def actor_handler_info(self):
+        """
+        Returns meta-info about itself.
+
+        :return: the info
+        :rtype: ActorHandlerInfo
+        """
+        return ActorHandlerInfo(can_contain_standalones=True, can_contain_source=True)
 
     def _pre_execute(self):
         """
@@ -60,6 +72,35 @@ class Flow(MutableActorHandler, StorageHandler):
         :rtype: Storage
         """
         return self._storage
+
+    def is_callable_name_used(self, handler, actor):
+        """
+        Returns whether a callable name is already in use.
+
+        :param handler: the handler for the actor to check
+        :type handler: ActorHandler
+        :param actor: the actor to check the name for
+        :type actor: Actor
+        :return: True if already in use
+        :rtype: bool
+        """
+        return actor.name in self._callable_names
+
+    def add_callable_name(self, handler, actor):
+        """
+        Adds the callable name, if possible.
+
+        :param handler: the handler for the actor to add
+        :type handler: ActorHandler
+        :param actor: the actor to add
+        :type actor: Actor
+        :return: None if successfully added, otherwise error message
+        :rtype: str
+        """
+        if self.is_callable_name_used(handler, actor):
+            return "Callable name '%s' is already in use this scope (%s)!" % (actor.name, handler.parent.full_name)
+        self._callable_names.add(actor.name)
+        return None
 
 
 def run_flow(flow, variables=None, dump_file=None):
