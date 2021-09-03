@@ -4,6 +4,7 @@ import pickle
 import traceback
 import yaml
 from .config import optionhandler_to_dict, dict_to_optionhandler
+from .serialization.vars import AbstractStringReader, add_string_reader
 from .actor import Actor, FLOW_DIR, FLOW_PATH
 from .logging import log
 
@@ -26,6 +27,60 @@ class Directory(str):
     Simple class to differentiate directories from plain strings.
     """
     pass
+
+
+class FileStringReader(AbstractStringReader):
+    """
+    Ancestor for classes that turn strings into File objects.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert a string into the specified class.
+
+        :param cls: the class to convert to
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, File)
+
+    def convert(self, s, base_type=None):
+        """
+        Turns the string into an object.
+
+        :param s: the string to convert
+        :type s: str
+        :param base_type: optional type when reconstructing lists etc
+        :return: the generated object
+        """
+        return File(s)
+
+
+class DirectoryStringReader(AbstractStringReader):
+    """
+    Ancestor for classes that turn strings into Directory objects.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert a string into the specified class.
+
+        :param cls: the class to convert to
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, Directory)
+
+    def convert(self, s, base_type=None):
+        """
+        Turns the string into an object.
+
+        :param s: the string to convert
+        :type s: str
+        :param base_type: optional type when reconstructing lists etc
+        :return: the generated object
+        """
+        return Directory(s)
 
 
 def fix_extension(ext):
@@ -385,3 +440,7 @@ add_flow_writer(".yaml", save_yaml_actor)
 # pickle
 add_flow_reader(".pkl", load_pickle_actor)
 add_flow_writer(".pkl", save_pickle_actor)
+
+# serialization
+add_string_reader(FileStringReader)
+add_string_reader(DirectoryStringReader)
