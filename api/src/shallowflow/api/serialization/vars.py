@@ -414,9 +414,14 @@ def get_string_reader(cls):
 
     # iterate readers to see whether any can handle the class
     for reader in get_string_readers():
+        if issubclass(reader, StringReader):
+            continue
         if reader().handles(cls):
             get_string_readers_cache()[cls] = reader
             return reader
+    if StringReader().handles(cls):
+        get_string_readers_cache()[cls] = StringReader
+        return StringReader
 
     # flag entry
     get_string_readers_cache()[cls] = False
@@ -491,10 +496,14 @@ def get_string_writer(cls):
 
     # iterate writers to see whether any can handle the class
     for writer in get_string_writers():
-        w = writer()
-        if w.handles(cls):
+        if issubclass(writer, StringWriter):
+            continue
+        if writer().handles(cls):
             get_string_writers_cache()[cls] = writer
             return writer
+    if StringWriter().handles(cls):
+        get_string_writers_cache()[cls] = StringWriter
+        return StringWriter
 
     # flag entry
     get_string_writers_cache()[cls] = False
