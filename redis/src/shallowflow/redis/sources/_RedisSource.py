@@ -59,7 +59,7 @@ class RedisSource(AbstractSimpleSource):
         result = None
         action = self.get("action")
         try:
-            output = action.execute(self._connection)
+            output = action.execute(self._connection.connection)
             if output is not None:
                 self._output.append(output)
         except Exception:

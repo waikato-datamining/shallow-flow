@@ -59,7 +59,7 @@ class RedisSink(AbstractSimpleSink):
         result = None
         action = self.get("action")
         try:
-            action.execute(self._connection, self._input)
+            action.execute(self._connection.connection, self._input)
         except Exception:
             result = self._handle_exception("Failed to execute action %s!" % get_class_name(action))
         return result
