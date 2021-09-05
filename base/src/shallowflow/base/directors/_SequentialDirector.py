@@ -66,22 +66,25 @@ class SequentialDirector(AbstractDirector):
 
     def _execute_standalones(self, actors):
         """
-        Executes all the standalones and returns the index of the
-        :param actors:
-        :return:
+        Executes all the standalones and returns the first non-standalone actor or None.
+
+        :param actors: the actors to iterate
+        :type actors: list
+        :return: non-standalone actor or None
+        :rtype: Actor
         """
-        result = 0
+        result = None
 
         if not self.allows_standalones:
             return result
 
         for i in range(len(actors)):
             if is_standalone(actors[i]):
-                result = i
                 msg = actors[i].execute()
                 if msg is not None:
                     raise Exception(msg)
             else:
+                result = actors[i]
                 break
         return result
 
@@ -95,23 +98,25 @@ class SequentialDirector(AbstractDirector):
         :rtype: str
         """
         result = None
-        start_index = self._execute_standalones(actors)
-        not_finished_actor = actors[start_index]
+        start = self._execute_standalones(actors)
+        not_finished_actor = start
         pending_actors = []
         finished = False
 
         while not self.is_stopped and not finished:
             # determine starting point
             if len(pending_actors) > 0:
-                start_index = actors.index(pending_actors[-1])
+                start = pending_actors[-1]
             else:
-                start_index = actors.index(not_finished_actor)
+                start = not_finished_actor
                 not_finished_actor = None
+            if start is None:
+                start = actors[0]
 
             # iterate over actors
             token = None
             curr = None
-            for i in range(start_index, len(actors), 1):
+            for i in range(actors.index(start), len(actors), 1):
                 curr = actors[i]
                 if token is None:
                     if isinstance(curr, OutputProducer) and curr.has_output():
