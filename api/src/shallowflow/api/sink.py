@@ -1,5 +1,6 @@
 from .actor import InputConsumer
 from .config import Option
+from .io import File
 
 STATE_INPUT = "input"
 
@@ -66,7 +67,7 @@ class AbstractFileWriter(AbstractSimpleSink):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option("output_file", str, ".", self._output_file_help()))
+        self._option_manager.add(Option("output_file", File, File("."), self._output_file_help()))
 
     def _output_file_help(self):
         """
