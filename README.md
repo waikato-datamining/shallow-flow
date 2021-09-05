@@ -6,3 +6,4 @@ Available modules:
 * [API](api)
 * [Base components](base)
 * [Imaging components (OpenCV)](cv2)
+* [Redis](redis)

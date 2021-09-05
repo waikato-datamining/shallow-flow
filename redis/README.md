@@ -17,5 +17,4 @@
   
 ## Examples
 
-  * [send](examples/redis_send.py)
-  * [receive](examples/redis_receive.py)
+  * [send and receive](examples/redis_send_and_receive.py)

@@ -39,12 +39,11 @@ def find_actor_handlers(actor, must_allow_standalones=False, include_same_level=
                             result.append(sub_handler)
                     else:
                         result.append(sub_handler)
-            else:
-                if must_allow_standalones:
-                    if handler.actor_handler_info.can_contain_standalones:
-                        result.append(handler)
-                else:
+            if must_allow_standalones:
+                if handler.actor_handler_info.can_contain_standalones:
                     result.append(handler)
+            else:
+                result.append(handler)
 
         if parent == root:
             parent = None
@@ -53,3 +52,46 @@ def find_actor_handlers(actor, must_allow_standalones=False, include_same_level=
             parent = parent.parent
 
     return result
+
+
+def _find_closest_type(handler, cls):
+    """
+    Tries to find the cls within the specified actor handler.
+
+    :param handler: the actor handler to search
+    :type handler: ActorHandler
+    :param cls: the type of actor to look for
+    :type cls: type
+    :return: the located actor or None if none found
+    :rtype: Actor
+    """
+    result = None
+    for actor in handler.actors:
+        if isinstance(actor, cls):
+            return actor
+        # TODO external actors
+    return result
+
+
+def find_closest_type(actor, cls, include_same_level=False):
+    """
+    Tries to find the closest type in the actor tree, starting with the current
+    actor.
+
+    :param actor: the starting point
+    :type actor: Actor
+    :param cls: the type to look for
+    :type cls: type
+    :param include_same_level: whether to look on the same level or higher up
+    :type include_same_level: bool
+    :return: the located actor or None if none found
+    :rtype: Actor
+    """
+    handlers = find_actor_handlers(actor, True, include_same_level=include_same_level)
+    for handler in handlers:
+        if isinstance(handler, cls):
+            return handler
+        result = _find_closest_type(handler, cls)
+        if result is not None:
+            return result
+    return None
