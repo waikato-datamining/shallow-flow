@@ -1,5 +1,5 @@
 import os
-from shallowflow.base.controls import Flow, Tee, Trigger, run_flow
+from shallowflow.base.controls import Flow, Tee, Trigger, Sleep, run_flow
 from shallowflow.base.sources import ForLoop
 from shallowflow.base.sinks import ConsoleOutput
 from shallowflow.redis.standalones import RedisConnection
@@ -18,7 +18,8 @@ flow = Flow().manage([
     Trigger().manage([
         RedisSource({"action": Get({"key": "name"})}),
         ConsoleOutput()
-    ])
+    ]),
+    Sleep(),
 ])
 msg = run_flow(flow, dump_file="./output/" + os.path.splitext(os.path.basename(__file__))[0] + ".json")
 if msg is not None:
