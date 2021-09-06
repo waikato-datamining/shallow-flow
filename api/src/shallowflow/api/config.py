@@ -1,8 +1,7 @@
-import importlib
 import json
 from collections import OrderedDict
 from datetime import datetime
-from .class_utils import fix_module_name, class_name_to_type, get_class_name
+from .class_utils import class_name_to_type, get_class_name
 from .logging import LoggableObject
 from .serialization.objects import get_dict_reader, get_dict_writer, add_dict_writer, add_dict_reader, has_dict_reader, has_dict_writer
 from .serialization.vars import get_string_reader
@@ -16,7 +15,7 @@ class Option(object):
     Defines a single option.
     """
 
-    def __init__(self, name, value_type, def_value, help, base_type=None):
+    def __init__(self, name, value_type, def_value, help, base_type=None, lower=None, upper=None):
         """
         Initializes the item.
 
@@ -30,6 +29,10 @@ class Option(object):
         :type help: str
         :param base_type: the base class of the value, in case of lists
         :type base_type: object
+        :param lower: the lower bound (for numbers, incl), unbounded if None
+        :param lower: int or float
+        :param upper: the upper bound (for numbers, incl), unbounded if None
+        :param upper: int or float
         """
         if name == "class":
             raise Exception("Cannot use reserved name: %s" % name)
@@ -39,6 +42,24 @@ class Option(object):
         self.help = help
         self.base_type = base_type
         self.var = None
+        self.lower = lower
+        self.upper = upper
+
+    def is_in_range(self, value):
+        """
+        If lower or upper numeric bound defined, checks whether the value is within range.
+
+        :param value: the numeric value to check against the bounds
+        :return: None if within range, otherwise error message
+        :rtype: bool
+        """
+        if self.lower is not None:
+            if value < self.lower:
+                return "Below lower bound: %s < %s" % (str(value), str(self.lower))
+        if self.upper is not None:
+            if value > self.upper:
+                return "Above upper bound: %s > %s" % (str(value), str(self.upper))
+        return None
 
     def __str__(self):
         """
@@ -216,11 +237,15 @@ class OptionManager(LoggableObject, VariableHandler):
         """
         if not self.has(name):
             raise("Invalid option name: %s" % name)
+        opt = self._options[name]
         if is_var(value):
-            self._options[name].var = unpad_var(value)
+            opt.var = unpad_var(value)
         else:
-            if not isinstance(value, self._options[name].value_type):
-                raise Exception("Invalid config type for %s: expected=%s, received=%s" % (name, str(self._options[name].value_type), str(type(value))))
+            if not isinstance(value, opt.value_type):
+                raise Exception("Invalid config type for %s: expected=%s, received=%s" % (name, str(opt.value_type), str(type(value))))
+            msg = opt.is_in_range(value)
+            if msg is not None:
+                raise Exception("Invalid value for %s: %s" % (name, msg))
             self._values[name] = value
 
     def get(self, name):
