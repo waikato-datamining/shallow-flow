@@ -22,7 +22,7 @@ class Sleep(AbstractSimpleTransformer):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option(name="seconds", value_type=float, def_value=1.0,
+        self._option_manager.add(Option(name="seconds", value_type=float, def_value=1.0, lower=0.0,
                                         help="The number of seconds to wait"))
 
     def _do_execute(self):
@@ -32,6 +32,8 @@ class Sleep(AbstractSimpleTransformer):
         :return: None if successful, otherwise error message
         :rtype: str
         """
-        sleep(self.get("seconds"))
+        seconds = self.get("seconds")
+        if seconds > 0:
+            sleep(seconds)
         self._output.append(self._input)
         return None
