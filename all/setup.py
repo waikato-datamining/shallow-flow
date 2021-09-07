@@ -29,6 +29,7 @@ setup(
     install_requires=[
         "shallowflow-base",
         "shallowflow-cv2",
+        "shallowflow-redis",
     ],
     version="0.0.1",
     author='Peter Reutemann',
