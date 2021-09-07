@@ -65,6 +65,7 @@ The base components for shallowflow.
 * [option handling](examples/option_handling.py)
 * [finding modules/classes](examples/find_modules_and_classes.py)
 * [listing files/dirs](examples/list_files.py)
+* [compatibility](examples/comp.py)
 * [listing files/dirs (flow)](examples/flow_listing_files.py)
 * [stopping flow](examples/stopping_flow.py)
 * [use variables](examples/use_variables.py)
