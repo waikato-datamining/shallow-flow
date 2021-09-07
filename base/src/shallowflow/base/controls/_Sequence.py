@@ -86,8 +86,10 @@ class Sequence(MutableActorHandler, InputConsumer):
         :return: the list of types
         :rtype: list
         """
-        # TODO
-        return [Unknown]
+        if len(self) == 0:
+            return [Unknown]
+        else:
+            return self.actors[0].accepts()
 
     def _pre_execute(self):
         """

@@ -1,6 +1,6 @@
 from shallowflow.api.control import MutableActorHandler, AbstractDirector, ActorHandlerInfo
 from shallowflow.api.transformer import InputConsumer
-from shallowflow.api.compatibility import Unknown
+from shallowflow.api.compatibility import Unknown, is_compatible
 
 STATE_INPUT = "input"
 
@@ -100,8 +100,41 @@ class Branch(MutableActorHandler, InputConsumer):
         :return: the list of types
         :rtype: list
         """
-        # TODO
-        return [Unknown]
+        compatible = True
+        actors = self.actors
+        for i in range(len(actors) - 1):
+            actor1 = actors[i]
+            if isinstance(actor1, InputConsumer):
+                classes = actor1.accepts()
+                for n in range(i + 1, len(actors), 1):
+                    actor2 = actors[n]
+                    if not is_compatible(classes, actor2.accepts()) and not is_compatible(actor2, classes):
+                        compatible = False
+                        break
+            if not compatible:
+                break
+
+        if compatible:
+            result = [Unknown]
+        else:
+            result = []
+
+        # gather all common classes
+        all = set()
+        for i in range(len(actors)):
+            actor = actors[i]
+            if isinstance(actor, InputConsumer):
+                classes = actor.accepts()
+                if i == 0:
+                    for c in classes:
+                        all.add(c)
+                else:
+                    all = all & set(classes)
+
+        if len(all) > 0:
+            result = list(all)
+
+        return result
 
     def setup(self):
         """
