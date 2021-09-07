@@ -1,5 +1,6 @@
 from shallowflow.api.actor import InputConsumer
 from shallowflow.api.control import MutableActorHandler, ActorHandlerInfo
+from shallowflow.api.compatibility import Unknown
 from shallowflow.base.directors import SequentialDirector
 
 STATE_INPUT = "input"
@@ -77,6 +78,16 @@ class Sequence(MutableActorHandler, InputConsumer):
         :rtype: AbstractDirector
         """
         return SequentialDirector(owner=self, allows_standalones=False, requires_source=False, requires_sink=False)
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        # TODO
+        return [Unknown]
 
     def _pre_execute(self):
         """

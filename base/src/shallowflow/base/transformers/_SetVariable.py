@@ -1,6 +1,7 @@
 from shallowflow.api.transformer import AbstractSimpleTransformer
 from shallowflow.api.config import Option
 from shallowflow.api.vars import is_valid_name
+from shallowflow.api.compatibility import Unknown
 import shallowflow.api.serialization.vars as ser_vars
 
 
@@ -29,6 +30,24 @@ class SetVariable(AbstractSimpleTransformer):
                                         help="The value to use instead of data passing through"))
         self._option_manager.add(Option(name="expand", value_type=bool, def_value=False,
                                         help="Whether to expand any variables in the value."))
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def setup(self):
         """

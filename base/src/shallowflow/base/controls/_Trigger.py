@@ -1,6 +1,7 @@
 from shallowflow.api.condition import AbstractBooleanCondition
 from shallowflow.api.config import Option
 from shallowflow.api.control import ActorHandlerInfo
+from shallowflow.api.compatibility import Unknown
 from shallowflow.api.transformer import InputConsumer
 from shallowflow.base.directors import SequentialDirector
 from shallowflow.base.conditions import AlwaysTrue
@@ -55,6 +56,24 @@ class Trigger(AbstractTee):
                 if isinstance(self.actors[0], InputConsumer):
                     result = "First sub-actor is not allowed to accept input: %s" % self.actors[0].full_name
         return result
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def _do_execute(self):
         """

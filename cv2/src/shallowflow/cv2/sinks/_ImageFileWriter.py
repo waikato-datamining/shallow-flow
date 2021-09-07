@@ -1,4 +1,5 @@
 import cv2
+import numpy
 from shallowflow.api.sink import AbstractFileWriter
 
 
@@ -15,6 +16,15 @@ class ImageFileWriter(AbstractFileWriter):
         :rtype: str
         """
         return "Writes the incoming image data to disk."
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [numpy.ndarray]
 
     def _do_execute(self):
         """

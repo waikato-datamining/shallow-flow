@@ -28,6 +28,14 @@ class ForLoop(AbstractListOutputSource):
         self._option_manager.add(Option(name="step", value_type=int, def_value=1,
                                         help="The increment between values"))
 
+    def _get_item_type(self):
+        """
+        Returns the type of the individual items that get generated, when not outputting a list.
+
+        :return: the type that gets generated
+        """
+        return int
+
     def setup(self):
         """
         Prepares the actor for use.

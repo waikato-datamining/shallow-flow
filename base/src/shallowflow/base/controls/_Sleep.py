@@ -1,6 +1,7 @@
 from time import sleep
 from shallowflow.api.config import Option
 from shallowflow.api.transformer import AbstractSimpleTransformer
+from shallowflow.api.compatibility import Unknown
 
 
 class Sleep(AbstractSimpleTransformer):
@@ -24,6 +25,24 @@ class Sleep(AbstractSimpleTransformer):
         super()._define_options()
         self._option_manager.add(Option(name="seconds", value_type=float, def_value=1.0, lower=0.0,
                                         help="The number of seconds to wait"))
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def _do_execute(self):
         """

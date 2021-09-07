@@ -1,6 +1,7 @@
 from shallowflow.api.source import AbstractSimpleSource
 from shallowflow.api.config import Option
 from shallowflow.api.vars import is_valid_name
+from shallowflow.api.compatibility import Unknown
 
 
 class GetVariable(AbstractSimpleSource):
@@ -24,6 +25,15 @@ class GetVariable(AbstractSimpleSource):
         super()._define_options()
         self._option_manager.add(Option(name="var_name", value_type=str, def_value="var",
                                         help="The name of the variable"))
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def setup(self):
         """

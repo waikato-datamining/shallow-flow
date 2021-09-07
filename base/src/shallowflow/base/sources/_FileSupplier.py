@@ -25,6 +25,14 @@ class FileSupplier(AbstractListOutputSource):
         self._option_manager.add(Option(name="files", value_type=list, def_value=list(),
                                         help="The files to output", base_type=File))
 
+    def _get_item_type(self):
+        """
+        Returns the type of the individual items that get generated, when not outputting a list.
+
+        :return: the type that gets generated
+        """
+        return File
+
     def _do_execute(self):
         """
         Performs the actual execution.

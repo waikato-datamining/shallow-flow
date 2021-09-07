@@ -1,4 +1,5 @@
 from shallowflow.api.transformer import AbstractSimpleTransformer
+from shallowflow.api.compatibility import Unknown
 
 
 class PassThrough(AbstractSimpleTransformer):
@@ -14,6 +15,24 @@ class PassThrough(AbstractSimpleTransformer):
         :rtype: str
         """
         return "Dummy, just passes through the data."
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def _do_execute(self):
         """

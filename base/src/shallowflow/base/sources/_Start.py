@@ -15,6 +15,15 @@ class Start(AbstractSimpleSource):
         """
         return "Outputs dummy data to execute the next actor."
 
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [str]
+
     def _do_execute(self):
         """
         Performs the actual execution.

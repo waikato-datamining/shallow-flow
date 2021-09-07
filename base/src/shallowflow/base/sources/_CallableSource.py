@@ -1,5 +1,6 @@
 from shallowflow.api.actor import OutputProducer
 from shallowflow.api.callable import AbstractCallableActor
+from shallowflow.api.compatibility import Unknown
 
 
 class CallableSource(AbstractCallableActor, OutputProducer):
@@ -15,6 +16,18 @@ class CallableSource(AbstractCallableActor, OutputProducer):
         :rtype: str
         """
         return "Executes the referenced source."
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        if self._callable_actor is not None:
+            return self._callable_actor.generates()
+        else:
+            return [Unknown]
 
     def _do_execute_callable_actor(self):
         """

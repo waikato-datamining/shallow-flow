@@ -103,9 +103,9 @@ class AbstractSimpleTransformer(InputConsumer, OutputProducer):
         super().wrap_up()
 
 
-class AbstractListOutputSource(AbstractSimpleTransformer):
+class AbstractListOutputTransformer(AbstractSimpleTransformer):
     """
-    Ancestor for source actors that can output data either as list or one by one.
+    Ancestor for transformer actors that can output data either as list or one by one.
     """
 
     def _define_options(self):
@@ -115,6 +115,26 @@ class AbstractListOutputSource(AbstractSimpleTransformer):
         super()._define_options()
         self._option_manager.add(Option(name="output_as_list", value_type=bool, def_value=False,
                                         help="If enabled, the items get output as list rather than one-by-one"))
+
+    def _get_item_type(self):
+        """
+        Returns the type of the individual items that get generated, when not outputting a list.
+
+        :return: the type that gets generated
+        """
+        raise NotImplemented()
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        if self.get("output_as_list"):
+            return [list]
+        else:
+            return [self._get_item_type()]
 
     def output(self):
         """

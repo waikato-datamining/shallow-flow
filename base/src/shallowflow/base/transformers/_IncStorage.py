@@ -1,6 +1,7 @@
 from shallowflow.api.transformer import AbstractSimpleTransformer
 from shallowflow.api.config import Option
 from shallowflow.api.storage import is_valid_name
+from shallowflow.api.compatibility import Unknown
 
 
 class IncStorage(AbstractSimpleTransformer):
@@ -26,6 +27,24 @@ class IncStorage(AbstractSimpleTransformer):
                                         help="The name of the storage item to increment"))
         self._option_manager.add(Option(name="inc_value", value_type=str, def_value="1",
                                         help="The value to increment the storage item by"))
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def setup(self):
         """

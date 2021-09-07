@@ -2,7 +2,7 @@ import os
 import re
 from shallowflow.api.source import AbstractListOutputSource
 from shallowflow.api.config import Option
-from shallowflow.api.io import Directory
+from shallowflow.api.io import Directory, File
 
 
 class DirectoryLister(AbstractListOutputSource):
@@ -38,6 +38,14 @@ class DirectoryLister(AbstractListOutputSource):
                                         help="If enabled, looking for files/dirs recursively"))
         self._option_manager.add(Option(name="sort", value_type=bool, def_value=False,
                                         help="If enabled, the located files/dirs get sorted"))
+
+    def _get_item_type(self):
+        """
+        Returns the type of the individual items that get generated, when not outputting a list.
+
+        :return: the type that gets generated
+        """
+        return File
 
     def setup(self):
         """
@@ -75,9 +83,9 @@ class DirectoryLister(AbstractListOutputSource):
                 if not re.search(self.get("regexp"), f):
                     continue
             if self.get("list_files") and os.path.isfile(full):
-                self._output.append(full)
+                self._output.append(File(full))
             elif self.get("list_dirs") and os.path.isdir(full):
-                self._output.append(full)
+                self._output.append(File(full))
             if os.path.isdir(full) and self.get("recursive"):
                 self._search(full)
 

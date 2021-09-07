@@ -1,6 +1,7 @@
 from shallowflow.api.source import AbstractSimpleSource
 from shallowflow.api.config import Option
 from shallowflow.api.storage import is_valid_name
+from shallowflow.api.compatibility import Unknown
 
 
 class GetStorage(AbstractSimpleSource):
@@ -24,6 +25,15 @@ class GetStorage(AbstractSimpleSource):
         super()._define_options()
         self._option_manager.add(Option(name="storage_name", value_type=str, def_value="storage",
                                         help="The name of the storage item"))
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def setup(self):
         """

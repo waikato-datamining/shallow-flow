@@ -2,6 +2,7 @@ from shallowflow.api.condition import AbstractBooleanCondition
 from shallowflow.api.config import Option
 from shallowflow.api.control import MutableActorHandler, ActorHandlerInfo
 from shallowflow.api.transformer import InputConsumer, OutputProducer
+from shallowflow.api.compatibility import Unknown
 from shallowflow.base.directors import SequentialDirector
 from shallowflow.base.conditions import AlwaysTrue
 
@@ -53,6 +54,24 @@ class AbstractTee(MutableActorHandler, InputConsumer, OutputProducer):
             self._input = state[STATE_INPUT]
             del state[STATE_INPUT]
         super()._restore_state(state)
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def _pre_execute(self):
         """

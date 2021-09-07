@@ -1,9 +1,9 @@
-from time import sleep
 from shallowflow.api.config import Option
-from shallowflow.api.transformer import AbstractSimpleTransformer
+from shallowflow.api.sink import AbstractSimpleSink
+from shallowflow.api.compatibility import Unknown
 
 
-class Stop(AbstractSimpleTransformer):
+class Stop(AbstractSimpleSink):
     """
     Stops the flow.
     """
@@ -24,6 +24,15 @@ class Stop(AbstractSimpleTransformer):
         super()._define_options()
         self._option_manager.add(Option(name="message", value_type=str, def_value="",
                                         help="The optional message to output; variables get expanded"))
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def _do_execute(self):
         """

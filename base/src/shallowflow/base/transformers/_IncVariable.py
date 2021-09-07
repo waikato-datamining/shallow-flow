@@ -1,6 +1,7 @@
 from shallowflow.api.transformer import AbstractSimpleTransformer
 from shallowflow.api.config import Option
 from shallowflow.api.vars import is_valid_name
+from shallowflow.api.compatibility import Unknown
 
 
 class IncVariable(AbstractSimpleTransformer):
@@ -28,6 +29,24 @@ class IncVariable(AbstractSimpleTransformer):
                                         help="The value to increment the variable by"))
         self._option_manager.add(Option(name="is_float", value_type=bool, def_value=False,
                                         help="Whether to increment an integer or float variable"))
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def setup(self):
         """

@@ -1,5 +1,6 @@
 from shallowflow.api.control import MutableActorHandler, AbstractDirector, ActorHandlerInfo
 from shallowflow.api.transformer import InputConsumer
+from shallowflow.api.compatibility import Unknown
 
 STATE_INPUT = "input"
 
@@ -91,6 +92,16 @@ class Branch(MutableActorHandler, InputConsumer):
             self._input = state[STATE_INPUT]
             del state[STATE_INPUT]
         super()._restore_state(state)
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        # TODO
+        return [Unknown]
 
     def setup(self):
         """

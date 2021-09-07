@@ -301,6 +301,15 @@ class InputConsumer(Actor):
     Interface for actors that consume input.
     """
 
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        raise NotImplemented()
+
     def input(self, data):
         """
         Sets the input data to consume.
@@ -315,6 +324,15 @@ class OutputProducer(Actor):
     """
     Interface for actors that generate output.
     """
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        raise NotImplemented()
 
     def output(self):
         """

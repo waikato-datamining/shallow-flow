@@ -1,5 +1,7 @@
 from shallowflow.api.director import AbstractDirector
 from shallowflow.api.actor import InputConsumer, OutputProducer, is_source, is_sink, is_standalone
+from shallowflow.api.compatibility import is_compatible
+from shallowflow.api.class_utils import get_class_name
 
 
 class SequentialDirector(AbstractDirector):
@@ -54,12 +56,16 @@ class SequentialDirector(AbstractDirector):
                 if is_standalone(actors[i]):
                     continue
                 if isinstance(actors[i], OutputProducer) and isinstance(actors[i+1], InputConsumer):
-                    continue
+                    if not is_compatible(actors[i].generates(), actors[i + 1].accepts()):
+                        result = "Actor %s produces %s which is not compatible with actor %s which accepts %s!" \
+                                 % (actors[i].full_name, str([get_class_name(x) for x in actors[i].generates()]),
+                                    actors[i + 1].full_name, str([get_class_name(x) for x in actors[i].accepts()]))
+                        break
                 if not isinstance(actors[i], OutputProducer):
-                    result = "Actor #%d does not generate output!" % (i+1)
+                    result = "Actor does not generate output: %s" % actors[i].full_name
                     break
                 if not isinstance(actors[i+1], InputConsumer):
-                    result = "Actor #%d does not accept input!" % (i + 2)
+                    result = "Actor does not accept input: %s" % actors[i+1].full_name
                     break
 
         return result

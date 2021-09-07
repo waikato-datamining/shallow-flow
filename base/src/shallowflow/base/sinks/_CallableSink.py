@@ -1,5 +1,6 @@
 from shallowflow.api.actor import InputConsumer
 from shallowflow.api.callable import AbstractCallableActor
+from shallowflow.api.compatibility import Unknown
 
 STATE_INPUT = "input"
 
@@ -57,6 +58,18 @@ class CallableSink(AbstractCallableActor, InputConsumer):
             self._input = state[STATE_INPUT]
             del state[STATE_INPUT]
         super()._restore_state(state)
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        if self._callable_actor is not None:
+            return self._callable_actor.accepts()
+        else:
+            return [Unknown]
 
     def _do_execute_callable_actor(self):
         """

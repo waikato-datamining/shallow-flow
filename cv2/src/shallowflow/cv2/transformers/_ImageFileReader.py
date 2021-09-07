@@ -1,6 +1,7 @@
 import cv2
-
+import numpy
 from shallowflow.api.transformer import AbstractSimpleTransformer
+from shallowflow.api.io import File
 
 
 class ImageFileReader(AbstractSimpleTransformer):
@@ -16,6 +17,24 @@ class ImageFileReader(AbstractSimpleTransformer):
         :rtype: str
         """
         return "Loads the image."
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [File]
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [numpy.ndarray]
 
     def _do_execute(self):
         """

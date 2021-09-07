@@ -1,4 +1,5 @@
 import cv2
+import numpy
 from shallowflow.api.config import Option
 from shallowflow.api.sink import AbstractFileWriter
 
@@ -65,6 +66,15 @@ class VideoWriter(AbstractFileWriter):
             self._video_out = state[STATE_VIDEO_OUT]
             del state[STATE_VIDEO_OUT]
         super()._restore_state(state)
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [numpy.ndarray]
 
     def _do_execute(self):
         """

@@ -1,6 +1,8 @@
 import cv2
+import numpy
 from shallowflow.api.transformer import AbstractSimpleTransformer
 from shallowflow.api.config import Option
+from shallowflow.api.io import File
 
 STATE_CAP = "cap"
 STATE_FRAME_COUNT = "frame_count"
@@ -72,6 +74,24 @@ class VideoFileReader(AbstractSimpleTransformer):
         del state[STATE_FRAMES_PROCESSED]
 
         super()._restore_state(state)
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [File]
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [numpy.ndarray]
 
     def setup(self):
         """

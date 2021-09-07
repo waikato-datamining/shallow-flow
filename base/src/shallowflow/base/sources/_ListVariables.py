@@ -27,6 +27,14 @@ class ListVariables(AbstractListOutputSource):
         self._option_manager.add(Option(name="invert", value_type=bool, def_value=False,
                                         help="Whether to invert the matching sense"))
 
+    def _get_item_type(self):
+        """
+        Returns the type of the individual items that get generated, when not outputting a list.
+
+        :return: the type that gets generated
+        """
+        return str
+
     def _do_execute(self):
         """
         Performs the actual execution.

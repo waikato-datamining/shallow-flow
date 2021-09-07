@@ -1,5 +1,4 @@
 import os
-
 from shallowflow.base.controls import Flow, Branch, Trigger, run_flow
 from shallowflow.base.sinks import ConsoleOutput
 from shallowflow.base.sources import FileSupplier, GetVariable
@@ -19,7 +18,7 @@ flow = Flow().manage([
             ConsoleOutput({"prefix": "saving: "}),
         ]),
         ImageFileWriter({"output_file": "@{out_file}"}),
-        VideoWriter({"output_file": "./output/track_book.avi"}),
+        VideoWriter({"output_file": File("./output/track_book.avi")}),
     ]),
 ])
 
