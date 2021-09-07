@@ -23,6 +23,15 @@ class Get(AbstractAction):
         super()._define_options()
         self._option_manager.add(Option("key", str, "", "The key to get the object from."))
 
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [str]
+
     def _check(self, connection):
         """
         Performs checks before performing the action.

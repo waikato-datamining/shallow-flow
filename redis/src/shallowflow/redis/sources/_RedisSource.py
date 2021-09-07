@@ -34,6 +34,15 @@ class RedisSource(AbstractSimpleSource):
         super().reset()
         self._connection = None
 
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return self.get("action").generates()
+
     def setup(self):
         """
         Prepares the actor for use.

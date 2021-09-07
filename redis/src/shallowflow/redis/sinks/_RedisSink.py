@@ -34,6 +34,15 @@ class RedisSink(AbstractSimpleSink):
         super().reset()
         self._connection = None
 
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return self.get("action").accepts()
+
     def setup(self):
         """
         Prepares the actor for use.

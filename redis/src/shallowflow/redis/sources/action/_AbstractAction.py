@@ -8,6 +8,15 @@ class AbstractAction(AbstractOptionHandler):
     Ancestor for Redis actions.
     """
 
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        raise NotImplemented()
+
     def _check(self, connection):
         """
         Performs checks before performing the action.

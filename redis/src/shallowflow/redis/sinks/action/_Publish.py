@@ -23,6 +23,15 @@ class Publish(AbstractAction):
         super()._define_options()
         self._option_manager.add(Option("channel", str, "", "The channel to publish on."))
 
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [str]
+
     def _check(self, connection, o):
         """
         Performs checks before performing the action.

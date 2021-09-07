@@ -1,5 +1,5 @@
 from ._AbstractAction import AbstractAction
-from shallowflow.api.config import Option
+from shallowflow.api.compatibility import Unknown
 
 
 class Null(AbstractAction):
@@ -15,6 +15,15 @@ class Null(AbstractAction):
         :rtype: str
         """
         return "Dummy, does not retrieve anything."
+
+    def generates(self):
+        """
+        Returns the types that get generated.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def _do_execute(self, connection):
         """

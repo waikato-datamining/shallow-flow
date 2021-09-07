@@ -1,4 +1,5 @@
 from ._AbstractAction import AbstractAction
+from shallowflow.api.compatibility import Unknown
 
 
 class Null(AbstractAction):
@@ -14,6 +15,15 @@ class Null(AbstractAction):
         :rtype: str
         """
         return "Dummy action, does nothing."
+
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
 
     def _do_execute(self, connection, o):
         """
