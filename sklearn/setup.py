@@ -34,6 +34,7 @@ setup(
         "shallowflow",
     ],
     install_requires=[
+        "numpy",
         "shallowflow-api",
         "scikit-learn",
     ],

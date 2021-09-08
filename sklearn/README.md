@@ -9,9 +9,13 @@
 
 * Transformers
 
-  * `shallowflow.sklearn.transformers.`
+  * `shallowflow.sklearn.transformers.DatasetLoader`
     
 * Sinks
 
   * `shallowflow.sklearn.sinks.`
  
+
+## Examples
+
+* [loading an ARFF file](examples/load_arff_file.py)
