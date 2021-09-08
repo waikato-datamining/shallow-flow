@@ -29,6 +29,7 @@ setup(
     install_requires=[
         "shallowflow-base",
         "shallowflow-cv2",
+        "shallowflow-sklearn",
         "shallowflow-redis",
     ],
     version="0.0.1",
