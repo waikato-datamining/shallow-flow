@@ -1,6 +1,6 @@
 import os
 import pickle
-from shallowflow.api.config import Option
+from shallowflow.api.config import Option, get_class_name
 from shallowflow.api.io import File
 from sklearn.base import BaseEstimator
 from ._AbstractEstimatorConfiguration import AbstractEstimatorConfiguration
@@ -56,4 +56,4 @@ class PickledEsimatorConfiguration(AbstractEstimatorConfiguration):
             if isinstance(estimator, BaseEstimator):
                 return estimator
             else:
-                raise Exception("Object in %s is not derived from %s!" % (model_file, BaseEstimator.__name__))
+                raise Exception("Object in %s is not derived from %s!" % (model_file, get_class_name(BaseEstimator)))
