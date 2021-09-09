@@ -62,7 +62,7 @@ class IncVariable(AbstractSimpleTransformer):
             if len(name) == 0:
                 result = "No variable name provided!"
             elif not is_valid_name(name):
-                result = "Not a valid variable name: %s" + name
+                result = "Not a valid variable name: %s" % name
             elif len(value) == 0:
                 result = "No increment value provided!"
             elif not self.get("is_float"):

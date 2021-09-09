@@ -63,7 +63,7 @@ class IncStorage(AbstractSimpleTransformer):
             if len(name) == 0:
                 result = "No storage name provided!"
             elif not is_valid_name(name):
-                result = "Not a valid storage name: %s" + name
+                result = "Not a valid storage name: %s" % name
             elif len(value) == 0:
                 result = "No increment value provided!"
         return result
