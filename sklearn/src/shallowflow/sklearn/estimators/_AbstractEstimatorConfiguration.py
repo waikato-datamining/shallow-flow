@@ -5,6 +5,34 @@ from sklearn.base import BaseEstimator
 
 class AbstractEstimatorConfiguration(AbstractOptionHandler):
 
+    def _initialize(self):
+        """
+        Performs initializations.
+        """
+        super()._initialize()
+        self._owner = None
+
+    @property
+    def owner(self):
+        """
+        Returns the owning actor.
+
+        :return: the owning actor
+        :rtype: Actor
+        """
+        return self._owner
+
+    @owner.setter
+    def owner(self, a):
+        """
+        Sets the actor to use as owner.
+
+        :param a: the owning actor
+        :type a: Actor
+        """
+        self._owner = a
+        self.reset()
+
     def _check(self):
         """
         Hook method before configuring the estimator.
@@ -12,6 +40,8 @@ class AbstractEstimatorConfiguration(AbstractOptionHandler):
         :return: None if successful check, otherwise error message
         :rtype: str
         """
+        if self._owner is None:
+            return "No actor set as owner!"
         return None
 
     def _do_configure(self):
