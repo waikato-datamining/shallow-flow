@@ -4,6 +4,12 @@ import inspect
 import importlib
 from shallowflow.api.serialization.objects import get_dict_reader
 
+MODULE_CACHE = None
+""" For caching the determine modules (list). """
+
+CLASS_CACHE = None
+""" For caching the determine class hierarchies (dict). """
+
 
 def fix_module_name(module, cls):
     """
@@ -56,65 +62,91 @@ def get_class_name(o):
     return m + "." + c
 
 
-def find_module_names():
+def find_module_names(use_cache=True):
     """
     Locates all module names used by shallowflow.
 
+    :param use_cache: whether to use the cache or not
+    :type use_cache: bool
     :return: the list of module names
     :rtype: list
     """
+    global MODULE_CACHE
+
     result = []
-    location = inspect.getmodule(get_dict_reader).__file__
-    # source?
-    if "src/shallowflow" in location:
-        location = location[0:location.index("src/shallowflow")]
-        location = os.path.dirname(location)
-        location = os.path.dirname(location)
-    # installed
-    else:
-        while not location.endswith("shallowflow"):
+
+    if not use_cache or (MODULE_CACHE is None):
+        if MODULE_CACHE is None:
+            MODULE_CACHE = list()
+
+        location = inspect.getmodule(get_dict_reader).__file__
+        # source?
+        if "src/shallowflow" in location:
+            location = location[0:location.index("src/shallowflow")]
             location = os.path.dirname(location)
-
-    packages = find_namespace_packages(where=location)
-
-    for package in packages:
-        if ".src." in package:
-            module_name = package[package.index(".src.") + 5:]
+            location = os.path.dirname(location)
+        # installed
         else:
-            module_name = "shallowflow." + package
-        try:
-            module = importlib.import_module(module_name)
-            if module.__package__ not in result:
-                result.append(module.__package__)
-        except Exception:
-            pass
-    result.sort()
+            while not location.endswith("shallowflow"):
+                location = os.path.dirname(location)
+
+        packages = find_namespace_packages(where=location)
+
+        for package in packages:
+            if ".src." in package:
+                module_name = package[package.index(".src.") + 5:]
+            else:
+                module_name = "shallowflow." + package
+            try:
+                module = importlib.import_module(module_name)
+                if module.__package__ not in result:
+                    result.append(module.__package__)
+            except Exception:
+                pass
+        result.sort()
+        MODULE_CACHE = result[:]
+    else:
+        result = MODULE_CACHE[:]
+
     return result
 
 
-def find_class_names(super_class):
+def find_class_names(super_class, use_cache=True):
     """
     Finds all classes that are derived from the specified superclass in all of the
     shallowflow modules.
 
     :param super_class: the class to look for
     :type super_class: type
+    :param use_cache: whether to use the cache or not
+    :type use_cache: bool
     :return: the list of class names
     :rtype: list
     """
-    result = []
-    module_names = find_module_names()
+    global CLASS_CACHE
 
-    for module_name in module_names:
-        try:
-            module = importlib.import_module(module_name)
-            for name, obj in inspect.getmembers(module):
-                if inspect.isclass(obj) and issubclass(obj, super_class):
-                    module_name, c = fix_module_name(obj.__module__, obj.__name__)
-                    result.append(module_name + "." + c)
-        except Exception:
-            pass
-    result.sort()
+    result = []
+    module_names = find_module_names(use_cache=use_cache)
+
+    locate = (not use_cache) or (CLASS_CACHE is None) or (super_class not in CLASS_CACHE)
+    if CLASS_CACHE is None:
+        CLASS_CACHE = dict()
+
+    if locate:
+        for module_name in module_names:
+            try:
+                module = importlib.import_module(module_name)
+                for name, obj in inspect.getmembers(module):
+                    if inspect.isclass(obj) and issubclass(obj, super_class):
+                        module_name, c = fix_module_name(obj.__module__, obj.__name__)
+                        result.append(module_name + "." + c)
+            except Exception:
+                pass
+        result.sort()
+        CLASS_CACHE[super_class] = result[:]
+    else:
+        result = CLASS_CACHE[super_class][:]
+
     return result
 
 
