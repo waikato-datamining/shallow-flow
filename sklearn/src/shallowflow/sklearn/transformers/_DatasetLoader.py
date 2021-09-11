@@ -41,7 +41,7 @@ class DatasetLoader(AbstractSimpleTransformer):
         :return: the list of types
         :rtype: list
         """
-        return self.get("loader").generates()
+        return [self.get("loader").generates()]
 
     def _do_execute(self):
         """
