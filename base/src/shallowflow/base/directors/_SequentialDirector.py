@@ -59,7 +59,7 @@ class SequentialDirector(AbstractDirector):
                     if not is_compatible(actors[i].generates(), actors[i + 1].accepts()):
                         result = "Actor %s produces %s which is not compatible with actor %s which accepts %s!" \
                                  % (actors[i].full_name, str([get_class_name(x) for x in actors[i].generates()]),
-                                    actors[i + 1].full_name, str([get_class_name(x) for x in actors[i].accepts()]))
+                                    actors[i + 1].full_name, str([get_class_name(x) for x in actors[i + 1].accepts()]))
                         break
                 if not isinstance(actors[i], OutputProducer):
                     result = "Actor does not generate output: %s" % actors[i].full_name
