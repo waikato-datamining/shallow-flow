@@ -1,3 +1,6 @@
+from shallowflow.api.config import get_class_name
+
+
 class AbstractContainer(object):
     """
     Ancestor for flow containers.
@@ -11,6 +14,26 @@ class AbstractContainer(object):
         self._additional_names = list()
         self._help = dict()
         self._init_help()
+
+    def _add_help(self, name, desc, cls=None):
+        """
+        Adds the help for a container value.
+
+        :param name: the name of the value to add the help for
+        :type name: str
+        :param desc: the help string
+        :type desc: str
+        :param cls: the optional type or types (list)
+        """
+        if not self._is_valid_name(name):
+            return
+        if cls is not None:
+            desc += "; "
+            if isinstance(cls, list):
+                desc += ", ".join([get_class_name(x) for x in cls])
+            else:
+                desc += get_class_name(cls)
+        self._help[name] = desc
 
     def _init_help(self):
         """
@@ -87,6 +110,8 @@ class AbstractContainer(object):
         :return: if successfully stored
         :rtype: bool
         """
+        if value is None:
+            return False
         if self._is_valid_name(name):
             self._values[name] = value
             return True
@@ -149,5 +174,5 @@ class AbstractContainer(object):
         for name in self.stored():
             if len(result) > 0:
                 result += ", "
-            result += name + "=" + self.get(name)
+            result += name + "=" + str(self.get(name))
         return result
