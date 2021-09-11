@@ -1,3 +1,4 @@
+import traceback
 from datetime import datetime
 
 
@@ -8,6 +9,22 @@ def log(*args):
     :param args: the arguments to log
     """
     print(*("%s - " % str(datetime.now()), *args))
+
+
+def handle_exception(msg, loggable=None):
+    """
+    Generates a string from message and the current exception.
+
+    :param msg: the message to use
+    :type msg: str
+    :param loggable: the LoggableObject instance
+    :return: the generated string
+    :rtype: str
+    """
+    result = msg + "\n" + traceback.format_exc()
+    if loggable is not None:
+        loggable.log(result)
+    return result
 
 
 class LoggableObject(object):
@@ -22,3 +39,14 @@ class LoggableObject(object):
         :param args: the arguments to log
         """
         print(*("%s - %s -" % (type(self).__name__, str(datetime.now())), *args))
+
+    def _handle_exception(self, msg):
+        """
+        Generates a string from message and the current exception.
+
+        :param msg: the message to use
+        :type msg: str
+        :return: the generated string
+        :rtype: str
+        """
+        return handle_exception(msg, loggable=self)

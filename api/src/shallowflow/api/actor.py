@@ -1,6 +1,7 @@
 import traceback
 import shallowflow.api.serialization.objects as serialization
 from .config import Option, AbstractOptionHandler, dict_to_optionhandler, optionhandler_to_dict
+from .logging import handle_exception
 from .vars import VariableChangeListener
 from .scope import ScopeHandler
 from .storage import StorageHandler
@@ -130,19 +131,6 @@ class Actor(AbstractOptionHandler, VariableChangeListener):
             prefix += self.name
             self._log_prefix = prefix
         return self._log_prefix
-
-    def _handle_exception(self, msg):
-        """
-        Generates a string from message and the current exception.
-
-        :param msg: the message to use
-        :type msg: str
-        :return: the generated string
-        :rtype: str
-        """
-        result = msg + "\n" + traceback.format_exc()
-        self.log(result)
-        return result
 
     def update_variables(self, variables):
         """
