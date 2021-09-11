@@ -8,6 +8,7 @@ The base components for shallowflow.
   * `shallowflow.base.controls.Branch`
   * `shallowflow.base.controls.ConditionalTee`
   * `shallowflow.base.controls.ConditionalTrigger`
+  * `shallowflow.base.controls.ContainerValuePicker`
   * `shallowflow.base.controls.Flow`
   * `shallowflow.base.controls.Sequence`
   * `shallowflow.base.controls.Sleep`

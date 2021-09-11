@@ -1,6 +1,6 @@
 import os
 from shallowflow.api.io import File
-from shallowflow.base.controls import Flow, run_flow
+from shallowflow.base.controls import Flow, run_flow, ContainerValuePicker
 from shallowflow.base.sources import FileSupplier
 from shallowflow.base.sinks import ConsoleOutput
 from shallowflow.sklearn.estimators import GenericConfiguration
@@ -11,7 +11,10 @@ flow = Flow().manage([
     FileSupplier({"files": [File("./data/iris.arff")]}),
     DatasetLoader({"loader": ArffLoader({"class_index": "last"})}),
     TrainClassifier({"estimator": GenericConfiguration({"class_name": "sklearn.ensemble.RandomForestClassifier", "options": {"n_estimators": 50, "max_leaf_nodes": 5}})}),
-    ConsoleOutput()
+    ContainerValuePicker({"value_name": "estimator"}).manage([
+        ConsoleOutput({"prefix": "\n--> model\n"})
+    ]),
+    ConsoleOutput({"prefix": "\n--> container\n"})
 ])
 
 msg = run_flow(flow, dump_file="./output/" + os.path.splitext(os.path.basename(__file__))[0] + ".json")
