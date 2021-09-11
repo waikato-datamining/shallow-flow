@@ -1,4 +1,4 @@
-class DefaultDataset(object):
+class Dataset(object):
     """
     Container class for datasets.
     """
@@ -23,9 +23,9 @@ class DefaultDataset(object):
         return "X=" + str(self.X) + "\nmeta=" + str(self.meta)
 
 
-class ClassificationDataset(DefaultDataset):
+class SupervisedDataset(Dataset):
     """
-    Container class for classification datasets.
+    Container class for datasets that have output variables as well.
     """
 
     def __init__(self, X, y, meta=None):

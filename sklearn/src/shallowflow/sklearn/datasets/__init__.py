@@ -1,1 +1,1 @@
-from ._Standard import DefaultDataset, ClassificationDataset
+from ._Standard import Dataset, SupervisedDataset

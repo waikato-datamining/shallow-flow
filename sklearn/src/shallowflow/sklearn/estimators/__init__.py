@@ -1,3 +1,3 @@
 from ._AbstractEstimatorConfiguration import AbstractEstimatorConfiguration
-from ._RandomForest import RandomForestClassifierConfiguration, RandomForestRegressorConfiguration
+from ._Generic import GenericConfiguration
 from ._Pickled import PickledEsimatorConfiguration

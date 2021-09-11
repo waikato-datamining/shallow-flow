@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.io.arff import loadarff
 from shallowflow.api.config import Option
-from shallowflow.sklearn.datasets import DefaultDataset, ClassificationDataset
+from shallowflow.sklearn.datasets import Dataset, SupervisedDataset
 from ._AbstractDatasetLoader import AbstractDatasetLoader, split_off_class
 
 
@@ -24,9 +24,9 @@ class ArffLoader(AbstractDatasetLoader):
         :return: the container class
         """
         if len(self.get("class_index")) == 0:
-            return DefaultDataset
+            return Dataset
         else:
-            return ClassificationDataset
+            return SupervisedDataset
 
     def _do_load(self, path):
         """
@@ -38,7 +38,7 @@ class ArffLoader(AbstractDatasetLoader):
         """
         data, meta = loadarff(path)
         if len(self.get("class_index")) == 0:
-            return DefaultDataset(np.array(data), meta=meta)
+            return Dataset(np.array(data), meta=meta)
         else:
             X, y = split_off_class(data, self.get("class_index"))
-            return ClassificationDataset(X, y, meta=meta)
+            return SupervisedDataset(X, y, meta=meta)
