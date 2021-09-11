@@ -36,7 +36,7 @@ def check_compatibility(output, input, strict=False):
         return True
 
     # does input accept superclass?
-    if issubclass(input, output):
+    if issubclass(output, input):
         return True
 
     return False
