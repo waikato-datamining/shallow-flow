@@ -6,7 +6,7 @@ from shallowflow.base.directors import SequentialDirector
 from ._Tee import AbstractTee
 
 
-class ContainerValuePicker(AbstractTee):
+class GetContainerValue(AbstractTee):
     """
     Lets the user obtain a value from a container passing through.
     Can either be processed in a sub-flow or by the following actor(s).
