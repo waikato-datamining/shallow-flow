@@ -107,7 +107,7 @@ class WhileLoop(MutableActorHandler, InputConsumer):
 
     def _new_director(self):
         """
-        Returns the directory to use for executing the actors.
+        Returns the director to use for executing the actors.
 
         :return: the director
         :rtype: AbstractDirector
