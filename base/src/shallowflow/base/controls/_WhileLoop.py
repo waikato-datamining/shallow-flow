@@ -102,7 +102,7 @@ class WhileLoop(MutableActorHandler, InputConsumer):
                 if isinstance(self.actors[0], InputConsumer):
                     result = "First sub-actor is not allowed to accept input: %s" % self.actors[0].full_name
         if result is None:
-            self.get("condition").owner = self
+            self.get("condition").flow_context = self
         return result
 
     def _new_director(self):

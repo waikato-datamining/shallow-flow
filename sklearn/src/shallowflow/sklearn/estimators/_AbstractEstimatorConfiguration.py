@@ -1,37 +1,47 @@
 from shallowflow.api.config import AbstractOptionHandler, optionhandler_to_dict, dict_to_optionhandler
+from shallowflow.api.actor import FlowContextHandler
 from shallowflow.api.serialization.objects import add_dict_writer, add_dict_reader
 from sklearn.base import BaseEstimator
 
 
-class AbstractEstimatorConfiguration(AbstractOptionHandler):
+class AbstractEstimatorConfiguration(AbstractOptionHandler, FlowContextHandler):
 
     def _initialize(self):
         """
         Performs initializations.
         """
         super()._initialize()
-        self._owner = None
+        self._flow_context = None
 
     @property
-    def owner(self):
+    def flow_context(self):
         """
         Returns the owning actor.
 
         :return: the owning actor
         :rtype: Actor
         """
-        return self._owner
+        return self._flow_context
 
-    @owner.setter
-    def owner(self, a):
+    @flow_context.setter
+    def flow_context(self, a):
         """
         Sets the actor to use as owner.
 
         :param a: the owning actor
         :type a: Actor
         """
-        self._owner = a
+        self._flow_context = a
         self.reset()
+
+    def _requires_flow_context(self):
+        """
+        Returns whether flow context is required.
+
+        :return: True if required
+        :rtype: bool
+        """
+        return False
 
     def _check(self):
         """
@@ -40,8 +50,8 @@ class AbstractEstimatorConfiguration(AbstractOptionHandler):
         :return: None if successful check, otherwise error message
         :rtype: str
         """
-        if self._owner is None:
-            return "No actor set as owner!"
+        if self._requires_flow_context() and (self.flow_context is None):
+            return "No flow context set!"
         return None
 
     def _do_configure(self):

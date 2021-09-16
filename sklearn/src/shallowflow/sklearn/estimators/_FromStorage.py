@@ -26,6 +26,15 @@ class FromStorageConfiguration(AbstractEstimatorConfiguration):
         self._option_manager.add(Option(name="storage_name", value_type=str, def_value="storage",
                                         help="The name of the storage item to retrieve"))
 
+    def _requires_flow_context(self):
+        """
+        Returns whether flow context is required.
+
+        :return: True if required
+        :rtype: bool
+        """
+        return True
+
     def _check(self):
         """
         Hook method before configuring the estimator.
@@ -40,7 +49,7 @@ class FromStorageConfiguration(AbstractEstimatorConfiguration):
                 result = "No storage name provided!"
             elif not is_valid_name(name):
                 result = "Not a valid storage name: %s" % name
-            elif not self.owner.storage_handler.storage.has(name):
+            elif not self.flow_context.storage_handler.storage.has(name):
                 result = "Storage item not present: %s" % name
         return result
 
@@ -52,7 +61,7 @@ class FromStorageConfiguration(AbstractEstimatorConfiguration):
         :rtype: BaseEstimator
         """
         name = self.get("storage_name")
-        estimator = self.owner.storage_handler.storage.get(name)
+        estimator = self.flow_context.storage_handler.storage.get(name)
         if isinstance(estimator, BaseEstimator):
             return estimator
         else:

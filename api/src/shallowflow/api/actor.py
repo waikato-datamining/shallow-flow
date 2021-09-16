@@ -341,6 +341,29 @@ class OutputProducer(Actor):
         raise NotImplemented()
 
 
+class FlowContextHandler(object):
+
+    @property
+    def flow_context(self):
+        """
+        Returns the flow context.
+
+        :return: the flow context, None if none set
+        :rtype: Actor
+        """
+        raise NotImplemented()
+
+    @flow_context.setter
+    def flow_context(self, actor):
+        """
+        Sets the flow context.
+
+        :param actor: the flow context
+        :type actor: Actor
+        """
+        raise NotImplemented()
+
+
 def is_standalone(actor):
     """
     Checks whether the actor is a standalone.

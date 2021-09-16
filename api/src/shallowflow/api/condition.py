@@ -1,8 +1,9 @@
 from .config import AbstractOptionHandler, optionhandler_to_dict, dict_to_optionhandler
+from .actor import FlowContextHandler
 from .serialization.objects import add_dict_writer, add_dict_reader
 
 
-class AbstractBooleanCondition(AbstractOptionHandler):
+class AbstractBooleanCondition(AbstractOptionHandler, FlowContextHandler):
     """
     Ancestor for boolean conditions.
     """
@@ -12,27 +13,27 @@ class AbstractBooleanCondition(AbstractOptionHandler):
         Performs initializations.
         """
         super()._initialize()
-        self._owner = None
+        self._flow_context = None
 
     @property
-    def owner(self):
+    def flow_context(self):
         """
         Returns the owning actor.
 
         :return: the owning actor
         :rtype: Actor
         """
-        return self._owner
+        return self._flow_context
 
-    @owner.setter
-    def owner(self, a):
+    @flow_context.setter
+    def flow_context(self, a):
         """
         Sets the actor to use as owner.
 
         :param a: the owning actor
         :type a: Actor
         """
-        self._owner = a
+        self._flow_context = a
         self._log_prefix = None
         self.reset()
 
@@ -44,8 +45,8 @@ class AbstractBooleanCondition(AbstractOptionHandler):
         :rtype: str
         """
         if self._log_prefix is None:
-            if self.owner is not None:
-                prefix = self.owner.log_prefix + "."
+            if self.flow_context is not None:
+                prefix = self.flow_context.log_prefix + "."
             else:
                 prefix = ""
             prefix += type(self).__name__
@@ -60,7 +61,7 @@ class AbstractBooleanCondition(AbstractOptionHandler):
         :return: None if successfully passed checks, otherwise error message
         :rtype: str
         """
-        if self._owner is None:
+        if self._flow_context is None:
             return "No owning actor set!"
         return None
 

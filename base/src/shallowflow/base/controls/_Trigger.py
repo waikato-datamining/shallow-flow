@@ -120,7 +120,7 @@ class ConditionalTrigger(Trigger):
         """
         result = super().setup()
         if result is None:
-            self.get("condition").owner = self
+            self.get("condition").flow_context = self
         return result
 
     def _can_execute_actors(self):

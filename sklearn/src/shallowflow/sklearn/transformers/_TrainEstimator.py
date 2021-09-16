@@ -62,7 +62,7 @@ class AbstractTrainEstimator(AbstractSimpleTransformer):
 
         try:
             config = self.get("estimator")
-            config.owner = self
+            config.flow_context = self
             estimator = config.configure()
         except Exception:
             result = self._handle_exception("Failed to configure estimator!")
