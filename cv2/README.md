@@ -17,6 +17,11 @@ Imaging components using [OpenCV2](https://github.com/opencv/opencv-python) for 
   * `shallowflow.cv2.sinks.ImageFileWriter`
   * `shallowflow.cv2.sinks.VideoFileWriter`
 
+## Conversions
+
+* `shallowflow.cv2.conversions.FrameToJpgBytes`
+* `shallowflow.cv2.conversions.JpgBytesToFrame`
+
 ## Examples
 
 * [extract video frames](examples/extract_video_frames.py)
