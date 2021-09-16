@@ -128,6 +128,32 @@ class ActorHandler(Actor):
                 result = self.actors.index(actor)
         return result
 
+    @property
+    def first_active(self):
+        """
+        Returns the first non-skipped actor.
+
+        :return: the first active Actor, None if none available
+        :rtype: Actor
+        """
+        for actor in self.actors:
+            if not actor.is_skipped:
+                return actor
+        return None
+
+    @property
+    def last_active(self):
+        """
+        Returns the last non-skipped actor.
+
+        :return: the last active Actor, None if none available
+        :rtype: Actor
+        """
+        for i in range(len(self.actors) - 1, -1, -1):
+            if not self.actors[i].is_skipped:
+                return self.actors[i]
+        return None
+
     def __len__(self):
         """
         Returns the number of actors.

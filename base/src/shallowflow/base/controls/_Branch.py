@@ -23,6 +23,8 @@ class BranchDirector(AbstractDirector):
         for actor in actors:
             if self.is_stopped:
                 break
+            if actor.is_skipped:
+                continue
             result = actor.execute()
             if result is not None:
                 break

@@ -85,6 +85,8 @@ class SequentialDirector(AbstractDirector):
             return result
 
         for i in range(len(actors)):
+            if actors[i].is_skipped:
+                continue
             if is_standalone(actors[i]):
                 msg = actors[i].execute()
                 if msg is not None:
@@ -124,6 +126,8 @@ class SequentialDirector(AbstractDirector):
             curr = None
             for i in range(actors.index(start), len(actors), 1):
                 curr = actors[i]
+                if curr.is_skipped:
+                    continue
                 if token is None:
                     if isinstance(curr, OutputProducer) and curr.has_output():
                         if len(pending_actors) > 0:

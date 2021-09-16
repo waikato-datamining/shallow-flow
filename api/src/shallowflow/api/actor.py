@@ -31,6 +31,7 @@ class Actor(AbstractOptionHandler, VariableChangeListener, Stoppable):
         For configuring the options.
         """
         super()._define_options()
+        self._option_manager.add(Option("skip", bool, False, "Whether to skip this actor during execution"))
         self._option_manager.add(Option("annotation", str, "", "For adding documentation to the actor"))
         self._option_manager.add(Option("name", str, "", "The name to use for this actor, leave empty for class name"))
         self._option_manager.add(Option("stop_flow_on_error", bool, True, "Whether to stop the flow in case of an error"))
@@ -92,6 +93,16 @@ class Actor(AbstractOptionHandler, VariableChangeListener, Stoppable):
             return self._parent.scope_handler
         else:
             return None
+
+    @property
+    def is_skipped(self):
+        """
+        Returns whether the actor is disabled and needs to be skipped during execution.
+
+        :return: true if to skip
+        :rtype: bool
+        """
+        return self.get("skip")
 
     @property
     def name(self):
