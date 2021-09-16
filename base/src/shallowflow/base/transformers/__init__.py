@@ -1,4 +1,5 @@
 from ._CallableTransformer import CallableTransformer
+from ._Convert import Convert
 from ._IncStorage import IncStorage
 from ._IncVariable import IncVariable
 from ._PassThrough import PassThrough
