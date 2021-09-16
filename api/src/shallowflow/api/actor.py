@@ -1,7 +1,7 @@
 import traceback
 import shallowflow.api.serialization.objects as serialization
 from .config import Option, AbstractOptionHandler, dict_to_optionhandler, optionhandler_to_dict
-from .logging import handle_exception
+from .stopping import Stoppable
 from .vars import VariableChangeListener
 from .scope import ScopeHandler
 from .storage import StorageHandler
@@ -13,7 +13,7 @@ FLOW_DIR = "flow_dir"
 """ Variable that stores the directory the flow resides in. """
 
 
-class Actor(AbstractOptionHandler, VariableChangeListener):
+class Actor(AbstractOptionHandler, VariableChangeListener, Stoppable):
     """
     The ancestor for all actors.
     """

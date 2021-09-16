@@ -1,7 +1,8 @@
 from .logging import LoggableObject
+from .stopping import Stoppable
 
 
-class AbstractDirector(LoggableObject):
+class AbstractDirector(LoggableObject, Stoppable):
     """
     Ancestor for directors used by control actors.
     """
