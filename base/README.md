@@ -40,6 +40,7 @@ The base components for shallowflow.
   * `shallowflow.base.transformers.IncStorage`
   * `shallowflow.base.transformers.IncVariable`
   * `shallowflow.base.transformers.PassThrough`
+  * `shallowflow.base.transformers.PickledFileReader`
   * `shallowflow.base.transformers.SetStorage`
   * `shallowflow.base.transformers.SetVariable`
     
@@ -48,6 +49,7 @@ The base components for shallowflow.
   * `shallowflow.base.sinks.CallableSink`
   * `shallowflow.base.sinks.ConsoleOutput`
   * `shallowflow.base.sinks.Null`
+  * `shallowflow.base.sinks.PickledFileWriter`
 
 ## Conditions
 
