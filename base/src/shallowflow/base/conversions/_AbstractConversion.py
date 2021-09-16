@@ -92,7 +92,7 @@ class AbstractConversion(AbstractOptionHandler, FlowContextHandler):
         msg = self._check(o)
         if msg is not None:
             raise Exception(msg)
-        return self._do_convert()
+        return self._do_convert(o)
 
 
 # register reader/writer

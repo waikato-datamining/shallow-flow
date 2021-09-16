@@ -53,7 +53,7 @@ class Convert(AbstractSimpleTransformer):
         result = None
         conversion = self.get("conversion")
         try:
-            conversion.flow_context(self)
+            conversion.flow_context = self
             self._output.append(conversion.convert(self._input))
         except Exception:
             result = self._handle_exception("Failed to convert input data!")

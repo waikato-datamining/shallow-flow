@@ -57,6 +57,10 @@ The base components for shallowflow.
 * `shallowflow.base.conditions.AlwaysTrue`
 * `shallowflow.base.conditions.NumExpr`
 
+## Conversions
+
+* `shallowflow.base.conversions.PassThrough`
+
 ## Help
 
   * `shallowflow.base.help.Markdown` - generates help in Markdown
