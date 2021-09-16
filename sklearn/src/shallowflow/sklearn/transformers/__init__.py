@@ -1,3 +1,4 @@
 from ._DatasetLoader import DatasetLoader
 from ._TrainEstimator import AbstractTrainEstimator
-from ._TrainEstimator import TrainClassifier
+from ._TrainEstimator import TrainSupervisedEstimator
+from ._TrainEstimator import TrainUnsupervisedEstimator

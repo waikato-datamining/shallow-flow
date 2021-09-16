@@ -10,7 +10,8 @@
 * Transformers
 
   * `shallowflow.sklearn.transformers.DatasetLoader`
-  * `shallowflow.sklearn.transformers.TrainEstimator`
+  * `shallowflow.sklearn.transformers.TrainSupervisedEstimator`
+  * `shallowflow.sklearn.transformers.TrainUnsupervisedEstimator`
     
 * Sinks
 
@@ -20,4 +21,5 @@
 ## Examples
 
 * [loading an ARFF file](examples/load_arff_file.py)
-* [train RandomForestClassifier](examples/train_random_forest_classifier.py)
+* [train RandomForest classifier](examples/train_random_forest_classifier.py)
+* [train KMeans clusterer](examples/train_kmeans_clusterer.py)
