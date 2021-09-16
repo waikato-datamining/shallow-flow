@@ -73,6 +73,10 @@ class BroadcastAndListen(AbstractAction):
             sleep(0.01)
 
         if self.is_stopped:
+            if self._pubsub is not None:
+                self._pubsub_thread.stop()
+                self._pubsub.close()
+                self._pubsub = None
             return None
         else:
             return self._output
