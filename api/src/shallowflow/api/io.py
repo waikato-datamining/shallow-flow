@@ -31,7 +31,7 @@ class Directory(str):
 
 class FileStringReader(AbstractStringReader):
     """
-    Ancestor for classes that turn strings into File objects.
+    Turns strings into File objects.
     """
 
     def handles(self, cls):
@@ -58,7 +58,7 @@ class FileStringReader(AbstractStringReader):
 
 class DirectoryStringReader(AbstractStringReader):
     """
-    Ancestor for classes that turn strings into Directory objects.
+    Turns strings into Directory objects.
     """
 
     def handles(self, cls):
