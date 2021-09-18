@@ -245,3 +245,19 @@ class StorageHandler(object):
         :rtype: Storage
         """
         raise NotImplemented()
+
+
+class StorageUser(object):
+    """
+    Interface for classes that use storage.
+    """
+
+    @property
+    def uses_storage(self):
+        """
+        Returns whether storage is used.
+
+        :return: True if used
+        :rtype: bool
+        """
+        raise NotImplemented()

@@ -1,9 +1,10 @@
 import re
+from shallowflow.api.storage import StorageUser
 from shallowflow.api.source import AbstractListOutputSource
 from shallowflow.api.config import Option
 
 
-class ListStorage(AbstractListOutputSource):
+class ListStorage(AbstractListOutputSource, StorageUser):
     """
     Outputs the names of the current storage items.
     """
@@ -34,6 +35,16 @@ class ListStorage(AbstractListOutputSource):
         :return: the type that gets generated
         """
         return str
+
+    @property
+    def uses_storage(self):
+        """
+        Returns whether storage is used.
+
+        :return: True if used
+        :rtype: bool
+        """
+        return not self.is_skipped
 
     def setup(self):
         """

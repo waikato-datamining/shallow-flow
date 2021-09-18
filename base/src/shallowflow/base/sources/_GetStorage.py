@@ -1,10 +1,10 @@
 from shallowflow.api.source import AbstractSimpleSource
 from shallowflow.api.config import Option
-from shallowflow.api.storage import is_valid_name
+from shallowflow.api.storage import is_valid_name, StorageUser
 from shallowflow.api.compatibility import Unknown
 
 
-class GetStorage(AbstractSimpleSource):
+class GetStorage(AbstractSimpleSource, StorageUser):
     """
     Outputs the value of the specified storage item.
     """
@@ -34,6 +34,16 @@ class GetStorage(AbstractSimpleSource):
         :rtype: list
         """
         return [Unknown]
+
+    @property
+    def uses_storage(self):
+        """
+        Returns whether storage is used.
+
+        :return: True if used
+        :rtype: bool
+        """
+        return not self.is_skipped
 
     def setup(self):
         """

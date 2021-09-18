@@ -1,10 +1,10 @@
 from shallowflow.api.config import Option, get_class_name
-from shallowflow.api.storage import is_valid_name
+from shallowflow.api.storage import is_valid_name, StorageUser
 from sklearn.base import BaseEstimator
 from ._AbstractEstimatorConfiguration import AbstractEstimatorConfiguration
 
 
-class FromStorageConfiguration(AbstractEstimatorConfiguration):
+class FromStorageConfiguration(AbstractEstimatorConfiguration, StorageUser):
     """
     Retrieves the estimator from storage.
     """
@@ -25,6 +25,16 @@ class FromStorageConfiguration(AbstractEstimatorConfiguration):
         super()._define_options()
         self._option_manager.add(Option(name="storage_name", value_type=str, def_value="storage",
                                         help="The name of the storage item to retrieve"))
+
+    @property
+    def uses_storage(self):
+        """
+        Returns whether storage is used.
+
+        :return: True if used
+        :rtype: bool
+        """
+        return True
 
     def _requires_flow_context(self):
         """
