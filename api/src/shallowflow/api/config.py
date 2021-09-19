@@ -379,6 +379,14 @@ class OptionManager(LoggableObject, VariableHandler):
                             l.append(reader(item))
                     self.set(k, l)
                     continue
+                else:
+                    l = []
+                    for item in d[k]:
+                        if (type(item) == str) and (self._options[k].base_type is not str):
+                            item = self._options[k].base_type(item)
+                        l.append(item)
+                    self.set(k, l)
+                    continue
 
             # special handler registered?
             if self.has_from_dict_handler(k):
@@ -395,6 +403,10 @@ class OptionManager(LoggableObject, VariableHandler):
                     reader = get_dict_reader(self._options[k].value_type)
                     self.set(k, reader(d[k]))
                 continue
+
+            # str derived class but str value? lets wrap it in correct class
+            if (type(d[k]) == str) and (self._options[k].value_type is not str):
+                d[k] = self._options[k].value_type(d[k])
 
             if isinstance(self.get(k), self._options[k].value_type):
                 self.set(k, d[k])
