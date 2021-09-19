@@ -1,5 +1,5 @@
 from shallowflow.api.config import Option, get_class_name
-from shallowflow.api.storage import is_valid_name, StorageUser
+from shallowflow.api.storage import StorageUser, StorageName
 from sklearn.base import BaseEstimator
 from ._AbstractEstimatorConfiguration import AbstractEstimatorConfiguration
 
@@ -23,7 +23,7 @@ class FromStorageConfiguration(AbstractEstimatorConfiguration, StorageUser):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option(name="storage_name", value_type=str, def_value="storage",
+        self._option_manager.add(Option(name="storage_name", value_type=StorageName, def_value=StorageName("storage"),
                                         help="The name of the storage item to retrieve"))
 
     @property
@@ -57,8 +57,6 @@ class FromStorageConfiguration(AbstractEstimatorConfiguration, StorageUser):
             name = self.get("storage_name")
             if len(name) == 0:
                 result = "No storage name provided!"
-            elif not is_valid_name(name):
-                result = "Not a valid storage name: %s" % name
             elif not self.flow_context.storage_handler.storage.has(name):
                 result = "Storage item not present: %s" % name
         return result

@@ -1,6 +1,6 @@
 from shallowflow.api.transformer import AbstractSimpleTransformer
 from shallowflow.api.config import Option
-from shallowflow.api.storage import is_valid_name, StorageUser
+from shallowflow.api.storage import StorageUser, StorageName
 from shallowflow.api.compatibility import Unknown
 
 
@@ -23,7 +23,7 @@ class IncStorage(AbstractSimpleTransformer, StorageUser):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option(name="storage_name", value_type=str, def_value="var",
+        self._option_manager.add(Option(name="storage_name", value_type=StorageName, def_value=StorageName("var"),
                                         help="The name of the storage item to increment"))
         self._option_manager.add(Option(name="inc_value", value_type=str, def_value="1",
                                         help="The value to increment the storage item by"))
@@ -72,8 +72,6 @@ class IncStorage(AbstractSimpleTransformer, StorageUser):
             value = self.get("inc_value")
             if len(name) == 0:
                 result = "No storage name provided!"
-            elif not is_valid_name(name):
-                result = "Not a valid storage name: %s" % name
             elif len(value) == 0:
                 result = "No increment value provided!"
         return result

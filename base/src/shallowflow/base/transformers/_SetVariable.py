@@ -1,6 +1,6 @@
 from shallowflow.api.transformer import AbstractSimpleTransformer
 from shallowflow.api.config import Option
-from shallowflow.api.vars import is_valid_name
+from shallowflow.api.vars import VariableName
 from shallowflow.api.compatibility import Unknown
 import shallowflow.api.serialization.vars as ser_vars
 
@@ -24,7 +24,7 @@ class SetVariable(AbstractSimpleTransformer):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option(name="var_name", value_type=str, def_value="var",
+        self._option_manager.add(Option(name="var_name", value_type=VariableName, def_value=VariableName("var"),
                                         help="The name of the variable"))
         self._option_manager.add(Option(name="var_value", value_type=str, def_value="",
                                         help="The value to use instead of data passing through"))
@@ -60,8 +60,6 @@ class SetVariable(AbstractSimpleTransformer):
         if result is None:
             if len(self.get("var_name")) == 0:
                 result = "No variable name provided!"
-            elif not is_valid_name(self.get("var_name")):
-                result = "Not a valid variable name: %s" + self.get("var_name")
         return result
 
     def _do_execute(self):

@@ -1,3 +1,6 @@
+from .serialization.vars import AbstractStringReader, add_string_reader
+
+
 VARIABLE_EVENT_ADDED = "added"
 VARIABLE_EVENT_UPDATED = "updated"
 VARIABLE_EVENT_DELETED = "deleted"
@@ -152,6 +155,44 @@ class VariableChangeEvent(object):
         self.variables = variables
         self.event_type = event_type
         self.var = var
+
+
+class VariableName(str):
+    """
+    Class that enforces correct variable names.
+    """
+
+    def __new__(cls, s):
+        if not is_valid_name(s):
+            raise Exception("Invalid variable name: %s" % s)
+        return super().__new__(cls, s)
+
+
+class VariableNameStringReader(AbstractStringReader):
+    """
+    Turns strings into VariableName objects.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert a string into the specified class.
+
+        :param cls: the class to convert to
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, VariableName)
+
+    def convert(self, s, base_type=None):
+        """
+        Turns the string into an object.
+
+        :param s: the string to convert
+        :type s: str
+        :param base_type: optional type when reconstructing lists etc
+        :return: the generated object
+        """
+        return VariableName(s)
 
 
 class VariableChangeListener(object):
@@ -369,3 +410,7 @@ class VariableHandler(object):
         :type variables: Variables
         """
         raise NotImplemented()
+
+
+# serialization
+add_string_reader(VariableNameStringReader)

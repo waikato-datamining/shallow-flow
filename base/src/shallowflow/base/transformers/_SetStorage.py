@@ -1,6 +1,6 @@
 from shallowflow.api.transformer import AbstractSimpleTransformer
 from shallowflow.api.config import Option
-from shallowflow.api.storage import is_valid_name, StorageUser
+from shallowflow.api.storage import StorageUser, StorageName
 from shallowflow.api.compatibility import Unknown
 
 
@@ -23,7 +23,7 @@ class SetStorage(AbstractSimpleTransformer, StorageUser):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option(name="storage_name", value_type=str, def_value="storage",
+        self._option_manager.add(Option(name="storage_name", value_type=StorageName, def_value=StorageName("storage"),
                                         help="The name of the storage item"))
 
     def generates(self):
@@ -59,8 +59,6 @@ class SetStorage(AbstractSimpleTransformer, StorageUser):
         if result is None:
             if len(self.get("storage_name")) == 0:
                 result = "No storage name provided!"
-            elif not is_valid_name(self.get("storage_name")):
-                result = "Not a valid storage name: %s" + self.get("storage_name")
         return result
 
     def _do_execute(self):

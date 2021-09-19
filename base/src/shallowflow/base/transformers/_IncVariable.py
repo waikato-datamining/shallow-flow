@@ -1,6 +1,6 @@
 from shallowflow.api.transformer import AbstractSimpleTransformer
 from shallowflow.api.config import Option
-from shallowflow.api.vars import is_valid_name
+from shallowflow.api.vars import VariableName
 from shallowflow.api.compatibility import Unknown
 
 
@@ -23,7 +23,7 @@ class IncVariable(AbstractSimpleTransformer):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option(name="var_name", value_type=str, def_value="var",
+        self._option_manager.add(Option(name="var_name", value_type=VariableName, def_value=VariableName("var"),
                                         help="The name of the variable to increment"))
         self._option_manager.add(Option(name="inc_value", value_type=str, def_value="1",
                                         help="The value to increment the variable by"))
@@ -61,8 +61,6 @@ class IncVariable(AbstractSimpleTransformer):
             value = self.get("inc_value")
             if len(name) == 0:
                 result = "No variable name provided!"
-            elif not is_valid_name(name):
-                result = "Not a valid variable name: %s" % name
             elif len(value) == 0:
                 result = "No increment value provided!"
             elif not self.get("is_float"):

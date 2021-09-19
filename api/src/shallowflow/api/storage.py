@@ -1,3 +1,6 @@
+from .serialization.vars import AbstractStringReader, add_string_reader
+
+
 STORAGE_EVENT_ADDED = "added"
 STORAGE_EVENT_UPDATED = "updated"
 STORAGE_EVENT_DELETED = "deleted"
@@ -26,6 +29,44 @@ def is_valid_name(s):
         if s[i] not in VALID_CHARS:
             return False
     return True
+
+
+class StorageName(str):
+    """
+    Class that enforces correct storage names.
+    """
+
+    def __new__(cls, s):
+        if not is_valid_name(s):
+            raise Exception("Invalid variable name: %s" % s)
+        return super().__new__(cls, s)
+
+
+class StorageNameStringReader(AbstractStringReader):
+    """
+    Turns strings into StorageName objects.
+    """
+
+    def handles(self, cls):
+        """
+        Whether it can convert a string into the specified class.
+
+        :param cls: the class to convert to
+        :type cls: type
+        :return: True if it can handle it
+        """
+        return issubclass(cls, StorageName)
+
+    def convert(self, s, base_type=None):
+        """
+        Turns the string into an object.
+
+        :param s: the string to convert
+        :type s: str
+        :param base_type: optional type when reconstructing lists etc
+        :return: the generated object
+        """
+        return StorageName(s)
 
 
 class StorageChangeEvent(object):
@@ -261,3 +302,7 @@ class StorageUser(object):
         :rtype: bool
         """
         raise NotImplemented()
+
+
+# serialization
+add_string_reader(StorageNameStringReader)
