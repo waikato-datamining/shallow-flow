@@ -1,4 +1,5 @@
 import os
+import re
 from setuptools import find_namespace_packages
 import inspect
 import importlib
@@ -62,12 +63,14 @@ def get_class_name(o):
     return m + "." + c
 
 
-def find_module_names(use_cache=True):
+def find_module_names(use_cache=True, module_regexp=None):
     """
     Locates all module names used by shallowflow.
 
     :param use_cache: whether to use the cache or not
     :type use_cache: bool
+    :param module_regexp: regular expression to limit the modules to search in
+    :type module_regexp: str
     :return: the list of module names
     :rtype: list
     """
@@ -108,10 +111,19 @@ def find_module_names(use_cache=True):
     else:
         result = MODULE_CACHE[:]
 
+    # limit result?
+    if module_regexp is not None:
+        regexp = re.compile(module_regexp)
+        r = []
+        for item in result:
+            if regexp.match(item):
+                r.append(item)
+        result = r
+
     return result
 
 
-def find_class_names(super_class, use_cache=True):
+def find_class_names(super_class, use_cache=True, module_regexp=None):
     """
     Finds all classes that are derived from the specified superclass in all of the
     shallowflow modules.
@@ -120,13 +132,15 @@ def find_class_names(super_class, use_cache=True):
     :type super_class: type
     :param use_cache: whether to use the cache or not
     :type use_cache: bool
+    :param module_regexp: regular expression to limit the modules to search in
+    :type module_regexp: str
     :return: the list of class names
     :rtype: list
     """
     global CLASS_CACHE
 
     result = []
-    module_names = find_module_names(use_cache=use_cache)
+    module_names = find_module_names(use_cache=use_cache, module_regexp=module_regexp)
 
     locate = (not use_cache) or (CLASS_CACHE is None) or (super_class not in CLASS_CACHE)
     if CLASS_CACHE is None:
