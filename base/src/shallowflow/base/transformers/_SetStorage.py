@@ -26,6 +26,15 @@ class SetStorage(AbstractSimpleTransformer, StorageUser):
         self._option_manager.add(Option(name="storage_name", value_type=StorageName, def_value=StorageName("storage"),
                                         help="The name of the storage item"))
 
+    def accepts(self):
+        """
+        Returns the types that are accepted.
+
+        :return: the list of types
+        :rtype: list
+        """
+        return [Unknown]
+
     def generates(self):
         """
         Returns the types that get generated.
