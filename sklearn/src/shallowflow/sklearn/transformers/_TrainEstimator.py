@@ -17,10 +17,10 @@ class AbstractTrainEstimator(AbstractSimpleTransformer):
         For configuring the options.
         """
         super()._define_options()
-        self._option_manager.add(Option(name="estimator", value_type=AbstractEstimatorConfiguration, def_value=self._get_dafault_estimator(),
+        self._option_manager.add(Option(name="estimator", value_type=AbstractEstimatorConfiguration, def_value=self._get_default_estimator(),
                                         help="The estimator configuration to use"))
 
-    def _get_dafault_estimator(self):
+    def _get_default_estimator(self):
         """
         Returns the default estimator config to use.
 
@@ -92,7 +92,7 @@ class TrainSupervisedEstimator(AbstractTrainEstimator):
         """
         return "Trains the specified sklearn estimator on the incoming dataset."
 
-    def _get_dafault_estimator(self):
+    def _get_default_estimator(self):
         """
         Returns the default estimator config to use.
 
@@ -139,7 +139,7 @@ class TrainUnsupervisedEstimator(AbstractTrainEstimator):
         """
         return "Trains the specified sklearn estimator on the incoming dataset."
 
-    def _get_dafault_estimator(self):
+    def _get_default_estimator(self):
         """
         Returns the default estimator config to use.
 
