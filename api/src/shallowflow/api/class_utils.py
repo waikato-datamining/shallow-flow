@@ -164,17 +164,21 @@ def find_class_names(super_class, use_cache=True, module_regexp=None):
     return result
 
 
-def find_classes(super_class):
+def find_classes(super_class, use_cache=True, module_regexp=None):
     """
     Finds all classes that are derived from the specified superclass in all of the
     shallowflow modules.
 
     :param super_class: the class to look for
     :type super_class: type
+    :param use_cache: whether to use the cache or not
+    :type use_cache: bool
+    :param module_regexp: regular expression to limit the modules to search in
+    :type module_regexp: str
     :return: the list of classes
     :rtype: list
     """
-    names = find_class_names(super_class)
+    names = find_class_names(super_class, use_cache=use_cache, module_regexp=module_regexp)
     result = []
     for name in names:
         result.append(class_name_to_type(name))
