@@ -45,7 +45,7 @@ class AbstractHelpGenerator(AbstractOptionHandler):
                 hf.write(help)
 
 
-def class_hierarchy_help(super_class, generator, output_dir):
+def class_hierarchy_help(super_class, generator, output_dir, module_regexp=None):
     """
     Generates help files for all the classes of the specified class hierarchy
     and places them in the output directory.
@@ -56,11 +56,13 @@ def class_hierarchy_help(super_class, generator, output_dir):
     :type generator: AbstractHelpGenerator
     :param output_dir: the output directory to place the files in
     :type output_dir: str
+    :param module_regexp: regular expression to limit the modules to search in
+    :type module_regexp: str
     :return: the list of generated files, relative to the output directory
     :rtype: list
     """
     result = []
-    classes = find_classes(super_class)
+    classes = find_classes(super_class, module_regexp=module_regexp)
     for cls in classes:
         fname = get_class_name(cls) + generator.file_extension()
         out_file = output_dir + "/" + fname
