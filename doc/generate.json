@@ -1,5 +1,4 @@
 {
-  "generator": "shallowflow.base.help.Markdown",
   "modules": {
     "base": {
       "superclasses": [

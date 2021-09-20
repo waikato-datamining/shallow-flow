@@ -1,3 +1,3 @@
-from shallowflow.api.help import class_documentation
+from shallowflow.base.help import markdown_class_doc
 
-class_documentation("./generate.json", ".")
+markdown_class_doc("./generate.json", ".")
