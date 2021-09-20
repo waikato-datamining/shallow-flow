@@ -140,7 +140,7 @@ def find_class_names(super_class, use_cache=True, module_regexp=None):
     global CLASS_CACHE
 
     result = []
-    module_names = find_module_names(use_cache=use_cache, module_regexp=module_regexp)
+    module_names = find_module_names(use_cache=use_cache)
 
     locate = (not use_cache) or (CLASS_CACHE is None) or (super_class not in CLASS_CACHE)
     if CLASS_CACHE is None:
@@ -160,6 +160,15 @@ def find_class_names(super_class, use_cache=True, module_regexp=None):
         CLASS_CACHE[super_class] = result[:]
     else:
         result = CLASS_CACHE[super_class][:]
+
+    # limit result?
+    if module_regexp is not None:
+        regexp = re.compile(module_regexp)
+        r = []
+        for item in result:
+            if regexp.match(item):
+                r.append(item)
+        result = r
 
     return result
 
