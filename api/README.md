@@ -1,6 +1,14 @@
 # shallowflow-api
 The API for shallowflow.
 
+## Installation
+
+Install via pip:
+
+```commandline
+pip install "git+https://github.com/waikato-datamining/shallowflow.git#egg=shallowflow-api&subdirectory=api"
+```
+
 ## Classes
 
 * Base classes

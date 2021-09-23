@@ -1,6 +1,14 @@
 # shallowflow-sklearn
 [sklearn](https://github.com/andymccurdy/redis-py) components for shallowflow.
 
+## Installation
+
+Install via pip:
+
+```commandline
+pip install "git+https://github.com/waikato-datamining/shallowflow.git#egg=shallowflow-sklearn&subdirectory=sklearn"
+```
+
 ## Actors
 
 * Sources
