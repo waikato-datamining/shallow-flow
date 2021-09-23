@@ -159,6 +159,7 @@ class VideoFileReader(AbstractSimpleTransformer):
                             if (max_frames > 0) and (self._frames_processed >= max_frames):
                                 self._close_video()
                                 break
+                            break
                         else:
                             continue
             except:
