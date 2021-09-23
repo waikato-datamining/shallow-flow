@@ -55,7 +55,10 @@ The base components for shallowflow.
 
 * `shallowflow.base.conditions.AlwaysFalse`
 * `shallowflow.base.conditions.AlwaysTrue`
+* `shallowflow.base.conditions.And`
+* `shallowflow.base.conditions.Not`
 * `shallowflow.base.conditions.NumExpr`
+* `shallowflow.base.conditions.Or`
 
 ## Conversions
 
