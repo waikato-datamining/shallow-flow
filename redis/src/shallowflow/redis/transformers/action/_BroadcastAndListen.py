@@ -87,6 +87,7 @@ class BroadcastAndListen(AbstractAction):
             if timeout > 0:
                 end = datetime.now()
                 if (end - start).total_seconds() >= timeout:
+                    self.log("Timeout reached!")
                     break
 
         if self.is_stopped:
