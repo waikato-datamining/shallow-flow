@@ -1,3 +1,4 @@
+from datetime import datetime
 from time import sleep
 from ._AbstractAction import AbstractAction
 from shallowflow.api.compatibility import Unknown
@@ -27,6 +28,7 @@ class BroadcastAndListen(AbstractAction):
         self._option_manager.add(Option("channel_out", str, "", "The channel to send the data to"))
         self._option_manager.add(Option("in_as_string", bool, False, "If enabled, incoming data get treated as string"))
         self._option_manager.add(Option("channel_in", str, "", "The channel to listen for incoming data"))
+        self._option_manager.add(Option("timeout", float, 0.0, "The timeout in seconds for data to appear on the incoming channel; use <=0 for no timeout"))
 
     def accepts(self):
         """
@@ -78,8 +80,14 @@ class BroadcastAndListen(AbstractAction):
         connection.publish(self.get("channel_out"), o)
 
         # wait for data to show up
+        timeout = self.get("timeout")
+        start = datetime.now()
         while (self._pubsub is not None) and not self.is_stopped:
             sleep(0.01)
+            if timeout > 0:
+                end = datetime.now()
+                if (end - start).total_seconds() >= timeout:
+                    break
 
         if self.is_stopped:
             if self._pubsub is not None:
