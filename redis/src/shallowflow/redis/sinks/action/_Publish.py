@@ -21,6 +21,7 @@ class Publish(AbstractAction):
         For configuring the options.
         """
         super()._define_options()
+        self._option_manager.add(Option("as_string", bool, False, "If enabled, the data gets treated as string"))
         self._option_manager.add(Option("channel", str, "", "The channel to publish on."))
 
     def accepts(self):
@@ -57,9 +58,11 @@ class Publish(AbstractAction):
         :return: None if successful, otherwise error message
         :rtype: str
         """
-        msg = str(o)
+        as_string = self.get("as_string")
+        if as_string:
+            o = str(o)
         channel = self.get("channel")
         if self.is_debug:
-            self.log("%s -> %s" % (channel, msg))
-        connection.publish(channel, msg)
+            self.log("%s -> %s" % (channel, o))
+        connection.publish(channel, o)
         return None

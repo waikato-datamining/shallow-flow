@@ -23,6 +23,7 @@ class BroadcastAndListen(AbstractAction):
         For configuring the options.
         """
         super()._define_options()
+        self._option_manager.add(Option("as_string", bool, False, "If enabled, incoming/outgoing data get treated as strings"))
         self._option_manager.add(Option("channel_out", str, "", "The channel to send the data to"))
         self._option_manager.add(Option("channel_in", str, "", "The channel to listen for incoming data"))
 
@@ -53,12 +54,16 @@ class BroadcastAndListen(AbstractAction):
         :param o: the object to use
         :return: the retrieved object, None if not available
         """
+        as_string = self.get("as_string")
         self._pubsub = connection.pubsub()
         self._output = None
         actor = self
 
         def anon_handler(message):
-            actor._output = message['data'].decode()
+            data = message['data']
+            if as_string:
+                data = data.decode()
+            actor._output = data
             actor._pubsub_thread.stop()
             actor._pubsub.close()
             actor._pubsub = None
@@ -66,7 +71,9 @@ class BroadcastAndListen(AbstractAction):
         self._pubsub.psubscribe(**{self.get("channel_in"): anon_handler})
         self._pubsub_thread = self._pubsub.run_in_thread(sleep_time=0.001)
 
-        connection.publish(self.get("channel_out"), str(o))
+        if as_string:
+            o = str(o)
+        connection.publish(self.get("channel_out"), o)
 
         # wait for data to show up
         while (self._pubsub is not None) and not self.is_stopped:

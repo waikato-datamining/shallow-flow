@@ -21,6 +21,7 @@ class Set(AbstractAction):
         For configuring the options.
         """
         super()._define_options()
+        self._option_manager.add(Option("as_string", bool, False, "If enabled, the data gets treated as string"))
         self._option_manager.add(Option("key", str, "", "The key to store the object under."))
 
     def accepts(self):
@@ -57,9 +58,11 @@ class Set(AbstractAction):
         :return: None if successful, otherwise error message
         :rtype: str
         """
-        value = str(o)
+        as_string = self.get("as_string")
+        if as_string:
+            o = str(o)
         key = self.get("key")
         if self.is_debug:
-            self.log("%s -> %s" % (key, value))
-        connection.set(key, value)
+            self.log("%s -> %s" % (key, o))
+        connection.set(key, o)
         return None
