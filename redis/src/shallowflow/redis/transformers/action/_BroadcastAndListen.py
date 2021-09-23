@@ -82,15 +82,17 @@ class BroadcastAndListen(AbstractAction):
         # wait for data to show up
         timeout = self.get("timeout")
         start = datetime.now()
+        no_data = False
         while (self._pubsub is not None) and not self.is_stopped:
             sleep(0.01)
             if timeout > 0:
                 end = datetime.now()
                 if (end - start).total_seconds() >= timeout:
                     self.log("Timeout reached!")
+                    no_data = True
                     break
 
-        if self.is_stopped:
+        if self.is_stopped or no_data:
             if self._pubsub is not None:
                 self._pubsub_thread.stop()
                 self._pubsub.close()
