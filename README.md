@@ -8,3 +8,11 @@ Available modules:
 * [Imaging components (OpenCV)](https://github.com/waikato-datamining/shallowflow-cv2)
 * [scikit-learn support](https://github.com/waikato-datamining/shallowflow-sklearn)
 * [Redis integration](https://github.com/waikato-datamining/shallowflow-redis)
+
+## Installation
+
+Install via pip:
+
+```bash
+pip install "git+https://github.com/waikato-datamining/shallowflow.git"
+```

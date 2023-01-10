@@ -13,7 +13,7 @@ def _read(f):
 
 
 setup(
-    name="shallowflow-all",
+    name="shallowflow",
     description="Meta-package that combines all shallowflow workflow engine packages.",
     long_description=(
         _read('DESCRIPTION.rst') + b'\n' +
@@ -31,6 +31,7 @@ setup(
         "shallowflow-cv2",
         "shallowflow-sklearn",
         "shallowflow-redis",
+        "shallowflow-vfs",
     ],
     version="0.0.1",
     author='Peter Reutemann',
