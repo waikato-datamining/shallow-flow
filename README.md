@@ -7,3 +7,4 @@ Available modules:
 * [Base components](base)
 * [Imaging components (OpenCV)](cv2)
 * [Redis](redis)
+* [scikit-learn](sklearn)
