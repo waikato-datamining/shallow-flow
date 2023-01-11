@@ -13,7 +13,7 @@ Available modules:
 
 ## Installation
 
-Install latest code from repos into a virtual environment (use `-h` to see full list of options):
+Install the latest code from repos into a virtual environment (use `-h` to see full list of options):
 
 ```bash
 ./install.sh -l
