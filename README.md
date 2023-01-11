@@ -16,11 +16,13 @@ Available modules:
 Install the latest code from repos into a virtual environment (use `-h` to see full list of options):
 
 ```bash
+git clone "git+https://github.com/waikato-datamining/shallowflow.git"
+cd shallowflow
 ./install.sh -l
 ```
 
-Install via pip:
+Install via pip (once releases are available):
 
 ```bash
-pip install "git+https://github.com/waikato-datamining/shallowflow.git"
+pip install shallowflow
 ```
