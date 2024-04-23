@@ -27,6 +27,7 @@ setup(
     ],
     license='MIT License',
     install_requires=[
+        "coed",
         "shallowflow-base",
         "shallowflow-cv2",
         "shallowflow-sklearn",

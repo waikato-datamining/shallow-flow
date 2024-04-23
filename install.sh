@@ -94,6 +94,7 @@ echo
 if [ "$LATEST" = "yes" ]
 then
   "$PIP" install \
+      git+https://github.com/waikato-datamining/coed.git \
       git+https://github.com/waikato-datamining/shallowflow-api.git \
       git+https://github.com/waikato-datamining/shallowflow-base.git \
       git+https://github.com/waikato-datamining/shallowflow-cv2.git \
